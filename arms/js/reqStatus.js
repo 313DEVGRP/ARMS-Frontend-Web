@@ -1976,7 +1976,6 @@ function getDeletedIssueData(selectId, endPointUrl) {
             className: "dt-body-center",
             visible: true
         },
-		{ name: "parentReqKey", title: "부모 요구사항 키", data: "parentReqKey", visible: false },
 		{
 			name: "isReq",
 			title: "요구사항 구분",
