@@ -1643,7 +1643,7 @@ async function draggableNode(data) {
 		data: {
 			c_id: data.c_id,
 			ref: data.ref,
-			c_position: data.c_position,
+			c_position: Number(data.c_position) + 1,
 			copy: 0,
 			multiCounter: 0
 		},
