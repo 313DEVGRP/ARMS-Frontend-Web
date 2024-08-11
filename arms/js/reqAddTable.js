@@ -33,13 +33,8 @@ const ReqDifficulty = {
 	매우_쉬움: 7
 };
 
-const ReqStatus = {
-	열림: 10,
-	진행중: 11,
-	해결됨: 12,
-	닫힘: 13
-};
-
+var ReqStatus = {};
+var req_state_map = {};
 const ReqStatusEnglish = {
 	open: 10,
 	investigation: 11,
@@ -149,6 +144,11 @@ const mapperTableData = (data) => {
                 const assigneeNames = assignee.length > 0 ? assignee.map(a => a.담당자_이름).join(', ') : "담당자 미배정";
 
                 const depthInfo = setDepth(data, c_parentid);
+				let state_category_icon = null;
+				if (reqStateEntity && reqStateEntity.reqStateCategoryEntity && reqStateEntity.reqStateCategoryEntity.c_category_icon) {
+					state_category_icon = reqStateEntity.reqStateCategoryEntity.c_category_icon;
+				}
+
                 acc.push({
                     version: getVersionTitle(vid),
                     id: c_id,
@@ -167,6 +167,7 @@ const mapperTableData = (data) => {
                     _status: reqStateEntity?.c_id,
                     _priority: reqPriorityEntity?.c_id,
                     _difficulty: reqDifficultyEntity?.c_id,
+					_state_category: state_category_icon,
                     _version: Number(vid)
                 });
              });
@@ -177,69 +178,71 @@ const mapperTableData = (data) => {
 const mapperPivotTableData = (data) => {
 	return data.reduce((acc, cur) => {
 		const {
-			c_id,
-			c_parentid,
-			c_title,
-			c_req_writer,
-			assignee,
-			c_req_contents,
-			reqStateEntity,
-			reqPriorityEntity,
-			reqDifficultyEntity,
-			c_req_create_date,
-			c_req_start_date,
-			c_req_end_date,
-			c_req_plan_progress,
-			c_req_pdservice_versionset_link
-		} = cur;
+				c_id,
+				c_parentid,
+				c_title,
+				c_req_writer,
+				assignee,
+				c_req_contents,
+				reqStateEntity,
+				reqPriorityEntity,
+				reqDifficultyEntity,
+				c_req_create_date,
+				c_req_start_date,
+				c_req_end_date,
+				c_req_plan_progress,
+				c_req_pdservice_versionset_link
+			} = cur;
 		if (cur.c_parentid < 2) return acc;
 
 		if (assignee.length === 0) { // 담당자 데이터가 없는 경우 처리
 	        const versions = c_req_pdservice_versionset_link ? JSON.parse(c_req_pdservice_versionset_link) : [""];
             versions.forEach((version) => {
                 const depthInfo = setDepth(data, c_parentid);
-                acc.push({
-                    id: c_id,
-                    version: version,
-                    assignee: "담당자 미배정",
-                    _assignee: "담당자 미배정",
-                    open: reqStateEntity?.c_id === 10 ? 1 : "",
-                    investigation: reqStateEntity?.c_id === 11 ? 1 : "",
-                    resolved: reqStateEntity?.c_id === 12 ? 1 : "",
-                    closeStatus: reqStateEntity?.c_id === 13 ? 1 : "",
-                    statusTotal: "",
-                    ...depthInfo,
-                    content: c_title,
-                    origin: cur,
-                    c_parentid: c_parentid
-                });
-            });
+				let row_data = {
+								id: c_id,
+								version: version,
+								assignee: "담당자 미배정",
+								_assignee: "담당자 미배정",
+								open: reqStateEntity?.c_id === 10 ? 1 : "",
+								investigation: reqStateEntity?.c_id === 11 ? 1 : "",
+								resolved: reqStateEntity?.c_id === 12 ? 1 : "",
+								closeStatus: reqStateEntity?.c_id === 13 ? 1 : "",
+								statusTotal: "",
+								...depthInfo,
+								content: c_title,
+								origin: cur,
+								c_parentid: c_parentid
+						};
 
+                acc.push(row_data);
+            });
         }
-        else{
+        else {
             assignee.forEach(({ 담당자_아이디, 담당자_이름,요구사항_여부 }) => { // 담당자 별로 데이터 생성
                 const versions = c_req_pdservice_versionset_link ? JSON.parse(c_req_pdservice_versionset_link) : [""];
                 if(요구사항_여부){
-                    versions.forEach((version) => {// 각 버전별로 데이터 생성
+                    versions.forEach((version) => {
+						// 각 버전별로 데이터 생성
                         const depthInfo = setDepth(data, c_parentid);
-                        acc.push({
-                            id: c_id,
-                            version: version,
-                            assignee:  담당자_이름, //getReqWriterName(c_req_writer),
-                            _assignee: 담당자_아이디,
-                            open: reqStateEntity?.c_id === 10 ? 1 : "",
-                            investigation: reqStateEntity?.c_id === 11 ? 1 : "",
-                            resolved: reqStateEntity?.c_id === 12 ? 1 : "",
-                            closeStatus: reqStateEntity?.c_id === 13 ? 1 : "",
-                            statusTotal: "",
-                            ...depthInfo,
-                            content: c_title,
-                            origin: cur,
-                            c_parentid: c_parentid
-                        });
+						let row_data = {
+									id: c_id,
+									version: version,
+									assignee:  담당자_이름, //getReqWriterName(c_req_writer),
+									_assignee: 담당자_아이디,
+									open: reqStateEntity?.c_id === 10 ? 1 : "",
+									investigation: reqStateEntity?.c_id === 11 ? 1 : "",
+									resolved: reqStateEntity?.c_id === 12 ? 1 : "",
+									closeStatus: reqStateEntity?.c_id === 13 ? 1 : "",
+									statusTotal: "",
+									...depthInfo,
+									content: c_title,
+									origin: cur,
+									c_parentid: c_parentid
+								};
+                        acc.push(row_data);
                     });
                 }
-
             });
         }
         return acc;
@@ -666,7 +669,16 @@ class Table {
 				$col.className = key;
 				if (tag === "td") {
 					if ((["status"].includes(key) && cur.category !== "Group")) {
-					    const iconData = this.mappingStateIcon(cur[key]);
+					    let iconData;
+						if (cur["_state_category"]) {
+							// 카테고리별 아이콘 적용
+							iconData = cur["_state_category"] + " " + cur[key];
+						}
+						else {
+							// 카테고리 미적용 상태는 아이콘 X
+							iconData = cur[key];
+						}
+
 						$col.innerHTML = `
                         <a href="#" class="dropdown-toggle ${!cur[key] ? "empty" : ""}" data-toggle="dropdown" aria-expanded="false">
                             ${iconData}
@@ -723,17 +735,6 @@ class Table {
 
 			return [...acc, $tr];
 		}, []);
-	}
-	mappingStateIcon(key){
-        if(key ==="열림"){
-        return '<i class="fa  fa-folder-o text-danger"></i> 열림';
-        }else if(key ==="진행중"){
-        return '<i class="fa fa-fire text-danger" style="color: #E49400;"></i> 진행중';
-        }else if(key ==="해결됨"){
-        return '<i class="fa fa-fire-extinguisher text-success"></i> 해결됨';
-        }else if(key ==="닫힘"){
-        return '<i class="fa fa-folder text-primary"></i> 닫힘';
-        }
 	}
 	mappingPriorityIcon(key){
         if(key ==="매우 높음"){
@@ -879,13 +880,20 @@ class Table {
 			$li.className = text.trim() === label ? "active" : "";
 			$li.innerHTML = `<a href="#resSelectOption" data-toggle="tab">${label}</a>`;
 			$li.addEventListener("click", (e) => {
-				if(keyname === "_status"){
+				if (keyname === "_status") {
                     editContents.statusId = value;
-                    dropdownIconData = this.mappingStateIcon(e.target.textContent);
-                }else if(keyname === "_priority"){
+					if (req_state_map[value].reqStateCategoryEntity) {
+						dropdownIconData = req_state_map[value].reqStateCategoryEntity.c_category_icon + " " + e.target.textContent;
+					}
+					else {
+						dropdownIconData = e.target.textContent;
+					}
+                }
+				else if (keyname === "_priority") {
                     editContents.priorityId = value;
                      dropdownIconData = this.mappingPriorityIcon(e.target.textContent);
-                }else if(keyname === "_difficulty"){
+                }
+				else if (keyname === "_difficulty") {
                     editContents.difficultyId = value;
                     dropdownIconData = this.mappingDifficultyIcon(e.target.textContent);
                 }
@@ -893,7 +901,7 @@ class Table {
 
 				$li.parentElement.previousElementSibling.innerHTML = `${dropdownIconData} <i class="fa fa-caret-down"></i>`;
 
-				document.getElementById(uuid).remove();
+				$("#" + uuid).empty();
 			});
 
 			return [...acc, $li];
@@ -942,12 +950,23 @@ class Table {
 			}
 
             if (e.target.type === "radio") {
-                editContents.statusId =ReqStatusEnglish[tdElement.className];
+                editContents.statusId =ReqStatus[tdElement.className];
                 this.updateData(trElement.dataset.id,editContents);
             }
 
-			// select
-			if (["A", "I"].includes(tagName)) {
+			// select a 태그(상태, 난이도, 우선순위 명칭)
+			if (["A"].includes(tagName)) {
+				const dropdown_menu = $(e.target).nextAll('.dropdown-menu');
+				dropdown_menu.remove();
+
+				classList.contains("dropdown-toggle") && this.addSelect(e.target);
+				tagName === "I" && this.addSelect(parentElement);
+			}
+			// select i 태그(상태, 난이도, 우선순위 우측 드롭다운 아이콘)
+			else if (["I"].includes(tagName)) {
+				const dropdown_menu = $(parentElement).nextAll('.dropdown-menu');
+				dropdown_menu.remove();
+
 				classList.contains("dropdown-toggle") && this.addSelect(e.target);
 				tagName === "I" && this.addSelect(parentElement);
 			}
