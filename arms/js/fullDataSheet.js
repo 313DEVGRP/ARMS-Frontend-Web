@@ -39,6 +39,9 @@ function execDocReady() {
 		[
 			//chart Colors
 			"./js/common/colorPalette.js",
+			// Apache Echarts
+			"../reference/jquery-plugins/echarts-5.4.3/dist/echarts.min.js",
+			"./js/common/chart/eCharts/donutChart.js",
 			// c3 차트(도넛)
 			"../reference/jquery-plugins/d3-5.16.0/d3.min.js",
 			"../reference/jquery-plugins/c3-0.7.20/c3.min.css",
@@ -74,7 +77,14 @@ function execDocReady() {
 				let cardWidth = $(".card").width();
 				drawDonutChart_report(targetId, mock, cardWidth);
 			}
-
+			let mock1 = {
+				"total": 5,
+				"in-progress": 2,
+				"open": 1,
+				"resolved" : 1,
+				"closed": 1
+			};
+			donutChart_fullDataSheet("donut1", mock1);
 
 
 		})
