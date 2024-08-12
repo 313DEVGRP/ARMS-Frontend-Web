@@ -1508,19 +1508,17 @@ function handle_change_date(start, end) {
 		return {
 			dayDiff: dayDiff,
 			todayDiff: dayDiff,
-			// plan_progress: 100,
-			plan_progress: 0
+			plan_progress: 100,
 		};
 	}
 
 	// 진행률 계산
-	// const progress = dayDiff > 0 ? (todayDiff / dayDiff) * 100 : 0;
+	const progress = dayDiff > 0 ? (todayDiff / dayDiff) * 100 : 0;
 
 	return {
 		dayDiff: dayDiff,
 		todayDiff: todayDiff,
-		// plan_progress: Math.min(progress.toFixed(0), 100)
-		plan_progress: 0
+		plan_progress: Math.min(progress.toFixed(0), 100)
 	};
 }
 
@@ -1579,7 +1577,7 @@ function setGanttTasks(data) {
 				assignee: cur.c_req_owner,
 				reporter: cur.c_req_writer,
 				name: cur.c_title,
-				progress: cur.c_req_plan_progress || 1,
+				progress: 0,
 				dependencies: dependencies,
 				priority: cur.state,
 				custom_class: cur.status, // optional
@@ -1610,7 +1608,8 @@ function setGanttTasks(data) {
 				common_object.plan_resource =  cur.c_req_plan_resource == null ? 0 : cur.c_req_plan_resource;
 				// 	common_object.total_resource = cur.c_req_total_time == null ? 0 : cur.c_req_total_time;
 				// 	common_object.plan_resouce = cur.c_req_plan_time == null ? 0 : cur.c_req_plan_time;
-				common_object.plan = cur.c_req_plan_progress == null ? 0 : cur.c_req_plan_progress;
+				// common_object.plan = cur.c_req_plan_progress == null ? 0 : cur.c_req_plan_progress;
+				common_object.plan = 0;
 				common_object.performance = cur.c_req_performance_progress == null ? 0 : cur.c_req_performance_progress;
 			}
 
@@ -1630,7 +1629,7 @@ async function draggableNode(data) {
 		data: {
 			c_id: data.c_id,
 			ref: data.ref,
-			c_position: data.c_position,
+			c_position: Number(data.c_position) + 1,
 			copy: 0,
 			multiCounter: 0
 		},

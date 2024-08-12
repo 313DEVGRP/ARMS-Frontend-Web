@@ -433,8 +433,8 @@ function processData(data) {
     ];
 }
 
-function format(d) {
-    return '<div class="child-table-container"><table class="display child-table" style="width:100%"><thead><tr><th>요구사항 구분</th><th>ALM Issue Key</th><th>Version</th><th>ALM Issue Title</th><th>ALM project</th><th>ALM Issue Type</th><th>ALM Assignee</th><th>ALM Priority</th><th>ALM Status</th><th>ALM Created</th><th>ALM Updated</th><th>ALM Resolution</th></tr></thead><tbody></tbody></table></div>';
+function format() {
+    return '<div class="child-table-container"><table class="display child-table" style="width:100%"><thead><tr><th>요구사항 구분</th><th>ALM Issue Key</th><th>Version</th><th>ALM Issue Title</th><th>ALM project</th><th>ALM Issue Type</th><th>ALM Assignee</th><th>ALM Priority</th><th>ALM Status</th><th>ALM Created</th><th>ALM Updated</th><th>ALM Deleted</th><th>ALM Resolution</th></tr></thead><tbody></tbody></table></div>';
 }
 
 function initializeChildTable(childrenData, container) {
@@ -692,6 +692,28 @@ function initializeChildTable(childrenData, container) {
             className: "dt-body-left",
             visible: true
         },
+		{
+			name: "deleted",
+			title: "ALM Deleted",
+			data: "deleted.deleted_date",
+			render: function (data, type, row, meta) {
+				if (isEmpty(data) || data === "false") {
+					return "<div style='color: #808080'>N/A</div>";
+				} else {
+					let displayText = dateFormat(data);
+					let color = "#f8f8f8"; // 기본 텍스트 색상
+					if (row.deleted && row.deleted.deleted_isDeleted === true) {
+						displayText = "<s style='color: #808080'>" + displayText + "</s>";
+					} else if (row.deleted && row.deleted.deleted_isDeleted === false) {
+						color = "#808080";
+					}
+					return "<div style='white-space: nowrap; color: " + color + "'>" + displayText + "</div>";
+				}
+				return data;
+			},
+			className: "dt-body-left",
+			visible: true
+		},
         {
             name: "resolutiondate",
             title: "ALM Resolution",
@@ -1207,6 +1229,8 @@ function dataTableLoad(tableData) {
 		scrollPos = $(window).scrollTop();
 		$(window).scrollTop(scrollPos);
 	});
+
+	reqStatusDataTable.columns.adjust();
 }
 // -------------------- 데이터 테이블을 만드는 템플릿으로 쓰기에 적당하게 리팩토링 함. ------------------ //
 
@@ -1237,7 +1261,7 @@ function dataTableCallBack(settings, json) {
          tr.removeClass('shown');
          icon.removeClass('fa-angle-up').addClass('fa-angle-down');
       } else {
-         row.child(format(row.data())).show();
+         row.child(format()).show();
          tr.addClass('shown');
          icon.removeClass('fa-angle-down').addClass('fa-angle-up');
          initializeChildTable(row.data().children, tr.next('tr').find('div.child-table-container'));
@@ -1976,7 +2000,6 @@ function getDeletedIssueData(selectId, endPointUrl) {
             className: "dt-body-center",
             visible: true
         },
-		{ name: "parentReqKey", title: "부모 요구사항 키", data: "parentReqKey", visible: false },
 		{
 			name: "isReq",
 			title: "요구사항 구분",
