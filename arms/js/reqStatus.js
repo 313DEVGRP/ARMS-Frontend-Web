@@ -1174,7 +1174,71 @@ function dataTableLoad(tableData) {
 			},
 			className: "dt-body-left",
 			visible: true
-		}
+		},
+		{
+            name: "childData",
+            title: "자식 데이터",
+            data: "childData",
+            render: function (data, type, row, meta) {
+
+                if (row.children && row.children.length > 0) {
+                    // versionListData를 미리 매핑해놓은 객체
+                    const versionMap = versionListData.reduce((map, version) => {
+                        map[version.c_id] = version.c_title;
+                        return map;
+                    }, {});
+
+                    var childData = row.children.map(function(child) {
+                        // 버전 이름 생성
+                        let versionName = child.pdServiceVersions
+                            .map(version_id => versionMap[version_id] || "")
+                            .filter(Boolean) // 유효하지 않은 값 제거
+                            .join(" ");
+
+                        // 날짜 포맷팅 및 결합 전 체크
+                        let createdDate = child.created ? dateFormat(child.created) : "";
+                        let updatedDate = child.updated ? dateFormat(child.updated) : "";
+                        let deletedDate = child.deleted && child.deleted.deleted_date ? dateFormat(child.deleted.deleted_date) : "";
+                        let resolutionDate = child.resolutiondate ? dateFormat(child.resolutiondate) : "";
+
+                        // 각 필드에 대해 undefined 체크
+                        let upperKey = child.upperKey || "";
+                        let key = child.key || "";
+                        let summary = child.summary || "";
+                        let projectName = child.project ? child.project.project_name : "";
+                        let issueTypeName = child.issuetype ? child.issuetype.issuetype_name : "";
+                        let assigneeName = child.assignee ? child.assignee.assignee_displayName : "";
+                        let priorityName = child.priority ? child.priority.priority_name : "";
+                        let statusName = child.status ? child.status.status_name : "";
+
+                        // 값이 유효한 항목만 결합
+                        let combinedData = [
+                            upperKey,
+                            key,
+                            versionName,
+                            summary,
+                            projectName,
+                            issueTypeName,
+                            assigneeName,
+                            priorityName,
+                            statusName,
+                            createdDate,
+                            updatedDate,
+                            deletedDate,
+                            resolutionDate
+                        ].filter(Boolean).join(" ");
+
+                        return combinedData;
+                    }).join(" ");
+
+                    return childData;
+                } else {
+                    return "";
+                }
+            },
+            className: "dt-body-left",
+            visible: false
+        }
 	];
 
 	var rowsGroupList = [];
