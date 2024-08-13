@@ -97,7 +97,7 @@ function execDocReady() {
         .then(function () {
             //사이드 메뉴 처리
             $(".widget").widgster();
-            setSideMenu("sidebar_menu_jira", "sidebar_menu_product_mapping");
+            setSideMenu("sidebar_menu_requirement", "sidebar_menu_requirement_state_mapping");
 
             //ALM 서버 셀렉트 박스 이니시에이터
             make_alm_server_select_box();
@@ -175,26 +175,6 @@ function execDocReady() {
             console.error("플러그인 로드 중 오류 발생");
             console.error(e);
         });
-}
-
-function get_arms_state_category_list() {
-    return new Promise((resolve, reject) => {
-        $.ajax({
-            url: "/auth-user/api/arms/reqStateCategory/getNodesWithoutRoot.do",
-            type: "GET",
-            dataType: "json",
-            progress: true,
-            statusCode: {
-                200: function (data) {
-                    resolve(data.result);
-                }
-            },
-            error: function (e) {
-                jError("상태 카테고리 조회 중 에러가 발생했습니다.");
-                reject(e);
-            }
-        });
-    });
 }
 
 ///////////////////////
@@ -401,8 +381,8 @@ function generate_gojs_mapping_data(req_state_category_list, arms_state_list, al
     const arms_state_x_position = 300;
     const alm_status_x_position = 600;
 
-    const y_spacing = 40;
-    const category_y_spacing = 100;
+    const y_spacing = 50;
+    const category_y_spacing = 50;
 
     let category_y_position = 0;
     let arms_state_y_position = 0;
@@ -863,7 +843,7 @@ function save_req_state_btn_click() {
         };
 
         $.ajax({
-            url: "/auth-user/api/arms/reqState/addNode.do",
+            url: "/auth-user/api/arms/reqState/addStateNode.do",
             type: "POST",
             data: data,
             statusCode: {
