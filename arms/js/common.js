@@ -104,6 +104,8 @@ function menu_setting() {
 		$("#menu_alm").removeClass("hide");
 		$("#menu_requirement").removeClass("hide");
 		$("#menu_analysis").removeClass("hide");
+		$("#menu_report").removeClass("hide");
+
 	}
 
 	if($("#menu_login").hasClass("hide") === false) {

@@ -1,3 +1,14 @@
+var selectedPdServiceId; // 제품(서비스) 아이디
+var selectedVersionId; // 선택된 버전 아이디
+
+var pdServiceListData;
+var versionListData;
+
+var resourceDataTable; //
+var selectedIndex; // 데이터테이블 선택한 인덱스
+var selectedPage; // 데이터테이블 선택한 인덱스
+
+var excelMock;//
 ////////////////////////////////////////////////////////////////////////////////////////
 //Document Ready
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -47,7 +58,17 @@ function execDocReady() {
 			"../reference/jquery-plugins/dataTables-1.10.16/extensions/Buttons/js/buttons.print.js",
 			"../reference/jquery-plugins/dataTables-1.10.16/extensions/Buttons/js/jszip.min.js"
 		],
-
+		[
+			"../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jsuites.js",
+			"../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/index.js",
+			"../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jsuites.css",
+			"../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jspreadsheet.css",
+			"../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jspreadsheet.datatables.css",
+			"../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jspreadsheet.theme.css",
+			"./js/common/jspreadsheet/spreadsheet.js",
+			"./css/jspreadsheet/custom_icon.css",
+			"./css/jspreadsheet/custom_sheet.css"
+		],
 		[
 			//chart Colors
 			"./js/common/colorPalette.js",
@@ -78,7 +99,35 @@ function execDocReady() {
 			//버전 멀티 셀렉트 박스 이니시에이터
 			makeVersionMultiSelectBox();
 			//날짜
-			datetTimePicker();
+			dateTimePicker();
+
+			let mockAssignees = [{
+				"assignee_accountId": "616fc9fa327da40069b4ed4f",
+				"assignee_emailAddress": "JY.J@abcde.com",
+				"assignee_displayName": "JJY"
+			},
+			{
+				"assignee_accountId": "712020:ecc44245-6be8-4962-9a66-888bdb4f8e3a",
+				"assignee_emailAddress": "HS.Y@abcde.com",
+				"assignee_displayName": "YHS"
+			},
+			{
+				"assignee_accountId": "616f6f04860f78006bbafe38",
+				"assignee_emailAddress": "SH.H@abcde.com",
+				"assignee_displayName": "HSH"
+			},
+			{
+				"assignee_accountId": "63b2a039159df2c252e826e9",
+				"assignee_emailAddress": "DM.L@abcde.com",
+				"assignee_displayName": "LDM"
+			},
+			{
+				"assignee_accountId": "621ee5a449c90000701efe06",
+				"assignee_emailAddress": "MG.L@abcde.com",
+				"assignee_displayName": "LMG"
+			}];
+
+			drawResourceTable(mockAssignees);
 
 			// 높이 조정
 			$('.top-menu-div').matchHeight({
@@ -93,14 +142,6 @@ function execDocReady() {
 				"resolved": 1,
 				"closed": 1
 			};
-
-			// 스크립트 실행 로직을 이곳에 추가합니다.
-			for (let i = 0; i < 1; i++) {
-				let targetId = "donut" + i;
-				console.log($(".card").width());
-				let cardWidth = $(".card").width();
-				drawDonutChart_report(targetId, mock, cardWidth);
-			}
 			let mock1 = {
 				"total": 5,
 				"in-progress": 2,
@@ -108,7 +149,49 @@ function execDocReady() {
 				"resolved": 1,
 				"closed": 1
 			};
-			donutChart_fullDataSheet("donut1", mock1);
+			// 스크립트 실행 로직을 이곳에 추가합니다.
+			for (let i = 0; i < 2; i++) {
+				let targetId = "donut" + i;
+				let chartData;
+				if (i===0) { chartData = mock;}
+				if (i===1) { chartData = mock1;}
+				//drawDonutChart_report(targetId, mock, cardWidth);
+				donutChart_fullDataSheet(targetId, chartData);
+			}
+			excelMock = [
+					{
+					"제품(서비스) 키": "25",
+					"제품(서비스) 명": "ALM RMS",
+					"버전 키": "77",
+					"버전 명": "24년8월",
+					"작업자 명": "YHS",
+					"C_REQ_LINK": "3",
+					"요구사항 구분": "요구사항",
+					"ALM 이슈 제목": "요구사항 이슈입니다. 해결해주세요",
+					"ALM 이슈 상태": "진행 중(in-progress)",
+					"ALM 이슈 우선순위": "높음",
+					"ALM 이슈 생성일": "2024/08/01",
+					"ALM 이슈 수정일": "2024/08/05",
+					"ALM 이슈 해결일": "",
+					"ALM 이슈 삭제여부": ""
+				},
+				{
+					"제품(서비스) 키": "25",
+					"제품(서비스) 명": "ALM RMS",
+					"버전 키": "76",
+					"버전 명": "24년7월",
+					"작업자 명": "HSH",
+					"C_REQ_LINK": "6",
+					"요구사항 구분": "요구사항",
+					"ALM 이슈 제목": "요구사항 이슈입니다. 해결해주세요",
+					"ALM 이슈 상태": "해결됨(resolved)",
+					"ALM 이슈 우선순위": "높음",
+					"ALM 이슈 생성일": "2024/07/21",
+					"ALM 이슈 수정일": "2024/08/01",
+					"ALM 이슈 해결일": "2024/08/05",
+					"ALM 이슈 삭제여부": ""
+				}
+			];
 
 
 		})
@@ -146,7 +229,7 @@ function makePdServiceSelectBox() {
 					$("#selected_pdService").append(newOption).trigger("change");
 				}
 				//////////////////////////////////////////////////////////
-				console.log("[analysisScope :: makePdServiceSelectBox] :: pdServiceListData => ");
+				console.log("[fullDataSheet :: makePdServiceSelectBox] :: pdServiceListData => ");
 				console.table(pdServiceListData);
 			}
 		}
@@ -165,6 +248,7 @@ function makePdServiceSelectBox() {
 		// 디폴트는 base version 을 선택하게 하고 ( select all )
 		//~> 이벤트 연계 함수 :: Version 표시 jsTree 빌드
 		bind_VersionData_By_PdService();
+		drawExcel("spreadsheet", excelMock);
 	});
 } // end makePdServiceSelectBox()
 
@@ -183,18 +267,17 @@ function bind_VersionData_By_PdService() {
 				for (var k in data.response) {
 					var obj = data.response[k];
 					pdServiceVersionIds.push(obj.c_id);
-					versionListData.push(obj);
+					versionListData.push({"c_id" : obj.c_id, "c_title" : obj.c_title,
+																"start_date" : obj.c_pds_version_start_date,
+																"end_date" : obj.c_pds_version_end_date});
 					var newOption = new Option(obj.c_title, obj.c_id, true, false);
 					$(".multiple-select").append(newOption);
 				}
 				var versionTag = $(".multiple-select").val();
-				console.log("[ analysisScope :: bind_VersionData_By_PdService ] :: versionTag");
-
-				console.log(pdServiceVersionIds);
 				selectedVersionId = pdServiceVersionIds.join(",");
-				console.log("bind_VersionData_By_PdService :: selectedVersionId");
-				console.log(selectedVersionId);
-
+				
+				// 시작일 종료일 세팅(datetimepicker)
+				setEdgeDateRange(versionListData);
 
 				if (data.length > 0) {
 					console.log("display 재설정.");
@@ -213,13 +296,14 @@ function makeVersionMultiSelectBox() {
 	//버전 선택시 셀렉트 박스 이니시에이터
 	$(".multiple-select").multipleSelect({
 		filter: true,
+		// selectBox 닫혔을 때
 		onClose: function() {
 			console.log("onOpen event fire!\n");
 
 			var checked = $("#checkbox1").is(":checked");
 			var endPointUrl = "";
 			var versionTag = $(".multiple-select").val();
-			console.log("[ analysisScope :: makeVersionMultiSelectBox ] :: versionTag");
+			console.log("[ fullDataSheet :: makeVersionMultiSelectBox ] :: versionTag");
 			console.log(versionTag);
 			selectedVersionId = versionTag.join(",");
 
@@ -228,19 +312,23 @@ function makeVersionMultiSelectBox() {
 				return;
 			}
 
+			let filteredVersionData = versionListData.filter(item => versionTag.includes(item.c_id.toString()));
+			// 시작일 종료일 세팅(datetimepicker)
+			setEdgeDateRange(filteredVersionData);
+
 			$(".ms-parent").css("z-index", 1000);
 		},
+		// selectBox 열렸을 때
 		onOpen: function() {
-			console.log("open event");
 			$(".ms-parent").css("z-index", 9999);
 		}
 	});
 }
 
 ////////////////////////////////////////
-// 검색날짜 기간 설정 세팅
+// 기간 설정 세팅
 ////////////////////////////////////////
-function datetTimePicker() {
+function dateTimePicker() {
 	$('#date_timepicker_start').datetimepicker({
 		format: 'Y-m-d', // 날짜 및 시간 형식 지정
 		formatDate: 'Y/m/d',
@@ -272,3 +360,241 @@ function datetTimePicker() {
 		}
 	});
 }
+
+
+////////////////////////////////////////
+// 선택한 버전 - min,max 날짜 세팅
+////////////////////////////////////////
+function setEdgeDateRange(versionData) {
+
+	if (!versionData || Object.keys(versionData).length === 0) {
+		console.log("[ fullDataSheet :: setEdgeDateRange ] :: versionData 가 없습니다.");
+		return false;
+	}
+
+	let minMaxDate = versionData.reduce((acc, curr) => {
+		const startDate = new Date(curr.start_date);
+		const endDate = new Date(curr.end_date);
+
+		if (!acc.min || startDate < acc.min) {
+			acc.min = startDate;
+		}
+
+		if (!acc.max || endDate > acc.max) {
+			acc.max = endDate;
+		}
+
+		return acc;
+	}, { min: null, max: null });
+	console.log("[ fullDataSheet :: setEdgeDateRange ] :: " +
+		"minMaxDate.min => " + minMaxDate.min+ ", minMaxDate.max => " +minMaxDate.max);
+
+	$('#date_timepicker_start').datetimepicker('setOptions', { value: minMaxDate.min });
+	$('#date_timepicker_end').datetimepicker('setOptions', { value: minMaxDate.max });
+}
+
+////////////////////////////////////////
+// resource 목록 정보.
+////////////////////////////////////////
+function drawResourceTable(tableData) {
+	var columnList = [
+		{
+			name: "assignee_displayName",
+			title: "작업자 명",
+			data: "assignee_displayName",
+			className: "dt-body-center",
+			visible: true,
+			render: function (data, type, row, meta) {
+				if (type === "display") {
+					return '<label style="color: #a4c6ff">' + data + "</label>";
+				}
+				return data;
+			}
+		},
+		{
+			name: "assignee_emailAddress",
+			title: "작업자 메일",
+			data: "assignee_emailAddress",
+			className: "dt-body-center",
+			visible: true,
+			render: function (data, type, row, meta) {
+				if (type === "display") {
+					return '<label style="color: #a4c6ff">' + data +
+						"</label>";
+				}
+				return data;
+			}
+		}
+	];
+	var rowsGroupList = [];
+	var jquerySelector = "#resource_table";
+	var ajaxUrl = "";
+	var jsonRoot = "";
+	var buttonList = [];
+	var selectList = {};
+	var isServerSide = false;
+	var isAjax = false;
+	var columnDefList = [];
+	var orderList = [[0, "asc"]];
+	// console.log(tableData);
+	resourceDataTable = dataTable_build(
+		jquerySelector,
+		ajaxUrl,
+		jsonRoot,
+		columnList,
+		rowsGroupList,
+		columnDefList,
+		selectList,
+		orderList,
+		buttonList,
+		isServerSide,
+		null,
+		tableData,
+		isAjax
+	);
+
+	// $("#reqstatustable").on('page.dt', function() {
+	// 	scrollPos = $(window).scrollTop();
+	// 	$(window).scrollTop(scrollPos);
+	// });
+
+}
+
+// -------------------- 데이터 테이블을 만드는 템플릿으로 쓰기에 적당하게 리팩토링 함. ------------------ //
+
+// 데이터 테이블 구성 이후 꼭 구현해야 할 메소드 : 열 클릭시 이벤트
+function dataTableClick(tempDataTable, selectedData) {
+	console.log(selectedData);
+}
+
+// 데이터 테이블 데이터 렌더링 이후 콜백 함수.
+function dataTableCallBack(settings, json) {
+	console.log("check");
+}
+
+function dataTableDrawCallback(tableInfo) {
+//	resourceDataTable.columns.adjust();
+	console.log(tableInfo);
+}
+
+/////////////////////////////////////////////////////
+// 엑셀 그리기
+/////////////////////////////////////////////////////
+function drawExcel(targetId, data) {
+	console.log("fullDataSheet :: drawExcel");
+	console.log(data);
+	let $targetId = "#" + targetId;
+
+	if($($targetId)[0].jexcel) {
+		console.log($($targetId)[0].jexcel);
+		$($targetId)[0].jexcel.destroy();
+	}
+	console.log("width=> " + $($targetId).width());
+	var excelWidth=$($targetId).width() - 50;
+
+	var columnList = [
+		{ readOnly: true, type: "text", title: "제품(서비스) 키", wRatio: 0.1}, //0
+		{ readOnly: true, type: "text", title: "제품(서비스) 명", wRatio: 0.1},
+		{ readOnly: true, type: "text", title: "버전 키", wRatio: 0.05},
+		{ readOnly: true, type: "text", title: "버전 명", wRatio: 0.1},
+		{ readOnly: true, type: "text", title: "작업자", wRatio: 0.05}, //4
+		{ readOnly: true, type: "text", title: "C_REQ_LINK", wRatio: 0.05},
+		{ readOnly: true, type: "text", title: "요구사항 구분", wRatio: 0.1}, // 요구사항 이슈, 연결이슈, 하위이슈
+		{ readOnly: true, type: "text", title: "ALM 이슈 제목", wRatio: 0.2},
+		{ readOnly: true, type: "text", title: "ALM 이슈 상태",	wRatio: 0.1},
+		{ readOnly: true, type: "text", title: "ALM 이슈 우선순위", wRatio: 0.1}, //9
+		{ readOnly: true, type: "calendar", title: "ALM 이슈 생성일", wRatio: 0.1},
+		{ readOnly: true, type: "calendar", title: "ALM 이슈 수정일", wRatio: 0.1},
+		{ readOnly: true, type: "calendar", title: "ALM 이슈 해결일", wRatio: 0.1},
+		{ readOnly: true, type: "text", title: "ALM 이슈 삭제여부", wRatio: 0.1}
+	];
+
+	SpreadSheetFunctions.setColumns(columnList);
+	SpreadSheetFunctions.setColumnWidth(excelWidth);
+
+	var customOptions = {
+		pagination:10,
+		contextMenu: [],
+		updateTable: function(instace, cell, col, row, val, id) {
+			cell.style.whiteSpace = "normal";
+			if(col === 0 || col === 2 || col ===5) {
+				cell.style.textAlign = "right";
+				cell.style.color = "#a4c6ff";
+			} else if (col === 1 || col === 4 || col === 7) {
+				cell.style.textAlign = "left";
+			}
+		}
+	};
+
+	SpreadSheetFunctions.setExcelData(data);
+	SpreadSheetFunctions.setOptions(customOptions);
+
+	$($targetId).spreadsheet($.extend({}, {
+		columns: SpreadSheetFunctions.getColumns(),
+		data: SpreadSheetFunctions.getExcelData()
+	}, SpreadSheetFunctions.getOptions()));
+}
+
+var SpreadSheetFunctions = ( function () {
+	let $tabFunction_data;   // 엑셀 데이터
+	let $tabFunction_columns;// 엑셀 컬럼
+	let $tabFunction_options;// 엑셀 (커스텀)옵션 :: 정의 안할 경우 default
+	let $sheetInstance;
+	var setESheet = function(obj) {
+		$sheetInstance = obj;
+	};
+	var setExcelData = function(data) {
+		$tabFunction_data = data;
+	};
+	var getExcelData = function () {
+		return $tabFunction_data;
+	};
+	var setColumns = function(columns) {
+		console.log("setColumns");
+		$tabFunction_columns = columns;
+	};
+	var getColumns = function () {
+		return $tabFunction_columns;
+	};
+	var setOptions = function(options) {
+		$tabFunction_options = options;
+	};
+	var getOptions = function() {
+		return $tabFunction_options ? $tabFunction_options : null;
+	};
+
+	var setColumnWidth = function (width) {
+		$tabFunction_columns = $tabFunction_columns.map(column => ({
+			...column, width: width * column.wRatio
+		}));
+	};
+
+	var resizeObserver = new ResizeObserver(function(entries) {
+		for (let entry of entries) {
+			var width = entry.contentRect.width;
+			var height = entry.contentRect.height;
+			handleResize(entry.target.id, width, height);
+		}
+	});
+
+	// 모달요소 크기 변화 관찰
+	resizeObserver.observe(document.getElementById('spreadsheet'));
+
+	function handleResize(id,width, height) {
+		if (id ==="spreadsheet" && height !== 0) {
+			console.log("handleResize")
+			// if (Object.keys(인력별_연봉정보).length > 0) {
+			// 	drawExcel("spreadsheet", 인력별_연봉정보);
+			// } else {
+			// 	console.log("인력별_연봉정보 데이터가 없습니다.");
+			// }
+		}
+	}
+
+	return {
+		setExcelData, getExcelData,
+		setColumns, getColumns,
+		setOptions, getOptions,
+		setColumnWidth
+	};
+})();
