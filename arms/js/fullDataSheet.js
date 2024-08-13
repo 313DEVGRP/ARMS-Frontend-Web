@@ -1,3 +1,6 @@
+var selectedPdServiceId; // 제품(서비스) 아이디
+var selectedVersionId; // 선택된 버전 아이디
+var versionListData;
 ////////////////////////////////////////////////////////////////////////////////////////
 //Document Ready
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -78,7 +81,7 @@ function execDocReady() {
 			//버전 멀티 셀렉트 박스 이니시에이터
 			makeVersionMultiSelectBox();
 			//날짜
-			datetTimePicker();
+			dateTimePicker();
 
 			// 높이 조정
 			$('.top-menu-div').matchHeight({
@@ -146,7 +149,7 @@ function makePdServiceSelectBox() {
 					$("#selected_pdService").append(newOption).trigger("change");
 				}
 				//////////////////////////////////////////////////////////
-				console.log("[analysisScope :: makePdServiceSelectBox] :: pdServiceListData => ");
+				console.log("[fullDataSheet :: makePdServiceSelectBox] :: pdServiceListData => ");
 				console.table(pdServiceListData);
 			}
 		}
@@ -183,18 +186,17 @@ function bind_VersionData_By_PdService() {
 				for (var k in data.response) {
 					var obj = data.response[k];
 					pdServiceVersionIds.push(obj.c_id);
-					versionListData.push(obj);
+					versionListData.push({"c_id" : obj.c_id, "c_title" : obj.c_title,
+																"start_date" : obj.c_pds_version_start_date,
+																"end_date" : obj.c_pds_version_end_date});
 					var newOption = new Option(obj.c_title, obj.c_id, true, false);
 					$(".multiple-select").append(newOption);
 				}
 				var versionTag = $(".multiple-select").val();
-				console.log("[ analysisScope :: bind_VersionData_By_PdService ] :: versionTag");
-
-				console.log(pdServiceVersionIds);
 				selectedVersionId = pdServiceVersionIds.join(",");
-				console.log("bind_VersionData_By_PdService :: selectedVersionId");
-				console.log(selectedVersionId);
-
+				
+				// 시작일 종료일 세팅(datetimepicker)
+				setEdgeDateRange(versionListData);
 
 				if (data.length > 0) {
 					console.log("display 재설정.");
@@ -213,13 +215,14 @@ function makeVersionMultiSelectBox() {
 	//버전 선택시 셀렉트 박스 이니시에이터
 	$(".multiple-select").multipleSelect({
 		filter: true,
+		// selectBox 닫혔을 때
 		onClose: function() {
 			console.log("onOpen event fire!\n");
 
 			var checked = $("#checkbox1").is(":checked");
 			var endPointUrl = "";
 			var versionTag = $(".multiple-select").val();
-			console.log("[ analysisScope :: makeVersionMultiSelectBox ] :: versionTag");
+			console.log("[ fullDataSheet :: makeVersionMultiSelectBox ] :: versionTag");
 			console.log(versionTag);
 			selectedVersionId = versionTag.join(",");
 
@@ -228,19 +231,23 @@ function makeVersionMultiSelectBox() {
 				return;
 			}
 
+			let filteredVersionData = versionListData.filter(item => versionTag.includes(item.c_id.toString()));
+			// 시작일 종료일 세팅(datetimepicker)
+			setEdgeDateRange(filteredVersionData);
+
 			$(".ms-parent").css("z-index", 1000);
 		},
+		// selectBox 열렸을 때
 		onOpen: function() {
-			console.log("open event");
 			$(".ms-parent").css("z-index", 9999);
 		}
 	});
 }
 
 ////////////////////////////////////////
-// 검색날짜 기간 설정 세팅
+// 기간 설정 세팅
 ////////////////////////////////////////
-function datetTimePicker() {
+function dateTimePicker() {
 	$('#date_timepicker_start').datetimepicker({
 		format: 'Y-m-d', // 날짜 및 시간 형식 지정
 		formatDate: 'Y/m/d',
@@ -271,4 +278,36 @@ function datetTimePicker() {
 			});
 		}
 	});
+}
+
+
+////////////////////////////////////////
+// 선택한 버전 - min,max 날짜 세팅
+////////////////////////////////////////
+function setEdgeDateRange(versionData) {
+
+	if (!versionData || Object.keys(versionData).length === 0) {
+		console.log("[ fullDataSheet :: setEdgeDateRange ] :: versionData 가 없습니다.");
+		return false;
+	}
+
+	let minMaxDate = versionData.reduce((acc, curr) => {
+		const startDate = new Date(curr.start_date);
+		const endDate = new Date(curr.end_date);
+
+		if (!acc.min || startDate < acc.min) {
+			acc.min = startDate;
+		}
+
+		if (!acc.max || endDate > acc.max) {
+			acc.max = endDate;
+		}
+
+		return acc;
+	}, { min: null, max: null });
+	console.log("[ fullDataSheet :: setEdgeDateRange ] :: " +
+		"minMaxDate.min => " + minMaxDate.min+ ", minMaxDate.max => " +minMaxDate.max);
+
+	$('#date_timepicker_start').datetimepicker('setOptions', { value: minMaxDate.min });
+	$('#date_timepicker_end').datetimepicker('setOptions', { value: minMaxDate.max });
 }
