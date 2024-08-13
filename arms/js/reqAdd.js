@@ -2056,7 +2056,7 @@ function tableSelect(id) {
   				data: params,
         		statusCode: {
    					200: function () {
-       				jSuccess("요구사항이 변경되었습니다.");
+       					jSuccess("요구사항이 변경되었습니다.");
         			}
        			},
                 error: function() {

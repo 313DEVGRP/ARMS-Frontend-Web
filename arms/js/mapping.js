@@ -97,7 +97,7 @@ function execDocReady() {
         .then(function () {
             //사이드 메뉴 처리
             $(".widget").widgster();
-            setSideMenu("sidebar_menu_jira", "sidebar_menu_product_mapping");
+            setSideMenu("sidebar_menu_requirement", "sidebar_menu_requirement_state_mapping");
 
             //ALM 서버 셀렉트 박스 이니시에이터
             make_alm_server_select_box();
@@ -843,7 +843,7 @@ function save_req_state_btn_click() {
         };
 
         $.ajax({
-            url: "/auth-user/api/arms/reqState/addNode.do",
+            url: "/auth-user/api/arms/reqState/addStateNode.do",
             type: "POST",
             data: data,
             statusCode: {
