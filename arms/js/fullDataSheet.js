@@ -1,6 +1,12 @@
 var selectedPdServiceId; // 제품(서비스) 아이디
 var selectedVersionId; // 선택된 버전 아이디
+
+var pdServiceListData;
 var versionListData;
+
+var resourceDataTable; //
+var selectedIndex; // 데이터테이블 선택한 인덱스
+var selectedPage; // 데이터테이블 선택한 인덱스
 ////////////////////////////////////////////////////////////////////////////////////////
 //Document Ready
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -83,6 +89,34 @@ function execDocReady() {
 			//날짜
 			dateTimePicker();
 
+			let mockAssignees = [{
+				"assignee_accountId": "616fc9fa327da40069b4ed4f",
+				"assignee_emailAddress": "JY.J@abcde.com",
+				"assignee_displayName": "JJY"
+			},
+			{
+				"assignee_accountId": "712020:ecc44245-6be8-4962-9a66-888bdb4f8e3a",
+				"assignee_emailAddress": "HS.Y@abcde.com",
+				"assignee_displayName": "YHS"
+			},
+			{
+				"assignee_accountId": "616f6f04860f78006bbafe38",
+				"assignee_emailAddress": "SH.H@abcde.com",
+				"assignee_displayName": "HSH"
+			},
+			{
+				"assignee_accountId": "63b2a039159df2c252e826e9",
+				"assignee_emailAddress": "DM.L@abcde.com",
+				"assignee_displayName": "LDM"
+			},
+			{
+				"assignee_accountId": "621ee5a449c90000701efe06",
+				"assignee_emailAddress": "MG.L@abcde.com",
+				"assignee_displayName": "LMG"
+			}];
+
+			drawResourceTable(mockAssignees);
+
 			// 높이 조정
 			$('.top-menu-div').matchHeight({
 				target: $('.top-menu-div-default')
@@ -96,14 +130,6 @@ function execDocReady() {
 				"resolved": 1,
 				"closed": 1
 			};
-
-			// 스크립트 실행 로직을 이곳에 추가합니다.
-			for (let i = 0; i < 1; i++) {
-				let targetId = "donut" + i;
-				console.log($(".card").width());
-				let cardWidth = $(".card").width();
-				drawDonutChart_report(targetId, mock, cardWidth);
-			}
 			let mock1 = {
 				"total": 5,
 				"in-progress": 2,
@@ -111,8 +137,15 @@ function execDocReady() {
 				"resolved": 1,
 				"closed": 1
 			};
-			donutChart_fullDataSheet("donut1", mock1);
-
+			// 스크립트 실행 로직을 이곳에 추가합니다.
+			for (let i = 0; i < 2; i++) {
+				let targetId = "donut" + i;
+				let chartData;
+				if (i===0) { chartData = mock;}
+				if (i===1) { chartData = mock1;}
+				//drawDonutChart_report(targetId, mock, cardWidth);
+				donutChart_fullDataSheet(targetId, chartData);
+			}
 
 		})
 		.catch(function(e) {
@@ -310,4 +343,88 @@ function setEdgeDateRange(versionData) {
 
 	$('#date_timepicker_start').datetimepicker('setOptions', { value: minMaxDate.min });
 	$('#date_timepicker_end').datetimepicker('setOptions', { value: minMaxDate.max });
+}
+
+////////////////////////////////////////
+// resource 목록 정보.
+////////////////////////////////////////
+function drawResourceTable(tableData) {
+	var columnList = [
+		{
+			name: "assignee_displayName",
+			title: "작업자 명",
+			data: "assignee_displayName",
+			className: "dt-body-center",
+			visible: true,
+			render: function (data, type, row, meta) {
+				if (type === "display") {
+					return '<label style="color: #a4c6ff">' + data + "</label>";
+				}
+				return data;
+			}
+		},
+		{
+			name: "assignee_emailAddress",
+			title: "작업자 메일",
+			data: "assignee_emailAddress",
+			className: "dt-body-center",
+			visible: true,
+			render: function (data, type, row, meta) {
+				if (type === "display") {
+					return '<label style="color: #a4c6ff">' + data +
+						"</label>";
+				}
+				return data;
+			}
+		}
+	];
+	var rowsGroupList = [];
+	var jquerySelector = "#resource_table";
+	var ajaxUrl = "";
+	var jsonRoot = "";
+	var buttonList = [];
+	var selectList = {};
+	var isServerSide = false;
+	var isAjax = false;
+	var columnDefList = [];
+	var orderList = [[0, "asc"]];
+	console.log(tableData);
+	resourceDataTable = dataTable_build(
+		jquerySelector,
+		ajaxUrl,
+		jsonRoot,
+		columnList,
+		rowsGroupList,
+		columnDefList,
+		selectList,
+		orderList,
+		buttonList,
+		isServerSide,
+		null,
+		tableData,
+		isAjax
+	);
+
+	// $("#reqstatustable").on('page.dt', function() {
+	// 	scrollPos = $(window).scrollTop();
+	// 	$(window).scrollTop(scrollPos);
+	// });
+
+}
+
+// -------------------- 데이터 테이블을 만드는 템플릿으로 쓰기에 적당하게 리팩토링 함. ------------------ //
+
+// 데이터 테이블 구성 이후 꼭 구현해야 할 메소드 : 열 클릭시 이벤트
+function dataTableClick(tempDataTable, selectedData) {
+	console.log(selectedData);
+}
+
+// 데이터 테이블 데이터 렌더링 이후 콜백 함수.
+function dataTableCallBack(settings, json) {
+	console.log("check");
+}
+
+function dataTableDrawCallback(tableInfo) {
+//	resourceDataTable.columns.adjust();
+	console.log(tableInfo);
 }
