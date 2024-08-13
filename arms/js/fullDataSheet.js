@@ -7,6 +7,8 @@ var versionListData;
 var resourceDataTable; //
 var selectedIndex; // 데이터테이블 선택한 인덱스
 var selectedPage; // 데이터테이블 선택한 인덱스
+
+var excelMock;//
 ////////////////////////////////////////////////////////////////////////////////////////
 //Document Ready
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -56,7 +58,17 @@ function execDocReady() {
 			"../reference/jquery-plugins/dataTables-1.10.16/extensions/Buttons/js/buttons.print.js",
 			"../reference/jquery-plugins/dataTables-1.10.16/extensions/Buttons/js/jszip.min.js"
 		],
-
+		[
+			"../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jsuites.js",
+			"../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/index.js",
+			"../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jsuites.css",
+			"../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jspreadsheet.css",
+			"../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jspreadsheet.datatables.css",
+			"../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jspreadsheet.theme.css",
+			"./js/common/jspreadsheet/spreadsheet.js",
+			"./css/jspreadsheet/custom_icon.css",
+			"./css/jspreadsheet/custom_sheet.css"
+		],
 		[
 			//chart Colors
 			"./js/common/colorPalette.js",
@@ -146,6 +158,41 @@ function execDocReady() {
 				//drawDonutChart_report(targetId, mock, cardWidth);
 				donutChart_fullDataSheet(targetId, chartData);
 			}
+			excelMock = [
+					{
+					"제품(서비스) 키": "25",
+					"제품(서비스) 명": "ALM RMS",
+					"버전 키": "77",
+					"버전 명": "24년8월",
+					"작업자 명": "YHS",
+					"C_REQ_LINK": "3",
+					"요구사항 구분": "요구사항",
+					"ALM 이슈 제목": "요구사항 이슈입니다. 해결해주세요",
+					"ALM 이슈 상태": "진행 중(in-progress)",
+					"ALM 이슈 우선순위": "높음",
+					"ALM 이슈 생성일": "2024/08/01",
+					"ALM 이슈 수정일": "2024/08/05",
+					"ALM 이슈 해결일": "",
+					"ALM 이슈 삭제여부": ""
+				},
+				{
+					"제품(서비스) 키": "25",
+					"제품(서비스) 명": "ALM RMS",
+					"버전 키": "76",
+					"버전 명": "24년7월",
+					"작업자 명": "HSH",
+					"C_REQ_LINK": "6",
+					"요구사항 구분": "요구사항",
+					"ALM 이슈 제목": "요구사항 이슈입니다. 해결해주세요",
+					"ALM 이슈 상태": "해결됨(resolved)",
+					"ALM 이슈 우선순위": "높음",
+					"ALM 이슈 생성일": "2024/07/21",
+					"ALM 이슈 수정일": "2024/08/01",
+					"ALM 이슈 해결일": "2024/08/05",
+					"ALM 이슈 삭제여부": ""
+				}
+			];
+
 
 		})
 		.catch(function(e) {
@@ -201,6 +248,7 @@ function makePdServiceSelectBox() {
 		// 디폴트는 base version 을 선택하게 하고 ( select all )
 		//~> 이벤트 연계 함수 :: Version 표시 jsTree 빌드
 		bind_VersionData_By_PdService();
+		drawExcel("spreadsheet", excelMock);
 	});
 } // end makePdServiceSelectBox()
 
@@ -388,7 +436,7 @@ function drawResourceTable(tableData) {
 	var isAjax = false;
 	var columnDefList = [];
 	var orderList = [[0, "asc"]];
-	console.log(tableData);
+	// console.log(tableData);
 	resourceDataTable = dataTable_build(
 		jquerySelector,
 		ajaxUrl,
@@ -428,3 +476,125 @@ function dataTableDrawCallback(tableInfo) {
 //	resourceDataTable.columns.adjust();
 	console.log(tableInfo);
 }
+
+/////////////////////////////////////////////////////
+// 엑셀 그리기
+/////////////////////////////////////////////////////
+function drawExcel(targetId, data) {
+	console.log("fullDataSheet :: drawExcel");
+	console.log(data);
+	let $targetId = "#" + targetId;
+
+	if($($targetId)[0].jexcel) {
+		console.log($($targetId)[0].jexcel);
+		$($targetId)[0].jexcel.destroy();
+	}
+	console.log("width=> " + $($targetId).width());
+	var excelWidth=$($targetId).width() - 50;
+
+	var columnList = [
+		{ readOnly: true, type: "text", title: "제품(서비스) 키", wRatio: 0.1}, //0
+		{ readOnly: true, type: "text", title: "제품(서비스) 명", wRatio: 0.1},
+		{ readOnly: true, type: "text", title: "버전 키", wRatio: 0.05},
+		{ readOnly: true, type: "text", title: "버전 명", wRatio: 0.1},
+		{ readOnly: true, type: "text", title: "작업자", wRatio: 0.05}, //4
+		{ readOnly: true, type: "text", title: "C_REQ_LINK", wRatio: 0.05},
+		{ readOnly: true, type: "text", title: "요구사항 구분", wRatio: 0.1}, // 요구사항 이슈, 연결이슈, 하위이슈
+		{ readOnly: true, type: "text", title: "ALM 이슈 제목", wRatio: 0.2},
+		{ readOnly: true, type: "text", title: "ALM 이슈 상태",	wRatio: 0.1},
+		{ readOnly: true, type: "text", title: "ALM 이슈 우선순위", wRatio: 0.1}, //9
+		{ readOnly: true, type: "calendar", title: "ALM 이슈 생성일", wRatio: 0.1},
+		{ readOnly: true, type: "calendar", title: "ALM 이슈 수정일", wRatio: 0.1},
+		{ readOnly: true, type: "calendar", title: "ALM 이슈 해결일", wRatio: 0.1},
+		{ readOnly: true, type: "text", title: "ALM 이슈 삭제여부", wRatio: 0.1}
+	];
+
+	SpreadSheetFunctions.setColumns(columnList);
+	SpreadSheetFunctions.setColumnWidth(excelWidth);
+
+	var customOptions = {
+		pagination:10,
+		contextMenu: [],
+		updateTable: function(instace, cell, col, row, val, id) {
+			cell.style.whiteSpace = "normal";
+			if(col === 0 || col === 2 || col ===5) {
+				cell.style.textAlign = "right";
+				cell.style.color = "#a4c6ff";
+			} else if (col === 1 || col === 4 || col === 7) {
+				cell.style.textAlign = "left";
+			}
+		}
+	};
+
+	SpreadSheetFunctions.setExcelData(data);
+	SpreadSheetFunctions.setOptions(customOptions);
+
+	$($targetId).spreadsheet($.extend({}, {
+		columns: SpreadSheetFunctions.getColumns(),
+		data: SpreadSheetFunctions.getExcelData()
+	}, SpreadSheetFunctions.getOptions()));
+}
+
+var SpreadSheetFunctions = ( function () {
+	let $tabFunction_data;   // 엑셀 데이터
+	let $tabFunction_columns;// 엑셀 컬럼
+	let $tabFunction_options;// 엑셀 (커스텀)옵션 :: 정의 안할 경우 default
+	let $sheetInstance;
+	var setESheet = function(obj) {
+		$sheetInstance = obj;
+	};
+	var setExcelData = function(data) {
+		$tabFunction_data = data;
+	};
+	var getExcelData = function () {
+		return $tabFunction_data;
+	};
+	var setColumns = function(columns) {
+		console.log("setColumns");
+		$tabFunction_columns = columns;
+	};
+	var getColumns = function () {
+		return $tabFunction_columns;
+	};
+	var setOptions = function(options) {
+		$tabFunction_options = options;
+	};
+	var getOptions = function() {
+		return $tabFunction_options ? $tabFunction_options : null;
+	};
+
+	var setColumnWidth = function (width) {
+		$tabFunction_columns = $tabFunction_columns.map(column => ({
+			...column, width: width * column.wRatio
+		}));
+	};
+
+	var resizeObserver = new ResizeObserver(function(entries) {
+		for (let entry of entries) {
+			var width = entry.contentRect.width;
+			var height = entry.contentRect.height;
+			handleResize(entry.target.id, width, height);
+		}
+	});
+
+	// 모달요소 크기 변화 관찰
+	resizeObserver.observe(document.getElementById('spreadsheet'));
+
+	function handleResize(id,width, height) {
+		if (id ==="spreadsheet" && height !== 0) {
+			console.log("handleResize")
+			// if (Object.keys(인력별_연봉정보).length > 0) {
+			// 	drawExcel("spreadsheet", 인력별_연봉정보);
+			// } else {
+			// 	console.log("인력별_연봉정보 데이터가 없습니다.");
+			// }
+		}
+	}
+
+	return {
+		setExcelData, getExcelData,
+		setColumns, getColumns,
+		setOptions, getOptions,
+		setColumnWidth
+	};
+})();
