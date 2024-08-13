@@ -104,6 +104,8 @@ function donutChart_fullDataSheet(targetId, data) {
 		legend: {
 			top: "80%",
 			left: 'center',
+			itemWidth: 10,  // 아이콘의 너비
+			itemHeight: 10, // 아이콘의 높이
 			textStyle: {
 				fontSize: 12,   // 폰트 크기 설정
 				color: '#FFF'   // 폰트 색상 설정
