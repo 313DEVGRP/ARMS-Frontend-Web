@@ -55,7 +55,7 @@ function execDocReady() {
 
 			//사이드 메뉴 처리
 			$('.widget').widgster();
-			setSideMenu("sidebar_menu_product", "sidebar_menu_version_manage");
+			setSideMenu("sidebar_menu_report", "sidebar_menu_report_swot");
 
 			// 스크립트 실행 로직을 이곳에 추가합니다.
 			const svg = d3.select('#matrix');

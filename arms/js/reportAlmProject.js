@@ -58,28 +58,13 @@ function execDocReady() {
 			"../reference/jquery-plugins/dataTables-1.10.16/extensions/Buttons/js/buttons.print.js",
 			"../reference/jquery-plugins/dataTables-1.10.16/extensions/Buttons/js/jszip.min.js"
 		],
-		[
-			"../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jsuites.js",
-			"../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/index.js",
-			"../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jsuites.css",
-			"../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jspreadsheet.css",
-			"../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jspreadsheet.datatables.css",
-			"../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jspreadsheet.theme.css",
-			"./js/common/jspreadsheet/spreadsheet.js",
-			"./css/jspreadsheet/custom_icon.css",
-			"./css/jspreadsheet/custom_sheet.css"
-		],
+
 		[
 			//chart Colors
 			"./js/common/colorPalette.js",
 			// Apache Echarts
 			"../reference/jquery-plugins/echarts-5.4.3/dist/echarts.min.js",
 			"./js/common/chart/eCharts/donutChart.js",
-			// c3 차트(도넛)
-			"../reference/jquery-plugins/d3-5.16.0/d3.min.js",
-			"../reference/jquery-plugins/c3-0.7.20/c3.min.css",
-			"../reference/jquery-plugins/c3-0.7.20/c3.js",
-			"./js/common/chart/d3/donutChart.js"
 		]
 		// 추가적인 플러그인 그룹들을 이곳에 추가하면 됩니다.
 	];
@@ -91,7 +76,7 @@ function execDocReady() {
 
 			//사이드 메뉴 처리
 			$('.widget').widgster();
-			setSideMenu("sidebar_menu_report", "sidebar_menu_report_full_data");
+			setSideMenu("sidebar_menu_report", "sidebar_menu_report_alm_project");
 
 
 			//제품(서비스) 셀렉트 박스 이니시에이터
@@ -106,26 +91,26 @@ function execDocReady() {
 				"assignee_emailAddress": "JY.J@abcde.com",
 				"assignee_displayName": "JJY"
 			},
-			{
-				"assignee_accountId": "712020:ecc44245-6be8-4962-9a66-888bdb4f8e3a",
-				"assignee_emailAddress": "HS.Y@abcde.com",
-				"assignee_displayName": "YHS"
-			},
-			{
-				"assignee_accountId": "616f6f04860f78006bbafe38",
-				"assignee_emailAddress": "SH.H@abcde.com",
-				"assignee_displayName": "HSH"
-			},
-			{
-				"assignee_accountId": "63b2a039159df2c252e826e9",
-				"assignee_emailAddress": "DM.L@abcde.com",
-				"assignee_displayName": "LDM"
-			},
-			{
-				"assignee_accountId": "621ee5a449c90000701efe06",
-				"assignee_emailAddress": "MG.L@abcde.com",
-				"assignee_displayName": "LMG"
-			}];
+				{
+					"assignee_accountId": "712020:ecc44245-6be8-4962-9a66-888bdb4f8e3a",
+					"assignee_emailAddress": "HS.Y@abcde.com",
+					"assignee_displayName": "YHS"
+				},
+				{
+					"assignee_accountId": "616f6f04860f78006bbafe38",
+					"assignee_emailAddress": "SH.H@abcde.com",
+					"assignee_displayName": "HSH"
+				},
+				{
+					"assignee_accountId": "63b2a039159df2c252e826e9",
+					"assignee_emailAddress": "DM.L@abcde.com",
+					"assignee_displayName": "LDM"
+				},
+				{
+					"assignee_accountId": "621ee5a449c90000701efe06",
+					"assignee_emailAddress": "MG.L@abcde.com",
+					"assignee_displayName": "LMG"
+				}];
 
 			drawResourceTable(mockAssignees);
 
@@ -159,7 +144,7 @@ function execDocReady() {
 				donutChart_fullDataSheet(targetId, chartData);
 			}
 			excelMock = [
-					{
+				{
 					"제품(서비스) 키": "25",
 					"제품(서비스) 명": "ALM RMS",
 					"버전 키": "77",
@@ -268,14 +253,14 @@ function bind_VersionData_By_PdService() {
 					var obj = data.response[k];
 					pdServiceVersionIds.push(obj.c_id);
 					versionListData.push({"c_id" : obj.c_id, "c_title" : obj.c_title,
-																"start_date" : obj.c_pds_version_start_date,
-																"end_date" : obj.c_pds_version_end_date});
+						"start_date" : obj.c_pds_version_start_date,
+						"end_date" : obj.c_pds_version_end_date});
 					var newOption = new Option(obj.c_title, obj.c_id, true, false);
 					$(".multiple-select").append(newOption);
 				}
 				var versionTag = $(".multiple-select").val();
 				selectedVersionId = pdServiceVersionIds.join(",");
-				
+
 				// 시작일 종료일 세팅(datetimepicker)
 				setEdgeDateRange(versionListData);
 
