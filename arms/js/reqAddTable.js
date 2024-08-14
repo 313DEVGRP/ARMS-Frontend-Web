@@ -35,12 +35,14 @@ const ReqDifficulty = {
 
 var ReqStatus = {};
 var req_state_map = {};
-const ReqStatusEnglish = {
-	open: 10,
-	investigation: 11,
-	resolved: 12,
-	closeStatus: 13
-};
+
+// 상태 카테고리별 클래스 추가
+const req_state_category_class_map = {
+	"3": "open",
+	"4": "investigation",
+	"5": "resolved",
+	"6": "closeStatus",
+}
 
 const getReqWriterName = (writerId) =>{
     let writer = writerId.match(/\[(.*?)\]/);
@@ -57,19 +59,15 @@ const createUUID = () => {
 
 const calcStatus = (arr) =>
 	arr.reduce((acc, cur) => {
-		const open = Number(acc?.open ?? 0) + Number(cur.open),
-			investigation = Number(acc?.investigation ?? 0) + Number(cur.investigation),
-			resolved = Number(acc?.resolved ?? 0) + Number(cur.resolved),
-			closeStatus = Number(acc?.closeStatus ?? 0) + Number(cur.closeStatus),
-			statusTotal = open + investigation + resolved + closeStatus;
+		// 상태별 개수 카운팅
+		const result = { statusTotal: 0 };
 
-		return {
-			open,
-			investigation,
-			resolved,
-			closeStatus,
-			statusTotal
-		};
+		Object.keys(ReqStatus).map((state) => {
+			result[state] = Number(acc?.[state] ?? 0) + Number(cur[state]);
+			result.statusTotal += result[state];
+		});
+
+		return result;
 	}, {});
 
 const getDate = (stamp) => {
@@ -204,16 +202,17 @@ const mapperPivotTableData = (data) => {
 								version: version,
 								assignee: "담당자 미배정",
 								_assignee: "담당자 미배정",
-								open: reqStateEntity?.c_id === 10 ? 1 : "",
-								investigation: reqStateEntity?.c_id === 11 ? 1 : "",
-								resolved: reqStateEntity?.c_id === 12 ? 1 : "",
-								closeStatus: reqStateEntity?.c_id === 13 ? 1 : "",
 								statusTotal: "",
 								...depthInfo,
 								content: c_title,
 								origin: cur,
 								c_parentid: c_parentid
 						};
+
+				// 상태 컬럼 동적 반영
+				Object.keys(ReqStatus).map(state => {
+					row_data[state] = reqStateEntity?.c_id === ReqStatus[state] ? 1 : "";
+				});
 
                 acc.push(row_data);
             });
@@ -230,16 +229,18 @@ const mapperPivotTableData = (data) => {
 									version: version,
 									assignee:  담당자_이름, //getReqWriterName(c_req_writer),
 									_assignee: 담당자_아이디,
-									open: reqStateEntity?.c_id === 10 ? 1 : "",
-									investigation: reqStateEntity?.c_id === 11 ? 1 : "",
-									resolved: reqStateEntity?.c_id === 12 ? 1 : "",
-									closeStatus: reqStateEntity?.c_id === 13 ? 1 : "",
 									statusTotal: "",
 									...depthInfo,
 									content: c_title,
 									origin: cur,
 									c_parentid: c_parentid
 								};
+
+						// 상태 컬럼 동적 반영
+						Object.keys(ReqStatus).map(state => {
+							row_data[state] = reqStateEntity?.c_id === ReqStatus[state] ? 1 : "";
+						});
+
                         acc.push(row_data);
                     });
                 }
@@ -273,141 +274,142 @@ class Table {
 		this.$data = this.setTableData();
 	}
 
-	setTableData(data) {
-		if (pivotType === "normal") {
+	setTableData() {
+		folderDepth = {};
+		for (let i = 1; i <= maxDepth; i++) {
+			folderDepth[`depth${i}`] = `Depth${i}`;
+		}
 
-            for (let i = 1; i <= maxDepth; i++) {
-                folderDepth[`depth${i}`] = `Depth${i}`;
-            }
-            ContentType["normal"] = {
-                version: "버전",
-                assignee: "담당자",
-                ...folderDepth,
-        		content: "요구사항 제목",
-        		status: "상태",
-        		priority: "우선순위",
-        		difficulty: "난이도",
-        		createDate: "생성일",
-        		startDate: "시작일",
-        		endDate: "종료일"
-            };
+		const contentTypeBase = {
+			version: "버전",
+			assignee: "담당자",
+			...folderDepth,
+			content: "요구사항 제목"
+		};
+
+		const filtered_data = (data) => data.filter(item => item.origin && item.origin.attr && item.origin.attr.rel !== "folder");
+
+		const sortData = (data, ...criteria) => data.sort((a, b) => {
+			for (const criterion of criteria) {
+				const comparison = criterion(a, b);
+				if (comparison !== 0) return comparison;
+			}
+			return 0;
+		});
+
+		const sort_by_version_and_parent = (a, b) => a._version - b._version || a.c_parentid - b.c_parentid;
+		const sort_by_assignee_and_parent = (a, b) => a.assignee?.localeCompare(b.assignee) || a.c_parentid - b.c_parentid;
+		const sort_by_assignee_version_and_parent = (a, b) => a.assignee?.localeCompare(b.assignee) || a._version - b._version || a.c_parentid - b.c_parentid;
+
+		if (pivotType === "normal") {
+			ContentType["normal"] = {
+				...contentTypeBase,
+				status: "상태",
+				priority: "우선순위",
+				difficulty: "난이도",
+				createDate: "생성일",
+				startDate: "시작일",
+				endDate: "종료일"
+			};
 
 			return tableData
-			.filter((item) => item.category !== "Group") // 폴더 제거
-			.sort((a, b) =>  a._version - b._version || a.c_parentid - b.c_parentid);; // 정렬
+				.filter(item => item.category !== "Group")
+				.sort(sort_by_version_and_parent);
 		}
 
 		if (pivotType === "version") {
-		    for (let i = 1; i <= maxDepth; i++) {
-                folderDepth[`depth${i}`] = `Depth${i}`;
-            }
-            ContentType["version"] = {
-                version: "버전",
-                assignee: "담당자",
-                ...folderDepth,
-                content: "요구사항 제목",
-                open: "열림",
-                investigation: "진행중",
-                resolved: "해결됨",
-                closeStatus: "닫힘",
-                statusTotal: "총계"
-            };
-            console.log(folderDepth.length);
-			return versionList.map((version) => {
-				const filterItems = pivotTableData
-					.filter((item) => item.origin && item.origin.attr && item.origin.attr.rel !== "folder") // 폴더 제거
-					.filter((item) => item.version?.includes(`${version.c_id}`))
-					.sort((a, b) => a.assignee?.localeCompare(b.assignee) ||
-                    				    a.c_parentid - b.c_parentid); // 데이터 정렬
+			ContentType["version"] = {
+				...contentTypeBase
+			};
 
-				const childrenItem = rearrangement(filterItems, "assignee", "assignee", {
+			Object.keys(ReqStatus).map(state => {
+				ContentType["version"][state] = state;
+			});
+			ContentType["version"].statusTotal = "총계";
+
+			return versionList.map(version => {
+				const filteredItems = filtered_data(pivotTableData)
+					.filter(item => item.version?.includes(`${version.c_id}`))
+					.sort(sort_by_assignee_and_parent);
+
+				const childrenItems = rearrangement(filteredItems, "assignee", "assignee", {
 					version: version.c_title,
 					_version: version.c_id
-				}).reduce((acc, cur) => {
-					return [
-						...acc,
-						{
-							...cur[0],
-							children: cur.slice(1, cur.length),
-							lastChild: {
-								_version: version.c_id,
-								assignee: `${cur[0].assignee} 총계`,
-								_assignee: cur[0]._assignee,
-								col: 1,
-								colSpan: 2+maxDepth,
-								node:"leaf",
-								origin: version,
-								...calcStatus(cur)
-							}
+				}).reduce((acc, cur) => ([
+					...acc,
+					{
+						...cur[0],
+						children: cur.slice(1),
+						lastChild: {
+							_version: version.c_id,
+							assignee: `${cur[0].assignee} 총계`,
+							_assignee: cur[0]._assignee,
+							col: 1,
+							colSpan: 2 + maxDepth,
+							node: "leaf",
+							origin: version,
+							...calcStatus(cur)
 						}
-					];
-				}, []);
+					}
+				]), []);
+
 				return {
 					version: `${version.c_title} 총계`,
 					_version: version.c_id,
 					col: 0,
-					colSpan: 3+maxDepth,
+					colSpan: 3 + maxDepth,
 					root: "version",
 					origin: version,
-					node:"root",
-					children: childrenItem,
-					...calcStatus(filterItems)
+					node: "root",
+					children: childrenItems,
+					...calcStatus(filteredItems)
 				};
 			});
 		}
 
 		if (pivotType === "owner") {
-		    for (let i = 1; i <= maxDepth; i++) {
-                folderDepth[`depth${i}`] = `Depth${i}`;
-            }
-            ContentType["owner"] = {
-                assignee: "담당자",
-                version: "버전",
-                ...folderDepth,
-                content: "요구사항 제목",
-                open: "열림",
-                investigation: "진행중",
-                resolved: "해결됨",
-                closeStatus: "닫힘",
-                statusTotal: "총계"
-            };
-			const 모든_요구사항데이터 = pivotTableData
-				.filter((item) => item.origin && item.origin.attr && item.origin.attr.rel !== "folder") // 폴더 제외(요구사항만 포함)
-				.flatMap(task => {
-                    const versions = Array.isArray(task.version) ? task.version : [task.version];
-                    return versions.reduce((acc, cur) => {
-                    const versionItem = versionList.find(item => item.c_id === Number(cur));
-                    return [...acc, { ...task, _version: versionItem.c_id, version: versionItem.c_title }];
-                    }, []);
-                })
-				.sort((a, b) => a.assignee?.localeCompare(b.assignee) ||
-				    a._version - b._version ||
-				    a.c_parentid - b.c_parentid); // 데이터 정렬
+			ContentType["owner"] = {
+				assignee: "담당자",
+				version: "버전",
+				...contentTypeBase
+			};
+			Object.keys(ReqStatus).map(state => {
+				ContentType["owner"][state] = state;
+			});
+			ContentType["owner"].statusTotal = "총계";
 
-			return rearrangement(모든_요구사항데이터, "assignee", "assignee").map((group) => ({
+			const all_requirement_data = filtered_data(pivotTableData)
+				.flatMap(task => {
+					const versions = Array.isArray(task.version) ? task.version : [task.version];
+					return versions.reduce((acc, cur) => {
+						const versionItem = versionList.find(item => item.c_id === Number(cur));
+						return [...acc, { ...task, _version: versionItem.c_id, version: versionItem.c_title }];
+					}, []);
+				})
+				.sort(sort_by_assignee_version_and_parent);
+
+			return rearrangement(all_requirement_data, "assignee", "assignee").map(group => ({
 				assignee: `${group[0].assignee} 총계`,
 				_assignee: group[0]._assignee,
 				col: 0,
-				colSpan: 3+maxDepth,
+				colSpan: 3 + maxDepth,
 				root: "assignee",
-				node:"root",
-				children: rearrangement(group, "version", "version").reduce((acc, cur) => {
-					return [
-						...acc,
-						{
-							...cur[0],
-							children: cur.slice(1, cur.length),
-							lastChild: {
-								assignee: `${cur[0].version}의 총계`,
-								_assignee: group[0]._assignee,
-								col: 0,
-								colSpan: 3+maxDepth,
-								...calcStatus(cur),
-							    node:"leaf"
-							},
+				node: "root",
+				children: rearrangement(group, "version", "version").reduce((acc, cur) => ([
+					...acc,
+					{
+						...cur[0],
+						children: cur.slice(1),
+						lastChild: {
+							assignee: `${cur[0].version}의 총계`,
+							_assignee: group[0]._assignee,
+							col: 0,
+							colSpan: 3 + maxDepth,
+							node: "leaf",
+							...calcStatus(cur)
 						}
-					];
-				}, []),
+					}
+				]), []),
 				...calcStatus(group)
 			}));
 		}
@@ -598,10 +600,15 @@ class Table {
 			Object.keys(ContentType[pivotType]).forEach((key, index) => {
 				const $col = this.makeElement(tag);
 				$col.className = key;
+				if (req_state_map[ReqStatus[key]] && req_state_map[ReqStatus[key]].reqStateCategoryEntity) {
+					$col.className = req_state_category_class_map[req_state_map[ReqStatus[key]].reqStateCategoryEntity.c_id];
+					$col.setAttribute('data-title', key);
+				}
 
                 if(['content'].includes($col.className) && (tag !== "th")){
                     $col.prepend(this.makeEditableButton(cur,  key));
-                }else if (cur[key]) {
+                }
+				else if (cur[key]) {
 					$col.innerHTML = cur[key];
 				}
 
@@ -627,11 +634,13 @@ class Table {
 					if (pivotType === "version"){
 					    $tr.removeAttribute('data-assignee');
 					}
-				}else{
-                    if(['open', 'investigation', 'resolved', 'closeStatus'].includes($col.className)){
-                        const checkedAttribute = $col.innerHTML === "1" ? " checked" : "";
-                        $col.innerHTML = `<input type="radio" name="${radioButtonName}"${checkedAttribute}>`;
-                    }
+				}
+				else {
+					var data_title_value = $col.getAttribute('data-title');
+					if (data_title_value) {
+						const checkedAttribute = $col.innerHTML === "1" ? " checked" : "";
+						$col.innerHTML = `<input type="radio" name="${radioButtonName}" ${checkedAttribute}>`;
+					}
 				}
 
 				if (['assignee'].includes($col.className) && $col.innerHTML === "담당자 미배정") {
@@ -776,7 +785,9 @@ class Table {
             dataToSend.c_req_state_link = editContents.statusId;
             dataToSend.c_req_pdservice_versionset_link = c_req_pdservice_versionset_link;
             dataToSend.c_title = reqData.c_title;
-        }if(editContents.priorityId) dataToSend.c_req_priority_link = editContents.priorityId;
+        }
+
+		if(editContents.priorityId) dataToSend.c_req_priority_link = editContents.priorityId;
         if(editContents.difficultyId) dataToSend.c_req_difficulty_link = editContents.difficultyId;
         if(editContents.content) dataToSend.c_title = editContents.content;
 
@@ -788,10 +799,11 @@ class Table {
             dataToSend.c_req_end_date = new Date(editContents.endDate);
         }
 
-        if( dataToSend.c_req_state_link || dataToSend.c_req_priority_link || dataToSend.c_req_difficulty_link || dataToSend.c_req_start_date || dataToSend.c_req_end_date) {
+        if(dataToSend.c_req_state_link || dataToSend.c_req_priority_link || dataToSend.c_req_difficulty_link || dataToSend.c_req_start_date || dataToSend.c_req_end_date) {
             // DB까지만 변경 필요한 경우
             tableOptions.onDBUpdate(tableOptions.id, dataToSend);
-        } else {
+        }
+		else {
            const versionSetLink = res.find(item => item.c_id === reqId);
            tableOptions.onUpdate(tableOptions.id, {
                 c_id: reqId,
@@ -950,8 +962,8 @@ class Table {
 			}
 
             if (e.target.type === "radio") {
-                editContents.statusId =ReqStatus[tdElement.className];
-                this.updateData(trElement.dataset.id,editContents);
+                editContents.statusId = ReqStatus[tdElement.getAttribute("data-title")];
+                this.updateData(trElement.dataset.id, editContents);
             }
 
 			// select a 태그(상태, 난이도, 우선순위 명칭)
