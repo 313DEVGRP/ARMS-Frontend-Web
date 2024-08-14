@@ -82,6 +82,10 @@
                 id="sidebar_menu_product_jira_connect">
                 <a href="/arms/template.html?page=jiraConnection" data-locale="nav.alm.c">연결 관리</a>
             </li>
+			<li class=""
+				id="sidebar_menu_state_mapping">
+				<a href="/arms/template.html?page=mapping" data-locale="nav.alm.m">상태 관리</a>
+			</li>
         </ul>
     </li>
 
@@ -94,10 +98,6 @@
 			Requirement
 		</span>
 		<ul id="requirement_elements_collapse">
-			<li class=""
-				id="sidebar_menu_requirement_state_mapping">
-				<a href="/arms/template.html?page=mapping" data-locale="nav.requirement.m">상태 관리</a>
-			</li>
 			<li class=""
 				id="sidebar_menu_requirement_regist">
 				<a href="/arms/template.html?page=reqAdd" data-locale="nav.requirement.q">요구 관리</a>
@@ -258,6 +258,40 @@
         </ul>
     </li>
 
+</ul>
+
+<h5 class="sidebar-nav-title">
+	상태 카테고리
+</h5>
+<!-- some styled links in sidebar. ready to use as links to email folders, projects, groups, etc -->
+<ul class="sidebar-labels">
+	<li>
+		<a>
+			<!-- yep, .circle again -->
+			<i class="fa fa-folder-o text-danger" style="margin-right: 8px;"></i>
+			<span class="label-name font11"> 열림</span>
+		</a>
+	</li>
+	<li>
+		<a>
+			<!-- yep, .circle again -->
+			<i class="fa fa-fire" style="color: #E49400; margin-right: 8px;"></i>
+			<span class="label-name font11"> 진행중</span>
+		</a>
+	</li>
+	<li>
+		<a>
+			<!-- yep, .circle again -->
+			<i class="fa fa-fire-extinguisher text-success" style="margin-right: 8px;"></i>
+			<span class="label-name font11"> 해결됨</span>
+		</a>
+	</li>
+	<li>
+		<a>
+			<i class="fa fa-folder text-primary" style="margin-right: 8px;"></i>
+			<span class="label-name font11"> 닫힘</span>
+		</a>
+	</li>
 </ul>
 
 <h5 class="sidebar-nav-title">
