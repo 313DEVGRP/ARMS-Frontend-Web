@@ -20,8 +20,8 @@
 			"c": "<span style='font-size:12px;'>Cost Analysis</span>"
 		},
 		"report": {
-			"f": "<span style='font-size:12px;'>Full Data Sheet</span>",
-			"s": "<span style='font-size:12px;'>SWOT Sheet</span>"
+			"f": "<span style='font-size:12px;'>Full Data Report</span>",
+			"s": "<span style='font-size:12px;'>SWOT Report</span>"
 		},
 		"community": {
 			"n": "<span style='font-size:12px;'>Notice Board</span>",
