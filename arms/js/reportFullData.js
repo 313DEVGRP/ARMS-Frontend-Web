@@ -72,14 +72,6 @@ function execDocReady() {
 		[
 			//chart Colors
 			"./js/common/colorPalette.js",
-			// Apache Echarts
-			"../reference/jquery-plugins/echarts-5.4.3/dist/echarts.min.js",
-			"./js/common/chart/eCharts/donutChart.js",
-			// c3 차트(도넛)
-			"../reference/jquery-plugins/d3-5.16.0/d3.min.js",
-			"../reference/jquery-plugins/c3-0.7.20/c3.min.css",
-			"../reference/jquery-plugins/c3-0.7.20/c3.js",
-			"./js/common/chart/d3/donutChart.js"
 		]
 		// 추가적인 플러그인 그룹들을 이곳에 추가하면 됩니다.
 	];
@@ -134,30 +126,6 @@ function execDocReady() {
 				target: $('.top-menu-div-default')
 			});
 
-			let mock = {
-				"total": 5,
-				"folder": 4,
-				"in-progress": 1,
-				"open": 2,
-				"resolved": 1,
-				"closed": 1
-			};
-			let mock1 = {
-				"total": 5,
-				"in-progress": 2,
-				"open": 1,
-				"resolved": 1,
-				"closed": 1
-			};
-			// 스크립트 실행 로직을 이곳에 추가합니다.
-			for (let i = 0; i < 2; i++) {
-				let targetId = "donut" + i;
-				let chartData;
-				if (i===0) { chartData = mock;}
-				if (i===1) { chartData = mock1;}
-				//drawDonutChart_report(targetId, mock, cardWidth);
-				donutChart_fullDataSheet(targetId, chartData);
-			}
 			excelMock = [
 					{
 					"제품(서비스) 키": "25",
@@ -497,8 +465,8 @@ function drawExcel(targetId, data) {
 		{ readOnly: true, type: "text", title: "제품(서비스) 명", wRatio: 0.1},
 		{ readOnly: true, type: "text", title: "버전 키", wRatio: 0.05},
 		{ readOnly: true, type: "text", title: "버전 명", wRatio: 0.1},
-		{ readOnly: true, type: "text", title: "작업자", wRatio: 0.05}, //4
-		{ readOnly: true, type: "text", title: "C_REQ_LINK", wRatio: 0.05},
+		{ readOnly: true, type: "text", title: "작업자", wRatio: 0.1}, //4
+		{ readOnly: true, type: "text", title: "C_REQ_LINK", wRatio: 0.08},
 		{ readOnly: true, type: "text", title: "요구사항 구분", wRatio: 0.1}, // 요구사항 이슈, 연결이슈, 하위이슈
 		{ readOnly: true, type: "text", title: "ALM 이슈 제목", wRatio: 0.2},
 		{ readOnly: true, type: "text", title: "ALM 이슈 상태",	wRatio: 0.1},
