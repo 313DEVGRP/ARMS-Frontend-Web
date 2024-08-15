@@ -8,7 +8,8 @@ var resourceDataTable; //
 var selectedIndex; // 데이터테이블 선택한 인덱스
 var selectedPage; // 데이터테이블 선택한 인덱스
 
-var excelMock;//
+var table;
+var mockData = {assignees : "", excelMock: ""};//
 ////////////////////////////////////////////////////////////////////////////////////////
 //Document Ready
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -64,7 +65,9 @@ function execDocReady() {
 			"./css/jspreadsheet/custom_icon.css",
 			"./css/jspreadsheet/custom_sheet.css",
 			//chart Colors
-			"./js/common/colorPalette.js"
+			"./js/common/colorPalette.js",
+			"./js/common/table.js",
+			"./js/report/resourceTable.js"
 			// 추가적인 플러그인 그룹들을 이곳에 추가하면 됩니다.(그룹 최대 4개)
 		]
 
@@ -87,40 +90,36 @@ function execDocReady() {
 			//날짜
 			dateTimePicker();
 
-			let mockAssignees = [{
-				"assignee_accountId": "616fc9fa327da40069b4ed4f",
-				"assignee_emailAddress": "JY.J@abcde.com",
-				"assignee_displayName": "JJY"
-			},
-			{
-				"assignee_accountId": "712020:ecc44245-6be8-4962-9a66-888bdb4f8e3a",
-				"assignee_emailAddress": "HS.Y@abcde.com",
-				"assignee_displayName": "YHS"
-			},
-			{
-				"assignee_accountId": "616f6f04860f78006bbafe38",
-				"assignee_emailAddress": "SH.H@abcde.com",
-				"assignee_displayName": "HSH"
-			},
-			{
-				"assignee_accountId": "63b2a039159df2c252e826e9",
-				"assignee_emailAddress": "DM.L@abcde.com",
-				"assignee_displayName": "LDM"
-			},
-			{
-				"assignee_accountId": "621ee5a449c90000701efe06",
-				"assignee_emailAddress": "MG.L@abcde.com",
-				"assignee_displayName": "LMG"
-			}];
-
-			drawResourceTable(mockAssignees);
-
 			// 높이 조정
 			$('.top-menu-div').matchHeight({
 				target: $('.top-menu-div-default')
 			});
-
-			excelMock = [
+			mockData.assignees = [{
+				"assignee_accountId": "616fc9fa327da40069b4ed4f",
+				"assignee_emailAddress": "JY.J@abcde.com",
+				"assignee_displayName": "JJY"
+			},
+				{
+					"assignee_accountId": "712020:ecc44245-6be8-4962-9a66-888bdb4f8e3a",
+					"assignee_emailAddress": "HS.Y@abcde.com",
+					"assignee_displayName": "YHS"
+				},
+				{
+					"assignee_accountId": "616f6f04860f78006bbafe38",
+					"assignee_emailAddress": "SH.H@abcde.com",
+					"assignee_displayName": "HSH"
+				},
+				{
+					"assignee_accountId": "63b2a039159df2c252e826e9",
+					"assignee_emailAddress": "DM.L@abcde.com",
+					"assignee_displayName": "LDM"
+				},
+				{
+					"assignee_accountId": "621ee5a449c90000701efe06",
+					"assignee_emailAddress": "MG.L@abcde.com",
+					"assignee_displayName": "LMG"
+				}];
+			mockData.excelMock = [
 					{
 					"제품(서비스) 키": "25",
 					"제품(서비스) 명": "ALM RMS",
@@ -155,6 +154,8 @@ function execDocReady() {
 				}
 			];
 
+			// 테이블 초기화
+			table = initTable();
 
 		})
 		.catch(function(e) {
@@ -210,7 +211,9 @@ function makePdServiceSelectBox() {
 		// 디폴트는 base version 을 선택하게 하고 ( select all )
 		//~> 이벤트 연계 함수 :: Version 표시 jsTree 빌드
 		bind_VersionData_By_PdService();
-		drawExcel("spreadsheet", excelMock);
+		drawExcel("spreadsheet", mockData.excelMock);
+		// API 호출 후 redraw 방식
+		table.redrawTable(mockData.assignees);
 	});
 } // end makePdServiceSelectBox()
 
@@ -356,71 +359,20 @@ function setEdgeDateRange(versionData) {
 }
 
 ////////////////////////////////////////
-// resource 목록 정보.
+// resource 목록 정보
 ////////////////////////////////////////
-function drawResourceTable(tableData) {
-	var columnList = [
-		{
-			name: "assignee_displayName",
-			title: "작업자 명",
-			data: "assignee_displayName",
-			className: "dt-body-center",
-			visible: true,
-			render: function (data, type, row, meta) {
-				if (type === "display") {
-					return '<label style="color: #a4c6ff">' + data + "</label>";
-				}
-				return data;
-			}
-		},
-		{
-			name: "assignee_emailAddress",
-			title: "작업자 메일",
-			data: "assignee_emailAddress",
-			className: "dt-body-center",
-			visible: true,
-			render: function (data, type, row, meta) {
-				if (type === "display") {
-					return '<label style="color: #a4c6ff">' + data +
-						"</label>";
-				}
-				return data;
-			}
-		}
-	];
-	var rowsGroupList = [];
-	var jquerySelector = "#resource_table";
-	var ajaxUrl = "";
-	var jsonRoot = "";
-	var buttonList = [];
-	var selectList = {};
-	var isServerSide = false;
-	var isAjax = false;
-	var columnDefList = [];
-	var orderList = [[0, "asc"]];
-	// console.log(tableData);
-	resourceDataTable = dataTable_build(
-		jquerySelector,
-		ajaxUrl,
-		jsonRoot,
-		columnList,
-		rowsGroupList,
-		columnDefList,
-		selectList,
-		orderList,
-		buttonList,
-		isServerSide,
-		null,
-		tableData,
-		isAjax
-	);
+var initTable = function () {
+	 var resourceTable = new $.fn.ResourceTable("#resource_table");
 
-	// $("#reqstatustable").on('page.dt', function() {
-	// 	scrollPos = $(window).scrollTop();
-	// 	$(window).scrollTop(scrollPos);
-	// });
+	 resourceTable.dataTableBuild({
+		rowGroup: [0],
+		isAddCheckbox: true
+	 });
 
-}
+	return {
+		redrawTable: resourceTable.reDraw.bind(resourceTable)
+	};
+};
 
 // -------------------- 데이터 테이블을 만드는 템플릿으로 쓰기에 적당하게 리팩토링 함. ------------------ //
 
