@@ -75,18 +75,7 @@ function execDocReady() {
             "../reference/jquery-plugins/dataTables-1.10.16/extensions/Buttons/js/dataTables.buttons.min.js",
             "../reference/jquery-plugins/dataTables-1.10.16/extensions/Buttons/js/buttons.html5.js",
             "../reference/jquery-plugins/dataTables-1.10.16/extensions/Buttons/js/buttons.print.js",
-            "../reference/jquery-plugins/dataTables-1.10.16/extensions/Buttons/js/jszip.min.js"
-        ],
-        [
-            // 칸반 보드
-            /*"../reference/jquery-plugins/jkanban-1.3.1/dist/jkanban.min.css",
-            "../reference/jquery-plugins/jkanban-1.3.1/dist/jkanban.min.js",
-            "../arms/js/reqKanban/kanban.js",
-            "../reference/jquery-plugins/jquery.flowchart-master/jquery.flowchart.css",
-            "../reference/jquery-plugins/jquery.flowchart-master/jquery.flowchart.js",
-            "https://cdnjs.cloudflare.com/ajax/libs/jquery.panzoom/3.2.2/jquery.panzoom.min.js",
-            "../reference/jquery-plugins/jquery-mousewheel-main/jquery.mousewheel.js",*/
-            // "../reference/gojs/go.css",
+            "../reference/jquery-plugins/dataTables-1.10.16/extensions/Buttons/js/jszip.min.js",
             "../reference/gojs/go-debug.js",
             "../arms/js/mapping/gojs_setup.js"
         ]
@@ -343,7 +332,7 @@ function mapping_data_load(alm_server_id, alm_server_type, project_id, issueType
                 console.log('ALM Status List:', alm_status_list);
 
                 if (alm_status_list.length === 0) {
-                    alert("선택된 이슈유형이 없습니다. 서버 관리에서 프로젝트의 이슈유형을 선택해주세요.");
+                    alert("프로젝트의 이슈유형에 연결된 상태가 없습니다. 서버 데이터 확인이 필요합니다.");
                     let data = {};
                     gojs.load(data);
                     return;

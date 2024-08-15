@@ -67,10 +67,12 @@ function execDocReady() {
 			"../reference/jquery-plugins/swiper-11.1.4/swiper-bundle.min.js",
 			"../reference/jquery-plugins/swiper-11.1.4/swiper-bundle.min.css",
 			"./js/common/swiperHelper.js",
-			"./css/customSwiper.css"
+			"./css/customSwiper.css",
+			"./js/reqAddTable.js",
+			"./js/reqAddPivot.js",
+			"./css/jiraServerCustom.css"
 		],
 		// 추가적인 플러그인 그룹들을 이곳에 추가하면 됩니다.
-		["js/reqAddTable.js", "js/reqAddPivot.js", "css/jiraServerCustom.css"]
 	];
 
 	loadPluginGroupsParallelAndSequential(pluginGroups)
