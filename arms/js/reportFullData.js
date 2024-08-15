@@ -24,17 +24,9 @@ function execDocReady() {
 			"../reference/light-blue/lib/jquery.fileupload.js",
 			"../reference/light-blue/lib/jquery.fileupload-fp.js",
 			"../reference/light-blue/lib/jquery.fileupload-ui.js",
-		],
-		[
-			//날짜 검색
-			"../reference/light-blue/lib/bootstrap-datepicker.js",
-			"../reference/jquery-plugins/datetimepicker-2.5.20/build/jquery.datetimepicker.min.css",
-			"../reference/jquery-plugins/datetimepicker-2.5.20/build/jquery.datetimepicker.full.min.js",
-			//
 			"../reference/lightblue4/docs/lib/widgster/widgster.js",
 			"../reference/lightblue4/docs/lib/slimScroll/jquery.slimscroll.min.js"
 		],
-
 		[
 			"../reference/jquery-plugins/select2-4.0.2/dist/css/select2_lightblue4.css",
 			"../reference/jquery-plugins/lou-multi-select-0.9.12/css/multiselect-lightblue4.css",
@@ -42,10 +34,13 @@ function execDocReady() {
 			"../reference/jquery-plugins/select2-4.0.2/dist/js/select2.min.js",
 			"../reference/jquery-plugins/lou-multi-select-0.9.12/js/jquery.quicksearch.js",
 			"../reference/jquery-plugins/lou-multi-select-0.9.12/js/jquery.multi-select.js",
-			"../reference/jquery-plugins/multiple-select-1.5.2/dist/multiple-select.min.js"
+			"../reference/jquery-plugins/multiple-select-1.5.2/dist/multiple-select.min.js",
+			//날짜 검색
+			"../reference/light-blue/lib/bootstrap-datepicker.js",
+			"../reference/jquery-plugins/datetimepicker-2.5.20/build/jquery.datetimepicker.min.css",
+			"../reference/jquery-plugins/datetimepicker-2.5.20/build/jquery.datetimepicker.full.min.js"
 		],
-		[
-			// lightblue4
+		[	// lightblue4
 			"../reference/jquery-plugins/dataTables-1.10.16/media/css/jquery.dataTables_lightblue4.css",
 			"../reference/jquery-plugins/dataTables-1.10.16/extensions/Responsive/css/responsive.dataTables_lightblue4.css",
 			"../reference/jquery-plugins/dataTables-1.10.16/extensions/Select/css/select.dataTables_lightblue4.css",
@@ -67,13 +62,12 @@ function execDocReady() {
 			"../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jspreadsheet.theme.css",
 			"./js/common/jspreadsheet/spreadsheet.js",
 			"./css/jspreadsheet/custom_icon.css",
-			"./css/jspreadsheet/custom_sheet.css"
-		],
-		[
+			"./css/jspreadsheet/custom_sheet.css",
 			//chart Colors
-			"./js/common/colorPalette.js",
+			"./js/common/colorPalette.js"
+			// 추가적인 플러그인 그룹들을 이곳에 추가하면 됩니다.(그룹 최대 4개)
 		]
-		// 추가적인 플러그인 그룹들을 이곳에 추가하면 됩니다.
+
 	];
 
 	loadPluginGroupsParallelAndSequential(pluginGroups)
