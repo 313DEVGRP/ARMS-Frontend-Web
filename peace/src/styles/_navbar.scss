@@ -1,9 +1,0 @@
-.navbar {
-  --#{$prefix}navbar-color: #{$nav-link-color};
-}
-
-[data-bs-theme='dark'] {
-  .navbar {
-    --#{$prefix}navbar-color: #{$nav-link-color-dark};
-  }
-}

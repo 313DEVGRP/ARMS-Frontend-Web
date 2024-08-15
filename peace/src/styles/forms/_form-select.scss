@@ -1,9 +1,0 @@
-.form-select {
-  color: var(--#{$prefix}form-select-color);
-  background-color: var(--#{$prefix}form-select-bg);
-  border: $form-select-border-width solid --#{$prefix}form-select-border-color;
-
-  &:disabled {
-    background-color: var(--#{$prefix}form-select-disabled-bg);
-  }
-}
