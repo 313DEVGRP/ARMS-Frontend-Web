@@ -71,7 +71,7 @@ function execDocReady() {
 
 			// 사이드 메뉴 색상 설정
 			$(".widget").widgster();
-			setSideMenu("sidebar_menu_system", "sidebar_menu_system_systeminfo");
+			setSideMenu("sidebar_menu_system", "sidebar_menu_system_info");
 
 			tab_click_event();
 
