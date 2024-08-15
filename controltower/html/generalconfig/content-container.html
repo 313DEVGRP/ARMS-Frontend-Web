@@ -1,0 +1,479 @@
+<div class="col-md-6">
+	<section class="widget" data-layout="html/targetInfo/modal/content-modal_targetInfo.html">
+		<header id="targetInfoListHeader">
+			<h4>
+				<span
+						class="font13"
+						style="font-weight: bold">
+					<i
+							class="fa fa-list-ul"
+							style="vertical-align: middle; font-size: 14px"></i>
+					<span data-locale="status.container.box_target_info_list.title"></span>
+				</span>
+			</h4>
+
+			<div class="widget-controls">
+				<a
+						data-widgster="expand"
+						title="Expand"
+						href="#">
+					<i class="glyphicon glyphicon-chevron-up"></i>
+				</a>
+				<a
+						data-widgster="collapse"
+						title="Collapse"
+						href="#">
+					<i class="glyphicon glyphicon-chevron-down"></i>
+				</a>
+				<a
+						data-widgster="restore"
+						title="Restore"
+						href="#">
+					<span class="glyphicon glyphicon-repeat"></span>
+				</a>
+				<a
+						data-widgster="fullscreen"
+						title="Fullscreen"
+						href="#">
+					<i
+							class="glyphicon glyphicon-fullscreen"
+							style="font-size: 11px"></i>
+				</a>
+			</div>
+		</header>
+		<div class="body">
+			<div
+					class="gradient_middle_border"
+					style="width: 100%; height: 2px"></div>
+
+			<blockquote
+					class="font13 clearfix"
+					style="margin-top: 5px">
+				<span data-locale="status.container.box_target_info_list.desc"></span>
+				<div style="float: right" class="hidden">
+					<button
+							class="btn btn-transparent btn-xs"
+							style="margin-top: -3px; color: #acacac; background: rgba(51, 51, 51, 0.2); padding: 1px 9px"
+							id="help4"
+							onclick="return true;">
+						<span data-locale="status.container.common.help"></span>
+						<i
+								class="fa fa-question"
+								style="font-size: 14px; vertical-align: middle; color: #acacac"></i>
+					</button>
+				</div>
+			</blockquote>
+
+			<table
+					id="targetInfoTable"
+					class="display"
+					style="width: 100%; overflow: hidden; border-top: 1px dashed rgba(51, 51, 51, 0.3); clear: both"></table>
+		</div>
+	</section>
+</div>
+
+
+<div class="col-md-6">
+	<section class="widget">
+		<header>
+			<h4><i class="fa fa-user"></i> General Configuration Information</h4>
+		</header>
+		<div class="body">
+			<div
+					class="modal-body"
+					style="padding: 5px; border-top: 1px solid rgba(51, 51, 51, 0.3); padding-top: 5px">
+				<blockquote
+						class="font12 gradient_bottom_border"
+						style="margin: 20px !important">
+					<strong>엔진 수집 주기가 저장 됩니다.</strong>
+					<div
+							id="popup_Cron_Right_Util"
+							style="float: right; padding: 5px 5px 1px 5px; margin-top: -10px">
+
+						<button
+								class="btn btn-warning btn-sm"
+								id="popup_Btn_Cron_Simulate"
+								type="button">
+							예상 실행 시간 확인
+						</button>
+						<button
+								class="btn btn-primary btn-sm"
+								id="popup_Btn_Cron_Save"
+								type="button">
+							저장
+						</button>
+					</div>
+				</blockquote>
+				<!--------------------스케줄러 설정 팝업---------------------->
+				<div class="cronDiv">
+					<div class="row">
+						<div
+								class="col-lg-6"
+								style="width: 100%">
+							<form class="form-horizontal">
+								<fieldset>
+									<div
+											class="base_Info"
+											style="border-radius: 10px">
+										<div class="control-group">
+											<label
+													for="popup_service_name"
+													class="control-label font12">
+												Host Type :
+											</label>
+											<div
+													class="controls form-group input-group"
+													style="margin-left: 180px">
+												<span class="input-group-addon">
+													<i class="glyphicon glyphicon-gift"></i>
+												</span>
+												<div
+														id="popup_service_name"
+														class="btn-group"
+														data-toggle="buttons">
+													<label class="btn btn-default">
+														<input
+																type="radio"
+																name="popup_service_name_select_option"
+																value="target-info-app" />
+														<img
+																src="img/targetInfo/live.png"
+																width="15px"
+																height="15px" />
+														APPLICATION
+													</label>
+													<label class="btn btn-default">
+														<input
+																type="radio"
+																name="popup_service_name_select_option"
+																value="target-info-db" />
+														<img
+																src="img/targetInfo/live.png"
+																width="15px"
+																height="15px" />
+														DATABASE
+													</label>
+												</div>
+											</div>
+										</div>
+
+										<div class="control-group">
+											<label
+													for="popup_cron_expression"
+													class="control-label font12">
+												Cron Expression :
+											</label>
+											<div
+													class="controls form-group input-group"
+													style="margin-left: 180px; margin-bottom: 10px; margin-right: 20px !important">
+												<span class="input-group-addon">
+													<i class="glyphicon glyphicon-gift"></i>
+												</span>
+												<input
+														type="text"
+														id="popup_cron_expression"
+														name="popup_cron_expression"
+														class="form-control parsley-validated font13 darkBack ajax-data"
+														required="required" />
+											</div>
+											<div
+													class="chat-message-body"
+													style="border: 2px solid #e5603b; margin-right: 20px; margin-left: 180px; display: none">
+												<div class="sender ajax-data">예상 실행 시간</div>
+												<div
+														class="text"
+														style="text-align: left; margin-top: 10px"></div>
+											</div>
+										</div>
+										<div class="control-group">
+											<label
+													for="popup_cron_expression"
+													class="control-label font12">
+												&nbsp;
+											</label>
+											<div
+													class="controls form-group input-group"
+													style="margin-left: 180px; margin-bottom: 10px; margin-right: 20px !important"></div>
+										</div>
+									</div>
+								</fieldset>
+							</form>
+						</div>
+					</div>
+
+					<div
+							class="row"
+							style="padding-left: 20px; padding-right: 20px">
+						<section class="widget">
+							<header>
+								<ul
+										id="main-tab"
+										class="tab-pane nav nav-tabs"
+										style="display: flex; white-space: nowrap">
+									<li>
+										<a
+												href="#tabs-second"
+												data-toggle="tab">
+											Second
+										</a>
+									</li>
+									<li class="active">
+										<a
+												href="#tabs-minute"
+												data-toggle="tab">
+											분
+										</a>
+									</li>
+									<li>
+										<a
+												href="#tabs-hour"
+												data-toggle="tab">
+											시
+										</a>
+									</li>
+									<li>
+										<a
+												href="#tabs-day"
+												data-toggle="tab">
+											일
+										</a>
+									</li>
+									<li>
+										<a
+												href="#tabs-month"
+												data-toggle="tab">
+											월
+										</a>
+									</li>
+									<li>
+										<a
+												href="#tabs-week"
+												data-toggle="tab">
+											주
+										</a>
+									</li>
+								</ul>
+							</header>
+							<div class="body tab-content">
+								<div
+										id="tabs-second"
+										class="tab-pane clearfix"
+										style="padding-top: 10px !important">
+									<ul class="nav nav-tabs">
+										<li id="button-second-every">
+											<a
+													href="#tabs-second-every"
+													data-toggle="tab">
+												Every second
+											</a>
+										</li>
+										<li id="button-second-n">
+											<a
+													href="#tabs-second-n"
+													data-toggle="tab">
+												Every n seconds
+											</a>
+										</li>
+									</ul>
+									<div class="body tab-content checkbox-content">
+										<div
+												id="tabs-second-every"
+												class="tab-pane clearfix">
+											<div>*</div>
+											<div>Every second.</div>
+										</div>
+										<div
+												id="tabs-second-n"
+												class="tab-pane clearfix">
+											<div class="preview">Every 1 seconds</div>
+											<div class="slider"></div>
+										</div>
+									</div>
+								</div>
+								<div
+										id="tabs-minute"
+										class="tab-pane active clearfix"
+										style="padding-top: 10px !important">
+									<ul class="nav nav-tabs">
+										<li
+												id="button-minute-every"
+												data-toggle="tab">
+											<a href="#tabs-minute-every">매 분</a>
+										</li>
+										<li
+												id="button-minute-n"
+												data-toggle="tab">
+											<a href="#tabs-minute-n">N 분 간격</a>
+										</li>
+										<li
+												id="button-minute-each"
+												data-toggle="tab">
+											<a href="#tabs-minute-each">선택 분</a>
+										</li>
+									</ul>
+									<div class="body tab-content checkbox-content">
+										<div
+												id="tabs-minute-every"
+												class="tab-pane clearfix">
+											<div>*</div>
+											<div>매 분 실행</div>
+										</div>
+										<div id="tabs-minute-n">
+											<div class="preview">1 분 간격</div>
+											<div class="slider"></div>
+										</div>
+										<div
+												id="tabs-minute-each"
+												class="tab-pane clearfix">
+											<div>분 선택</div>
+											<br />
+											<div class="tabs-minute-format"></div>
+										</div>
+									</div>
+								</div>
+								<div
+										id="tabs-hour"
+										class="tab-pane clearfix"
+										style="padding-top: 10px !important">
+									<ul class="nav nav-tabs">
+										<li
+												id="button-hour-every"
+												data-toggle="tab">
+											<a href="#tabs-hour-every">매 시</a>
+										</li>
+										<li
+												id="button-hour-n"
+												data-toggle="tab">
+											<a href="#tabs-hour-n">N 시간 간격</a>
+										</li>
+										<li
+												id="button-hour-each"
+												data-toggle="tab">
+											<a href="#tabs-hour-each">선택 시</a>
+										</li>
+									</ul>
+									<div class="body tab-content checkbox-content">
+										<div
+												id="tabs-hour-every"
+												class="tab-pane active clearfix">
+											<div>*</div>
+											<div>매 시 실행</div>
+										</div>
+										<div id="tabs-hour-n">
+											<div class="preview">1 시간 간격</div>
+											<div class="slider"></div>
+										</div>
+										<div
+												id="tabs-hour-each"
+												class="tab-pane clearfix">
+											<div>시 선택</div>
+											<br />
+											<div class="tabs-hour-format"></div>
+										</div>
+									</div>
+								</div>
+								<div
+										id="tabs-day"
+										class="tab-pane clearfix"
+										style="padding-top: 10px !important">
+									<ul class="nav nav-tabs">
+										<li
+												id="button-day-every"
+												data-toggle="tab">
+											<a href="#tabs-day-every">매일</a>
+										</li>
+										<li
+												id="button-day-each"
+												data-toggle="tab">
+											<a href="#tabs-day-each">선택 일</a>
+										</li>
+									</ul>
+									<div class="body tab-content checkbox-content">
+										<div
+												id="tabs-day-every"
+												class="tab-pane active clearfix">
+											<div>*</div>
+											<div>매일 실행</div>
+										</div>
+										<div
+												id="tabs-day-each"
+												class="tab-pane clearfix">
+											<div>선택 일</div>
+											<br />
+											<div class="tabs-day-format"></div>
+										</div>
+									</div>
+								</div>
+								<div
+										id="tabs-month"
+										class="tab-pane clearfix"
+										style="padding-top: 10px !important">
+									<ul class="nav nav-tabs">
+										<li
+												id="button-month-every"
+												data-toggle="tab">
+											<a href="#tabs-month-every">매 월</a>
+										</li>
+										<li
+												id="button-month-each"
+												data-toggle="tab">
+											<a href="#tabs-month-each">선택 월</a>
+										</li>
+									</ul>
+									<div class="body tab-content checkbox-content">
+										<div
+												id="tabs-month-every"
+												class="tab-pane active clearfix">
+											<div>*</div>
+											<div>매 월</div>
+										</div>
+										<div
+												id="tabs-month-each"
+												class="tab-pane active clearfix">
+											<div>선택 월</div>
+											<br />
+											<div class="tabs-month-format"></div>
+										</div>
+									</div>
+								</div>
+								<div
+										id="tabs-week"
+										class="tab-pane clearfix"
+										style="padding-top: 10px !important">
+									<ul class="nav nav-tabs">
+										<li
+												id="button-week-every"
+												data-toggle="tab">
+											<a href="#tabs-week-every">매 주</a>
+										</li>
+										<li
+												id="button-week-each"
+												data-toggle="tab">
+											<a href="#tabs-week-each">선택 요일</a>
+										</li>
+									</ul>
+									<div class="body tab-content checkbox-content">
+										<div
+												id="tabs-week-every"
+												class="tab-pane active clearfix">
+											<div>*</div>
+											<div>매 주</div>
+										</div>
+										<div
+												id="tabs-week-each"
+												class="tab-pane active clearfix">
+											<div>선택 요일</div>
+											<br />
+											<div class="tabs-week-format"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</section>
+					</div>
+				</div>
+				<!------------------------------------------------>
+			</div>
+		</div>
+	</section>
+</div>

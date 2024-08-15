@@ -12,32 +12,40 @@ var dataTableRef; // 데이터테이블 참조 변수
 //Document Ready
 ////////////////////////////////////////////////////////////////////////////////////////
 function execDocReady() {
-
 	var pluginGroups = [
-		[	"../reference/light-blue/lib/vendor/jquery.ui.widget.js",
+		[
+			"../reference/light-blue/lib/vendor/jquery.ui.widget.js",
 			"../reference/light-blue/lib/vendor/http_blueimp.github.io_JavaScript-Templates_js_tmpl.js",
 			"../reference/light-blue/lib/vendor/http_blueimp.github.io_JavaScript-Load-Image_js_load-image.js",
 			"../reference/light-blue/lib/vendor/http_blueimp.github.io_JavaScript-Canvas-to-Blob_js_canvas-to-blob.js",
 			"../reference/light-blue/lib/jquery.iframe-transport.js",
 			"../reference/light-blue/lib/jquery.fileupload.js",
 			"../reference/light-blue/lib/jquery.fileupload-fp.js",
-			"../reference/light-blue/lib/jquery.fileupload-ui.js"],
+			"../reference/light-blue/lib/jquery.fileupload-ui.js"
+		],
 
-		[	"../reference/jquery-plugins/select2-4.0.2/dist/css/select2_lightblue4.css",
+		[
+			"../reference/jquery-plugins/select2-4.0.2/dist/css/select2_lightblue4.css",
 			"../reference/jquery-plugins/lou-multi-select-0.9.12/css/multiselect-lightblue4.css",
 			"../reference/jquery-plugins/multiple-select-1.5.2/dist/multiple-select-bluelight.css",
 			"../reference/jquery-plugins/select2-4.0.2/dist/js/select2.min.js",
 			"../reference/jquery-plugins/lou-multi-select-0.9.12/js/jquery.quicksearch.js",
 			"../reference/jquery-plugins/lou-multi-select-0.9.12/js/jquery.multi-select.js",
-			"../reference/jquery-plugins/multiple-select-1.5.2/dist/multiple-select.min.js"],
+			"../reference/jquery-plugins/multiple-select-1.5.2/dist/multiple-select.min.js"
+		],
 
-		[	"../reference/jquery-plugins/datetimepicker-2.5.20/build/jquery.datetimepicker.min.css",
+		[
+			"../reference/jquery-plugins/datetimepicker-2.5.20/build/jquery.datetimepicker.min.css",
 			"../reference/light-blue/lib/bootstrap-datepicker.js",
 			"../reference/jquery-plugins/datetimepicker-2.5.20/build/jquery.datetimepicker.full.min.js",
 			"../reference/lightblue4/docs/lib/widgster/widgster.js",
-			"../reference/lightblue4/docs/lib/slimScroll/jquery.slimscroll.min.js"],
+			"../reference/lightblue4/docs/lib/slimScroll/jquery.slimscroll.min.js",
+			"../reference/lightblue4/docs/lib/jquery.sparkline/index.js",
+			"../reference/lightblue4/docs/js/charts.js"
+		],
 
-		[	"../reference/jquery-plugins/dataTables-1.10.16/media/css/jquery.dataTables_lightblue4.css",
+		[
+			"../reference/jquery-plugins/dataTables-1.10.16/media/css/jquery.dataTables_lightblue4.css",
 			"../reference/jquery-plugins/dataTables-1.10.16/extensions/Responsive/css/responsive.dataTables_lightblue4.css",
 			"../reference/jquery-plugins/dataTables-1.10.16/extensions/Select/css/select.dataTables_lightblue4.css",
 			"../reference/jquery-plugins/dataTables-1.10.16/media/js/jquery.dataTables.min.js",
@@ -49,37 +57,64 @@ function execDocReady() {
 			"../reference/jquery-plugins/dataTables-1.10.16/extensions/Buttons/js/buttons.print.js",
 			"../reference/jquery-plugins/dataTables-1.10.16/extensions/Buttons/js/jszip.min.js",
 			"../reference/jquery-plugins/dataTables-1.10.16/extensions/Buttons/js/pdfmake.min.js",
-			"../reference/jquery-plugins/dataTables-1.10.16/extensions/Buttons/js/vfs_fonts.js"
+			"../reference/jquery-plugins/dataTables-1.10.16/extensions/Buttons/js/vfs_fonts.js",
+			// timezone-picker
+			"../reference/jquery-plugins/kevalbhatt-timezone-picker-2.0.0/dist/timezone-picker.min.js",
+			"../reference/jquery-plugins/kevalbhatt-timezone-picker-2.0.0/dist/styles/timezone-picker.css"
 		]
 		// 추가적인 플러그인 그룹들을 이곳에 추가하면 됩니다.
 	];
 
 	loadPluginGroupsParallelAndSequential(pluginGroups)
-		.then(function() {
-
-			console.log('모든 플러그인 로드 완료');
+		.then(function () {
+			console.log("모든 플러그인 로드 완료");
 
 			// 사이드 메뉴 색상 설정
-			$('.widget').widgster();
-			setSideMenu("sidebar_menu_system", "sidebar_menu_system_logging");
+			$(".widget").widgster();
+			setSideMenu("sidebar_menu_system", "sidebar_menu_system_systeminfo");
 
+			tab_click_event();
+
+			$("#globe").timezonePicker({
+				// initialValue: "Asia/Seoul",
+				defaultValue: { value: "Asia/Seoul", attribute: "timezone" },
+				hoverText: function(e, data){
+					return (data.timezone + " (" + data.zonename + "+"+data.offset+")");
+				},
+				quickLink: [{}],
+				selectBox: true,
+				showHoverText: true
+			});
+			$(".quick-link").css("display","none");
+			$("#globe .select2-selection__rendered").text("Asia/Seoul (KST+9)");
 		})
-		.catch(function() {
-			console.error('플러그인 로드 중 오류 발생');
+		.catch(function (error) {
+			console.error("플러그인 로드 중 오류 발생");
+			console.log(error);
 		});
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // 탭 클릭 이벤트 처리
 ////////////////////////////////////////////////////////////////////////////////////////
 function tab_click_event() {
+	$("#globe").on("click", (event => {
+		let zoneText = "";
+		let selectedTZ = $("#globe").data('timezonePicker').getValue()[0];
+		if (selectedTZ.offset <0) {
+			zoneText = selectedTZ.timezone + " ("+selectedTZ.zonename+selectedTZ.offset+")";
+		} else {
+			zoneText = selectedTZ.timezone + " ("+selectedTZ.zonename+"+"+selectedTZ.offset+")";
+		}
+		$("#globe .select2-selection__rendered").val(zoneText);
+		$("#globe .select2-selection__rendered").text(zoneText);
+	}));
+
 	$('a[data-toggle="tab"]').on("shown.bs.tab", function (e) {
 		var target = $(e.target).attr("href"); // activated tab
 		console.log(target);
 
 		if (target == "#dropdown1") {
-
 			$("#pdservice_details_popup_div").addClass("hidden");
 			$("#pdservice_update_div").addClass("hidden");
 			$("#pdservice_delete_div").removeClass("hidden");
@@ -98,7 +133,6 @@ function tab_click_event() {
 			$("#pdservice_details_popup_div").addClass("hidden");
 			$("#pdservice_delete_div").addClass("hidden");
 			$("#pdservice_update_div").removeClass("hidden");
-
 		} else {
 			$("#pdservice_details_popup_div").removeClass("hidden");
 			$("#pdservice_update_div").addClass("hidden");
@@ -115,11 +149,10 @@ function tab_click_event() {
 	});
 }
 
-
 ////////////////////////////////////////////////////////////////////////////////////////
 // --- 신규 제품(서비스) 등록 팝업 및 팝업 띄울때 사이즈 조정 -- //
 ////////////////////////////////////////////////////////////////////////////////////////
-function popup_size_setting(){
+function popup_size_setting() {
 	console.log("popup_size_setting() is activated");
 	$("#modal_popup_id").click(function () {
 		console.log("modal_popup_id clicked");
@@ -127,7 +160,7 @@ function popup_size_setting(){
 
 		//모달 초기화
 		$("#my_modal2").on("hidden.bs.modal", function (e) {
-			$(this).find('form')[0].reset();
+			$(this).find("form")[0].reset();
 			$("#popup_editview_pdservice_owner").val(null).trigger("change");
 			$("#popup_editview_pdservice_reviewers").val(null).trigger("change");
 			CKEDITOR.instances.modal_editor.setData("<p>제품(서비스)의 기획서 및 Project Charter 의 내용을 기록합니다.</p>"); //에디터 초기화
@@ -359,7 +392,6 @@ function popup_size_setting(){
 	});
 }
 
-
 ////////////////////////////////////////////////////////////////////////////////////////
 // --- select2 (사용자 자동완성 검색 ) 설정 --- //
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -407,14 +439,14 @@ function select2_setting() {
 ////////////////////////////////////////////////////////////////////////////////////////
 function formatUser(jsonData) {
 	console.log("formatUser");
-	console.log(jsonData)
+	console.log(jsonData);
 	var $container = $(
 		"<div class='select2-result-jsonData clearfix'>" +
-		"<div class='select2-result-jsonData__meta'>" +
-		"<div class='select2-result-jsonData__username'><i class='fa fa-flash'></i></div>" +
-		"<div class='select2-result-jsonData__id'><i class='fa fa-star'></i></div>" +
-		"</div>" +
-		"</div>"
+			"<div class='select2-result-jsonData__meta'>" +
+			"<div class='select2-result-jsonData__username'><i class='fa fa-flash'></i></div>" +
+			"<div class='select2-result-jsonData__id'><i class='fa fa-star'></i></div>" +
+			"</div>" +
+			"</div>"
 	);
 
 	$container.find(".select2-result-jsonData__username").text(jsonData.username);
@@ -428,7 +460,7 @@ function formatUser(jsonData) {
 ////////////////////////////////////////////////////////////////////////////////////////
 function formatUserSelection(jsonData) {
 	console.log("formatUserSelection");
-	console.log(jsonData)
+	console.log(jsonData);
 	if (jsonData.id == "") {
 		jsonData.text = "placeholder";
 	} else {
@@ -445,7 +477,6 @@ function formatUserSelection(jsonData) {
 // --- file upload --- //
 ////////////////////////////////////////////////////////////////////////////////////////
 function file_upload_setting() {
-
 	// Initialize the jQuery File Upload widget:
 	var $fileupload = $("#fileupload");
 	$fileupload.fileupload({
@@ -455,7 +486,6 @@ function file_upload_setting() {
 		url: "/auth-user/api/arms/pdService/uploadFileToNode.do",
 		dropZone: $("#dropzone")
 	});
-
 
 	$("#fileupload").bind("fileuploadsubmit", function (e, data) {
 		// The example input, doesn't have to be part of the upload form:
@@ -467,7 +497,6 @@ function file_upload_setting() {
 			return false;
 		}
 	});
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -550,7 +579,6 @@ function dataTableLoad() {
 	});
 }
 
-
 // 데이터 테이블 구성 이후 꼭 구현해야 할 메소드 : 열 클릭시 이벤트
 function dataTableClick(tempDataTable, selectedData) {
 	selectedIndex = selectedData.selectedIndex;
@@ -561,8 +589,8 @@ function dataTableClick(tempDataTable, selectedData) {
 	pdServiceDataTableClick(selectedData.c_id);
 
 	//제품 클릭 시, 상세보기 tab을 기본값으로 세팅.
-	$('ul.nav-tabs li').removeClass('active');
-	$('.nav-tabs-stats').addClass('active');
+	$("ul.nav-tabs li").removeClass("active");
+	$(".nav-tabs-stats").addClass("active");
 
 	//파일 업로드 관련 레이어 보이기 처리
 	$(".body-middle").show();
@@ -588,8 +616,7 @@ function dataTableClick(tempDataTable, selectedData) {
 }
 
 //데이터 테이블 ajax load 이후 콜백.
-function dataTableCallBack(settings, json) {
-}
+function dataTableCallBack(settings, json) {}
 
 function dataTableDrawCallback(tableInfo) {
 	$("#" + tableInfo.sInstance)
@@ -624,7 +651,8 @@ function pdServiceDataTableClick(c_id) {
 					<span class="arrow" style="top: 35% !important;"></span>
 					<span class="sender" style="padding-bottom: 5px; padding-top: 3px;"> 선택된 제품(서비스) :  </span>
 				<span class="text" style="color: #a4c6ff;">
-				` + json.c_title +
+				` +
+				json.c_title +
 				`
 				</span>
 				</div>
@@ -826,7 +854,7 @@ function save_btn_click() {
 					$("#close_pdservice").trigger("click");
 					//데이터 테이블 데이터 재 로드
 					reloadDataWithSameOrdering(cTitle);
-					jSuccess("신규 제품 등록이 완료 되었습니다.");
+					jSuccess("신규 제품 등록이 완료되었습니다.");
 				}
 			},
 			beforeSend: function () {
@@ -836,7 +864,7 @@ function save_btn_click() {
 				$("#regist_pdservice").show();
 			},
 			error: function (e) {
-				jError("신규 제품 등록 중 에러가 발생했습니다.");
+				jError("신규 제품 등록 중 문제가발생했습니다.");
 			}
 		});
 	});
@@ -845,7 +873,7 @@ function save_btn_click() {
 ////////////////////////////////////////////////////////////////////////////////////////
 // 신규 제품(서비스) 삭제 버튼
 ////////////////////////////////////////////////////////////////////////////////////////
-function delete_btn_click(){
+function delete_btn_click() {
 	$("#delete_pdservice").click(function () {
 		$.ajax({
 			url: "/auth-user/api/arms/pdService/removeNode.do",
@@ -1009,17 +1037,14 @@ function modalPopup(popupName) {
 	if (popupName === "modal_popup_readonly") {
 		//modal_popup_readOnly = 새 창으로 제품(서비스 보기)
 		$("#my_modal1_title").text("제품(서비스) 내용 보기 팝업");
-		$("#my_modal1_sub").text("새 창으로 제품(서비스)의 정보를 확인합니다.")
+		$("#my_modal1_sub").text("새 창으로 제품(서비스)의 정보를 확인합니다.");
 		$("#extendupdate_pdservice").addClass("hidden");
-
-
-	} else { //팝업 창으로 편집하기
+	} else {
+		//팝업 창으로 편집하기
 
 		$("#my_modal1_title").text("신규 제품(서비스) 수정 팝업");
-		$("#my_modal1_sub").text("A-RMS에 신규 제품(서비스)의 정보를 수정합니다.")
+		$("#my_modal1_sub").text("A-RMS에 신규 제품(서비스)의 정보를 수정합니다.");
 		$("#extendupdate_pdservice").removeClass("hidden");
-
-
 	}
 }
 
@@ -1029,10 +1054,10 @@ function modalPopup(popupName) {
 ////////////////////////////////////////////////////////////////////////////////////////
 function reloadDataWithSameOrdering(cTitle) {
 	const currentOrder = dataTableRef.order();
-	dataTableRef.ajax.reload(function() {
+	dataTableRef.ajax.reload(function () {
 		dataTableRef.order(currentOrder).draw();
-		if(cTitle === "") return false;
-		$("#pdservice_table tbody tr").each(function() {
+		if (cTitle === "") return false;
+		$("#pdservice_table tbody tr").each(function () {
 			const rowTitle = $(this).find("td label").text();
 			if (rowTitle === cTitle) {
 				$(this).click();
