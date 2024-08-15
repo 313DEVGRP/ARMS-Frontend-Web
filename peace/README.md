@@ -1,8 +1,15 @@
-# React + Vite
+npm 설치
+npm install -g yarn --force
+yarn install
+yarn run build <- 빌드 시
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+yarn build <- 빌드 시
+yarn run dev <- 개발 시
 
-Currently, two official plugins are available:
+React 선행 과제
+1. http://a-rms.net/reference/lightblue4/docs/ 를 확인
+2. dashboard, tables, notifications 중 하나를 선택
+3. 선택한 화면을 React 로 구현.
+4. 구현 대상 폴더는 좌측 프로젝트 폴더 중. peace 폴더 내 구현
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+아직 React 는 자동 빌드를 지원하지 않습니다.

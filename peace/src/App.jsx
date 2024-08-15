@@ -17,7 +17,7 @@ import ComingSoon from '@/components/ComingSoon';
 
 function App() {
   return (
-    <BrowserRouter basename="/mmc/dist">
+    <BrowserRouter basename="/peace/dist">
       <main className="d-flex" as="main">
         <Logo />
 
