@@ -71,7 +71,7 @@ function execDocReady() {
 
             // 사이드 메뉴 색상 설정
             $(".widget").widgster();
-            setSideMenu("sidebar_menu_system", "sidebar_menu_config_dynamic");
+            setSideMenu("sidebar_menu_config", "sidebar_menu_config_dynamic");
         })
         .catch(function (error) {
             console.error("플러그인 로드 중 오류 발생");
