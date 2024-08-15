@@ -1,0 +1,124 @@
+.widget {
+  border-radius: $border-radius;
+  box-sizing: border-box;
+  padding: 12px 17px;
+  color: var(--#{$prefix}text-color);
+  background: var(--#{$prefix}bg-color);
+  margin-bottom: $spacer * 1.5;
+  position: relative;
+
+  //widget sizes
+  &.normal {
+    height: 220px;
+  }
+
+  &.large {
+    height: 315px;
+
+    .body {
+      height: 280px;
+    }
+  }
+
+  &.xlarge {
+    height: 415px;
+
+    .body {
+      height: 380px;
+    }
+  }
+
+  &.tiny {
+    height: 188px;
+  }
+
+  &.tiny-x2 {
+    height: 426px;
+  }
+
+  &.transparent {
+    background: transparent;
+    @include box-shadow(none);
+  }
+
+  & > header {
+    position: relative;
+    background: none;
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5 {
+      margin: 0;
+      line-height: 20px;
+      font-weight: 600;
+      color: inherit;
+
+      small {
+        text-transform: lowercase;
+        color: var(--#{$prefix}text-muted);
+      }
+    }
+
+    h3 {
+      font-size: $font-size-xl;
+    }
+  }
+
+  .body {
+    margin-top: 10px;
+
+    blockquote {
+      @include clearfix();
+
+      a.help {
+        color: var(--#{$prefix}text-muted);
+        background: var(--#{$prefix}bg-addition);
+        padding: 1px 9px;
+        text-shadow: none;
+        box-shadow: none;
+        text-decoration: none;
+        float: right;
+      }
+    }
+  }
+
+  & > footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: 15px 0 0;
+  }
+
+  .actions {
+    position: absolute;
+    right: 0;
+    top: 0;
+
+    a {
+      text-decoration: none;
+    }
+  }
+}
+
+.widget-controls {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  right: 0;
+  font-size: $font-size-sm;
+  word-spacing: 1px;
+
+  > button {
+    padding: 1px 4px;
+    border-radius: 4px;
+    color: var(--#{$prefix}text-muted);
+    @include transition(color 0.15s ease-in-out);
+
+    &:hover {
+      color: var(--#{$prefix}text-color);
+    }
+  }
+}

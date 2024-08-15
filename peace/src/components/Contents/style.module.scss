@@ -1,0 +1,4 @@
+.container {
+  width: calc(100% - $sidebar-width - 1.5rem);
+  margin-left: $wrap-margin;
+}

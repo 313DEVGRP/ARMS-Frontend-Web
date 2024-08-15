@@ -1,0 +1,12 @@
+.card {
+  --#{$prefix}card-border-color: #{$card-border-color};
+  --#{$prefix}card-bg: #{$card-bg};
+
+  border: none;
+  @include box-shadow(none);
+}
+
+[data-bs-theme='dark'] {
+  --#{$prefix}card-border-color: #{$card-border-color-dark};
+  --#{$prefix}card-bg: #{$card-bg-dark};
+}

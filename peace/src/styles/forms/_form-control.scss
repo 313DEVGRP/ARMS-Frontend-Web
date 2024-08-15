@@ -1,0 +1,22 @@
+.form-control {
+  color: var(--#{$prefix}input-color);
+  background-color: var(--#{$prefix}input-bg);
+  border: $input-border-width solid var(--#{$prefix}input-border-color);
+  margin-bottom: $line-height-computed;
+
+  @include transition(border linear 0.2s, box-shadow linear 0.2s);
+
+  &[type='search'],
+  &.search {
+    padding-left: 26px;
+  }
+
+  &:focus {
+    color: var(--#{$prefix}input-focus-color);
+    background-color: var(--#{$prefix}input-focus-bg);
+  }
+
+  &:disabled {
+    background-color: var(--#{$prefix}input-disabled-bg);
+  }
+}

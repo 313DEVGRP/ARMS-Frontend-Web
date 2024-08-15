@@ -17,11 +17,19 @@ export default defineConfig({
     preprocessorOptions: {
       scss: {
         additionalData: `
-          @import "@/styles/functions";
-          @import "@/styles/mixins";
-          @import "@/styles/variables";
+          @import '@/styles/variables';
+          @import '@/styles/variables-dark';
         `,
         quietDeps: true,
+      },
+    },
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        entryFileNames: 'mmc/dist/assets/[name]-[hash].js',
+        chunkFileNames: 'mmc/dist/assets/[name]-[hash].js',
+        assetFileNames: 'mmc/dist/assets/[name]-[hash][extname]',
       },
     },
   },

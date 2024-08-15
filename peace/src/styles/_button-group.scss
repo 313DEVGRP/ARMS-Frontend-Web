@@ -1,0 +1,27 @@
+@use 'sass:math';
+
+.btn-group {
+  > .btn {
+    &:hover,
+    &:focus,
+    &:active,
+    &.active {
+      z-index: auto;
+    }
+
+    & + .dropdown-toggle {
+      @include box-shadow(none);
+    }
+  }
+}
+
+.btn-toolbar {
+  margin-top: math.div($line-height-base, 2);
+  margin-bottom: math.div($line-height-base, 2);
+
+  > .btn + .btn,
+  > .btn-group + .btn,
+  > .btn + .btn-group {
+    margin-left: 5px;
+  }
+}

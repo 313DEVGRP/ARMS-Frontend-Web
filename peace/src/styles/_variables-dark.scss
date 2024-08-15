@@ -1,0 +1,161 @@
+// Light Blue Dark color mode variables
+// -------------------------
+// -------------------------
+
+$gradient-dark: radial-gradient(
+  farthest-side ellipse at 10% 0,
+  rgba(139, 129, 118, 0.9),
+  rgba(78, 76, 71, 0.89),
+  rgba(102, 98, 92, 0.9)
+) !default;
+
+$main-color-dark: #333;
+
+$bg-color-dark: rgba($main-color-dark, 0.425);
+$bg-addition-dark: rgba($main-color-dark, 0.3);
+
+$text-color-dark: $gray-100;
+$text-bold-dark: lighten($text-color-dark, 3%);
+$text-muted-dark: darken($text-color-dark, 15%) !default;
+
+// Body
+//
+// Settings for the `<body>` element.
+
+$body-bg-dark: $bg-color-dark !default;
+$body-color-dark: $text-color-dark !default;
+$body-image-dark: url('../assets/background/bgnoise_lg_dark.png') !default;
+
+// Links
+//
+// Style anchor elements.
+
+$link-color-dark: #a4c6ff !default;
+$link-hover-color-dark: lighten($link-color-dark, $link-shade-percentage) !default;
+
+// Typography
+//
+// Font, line-height, and color for body text, headings, and more.
+
+$blockquote-border-color-dark: $bg-color-dark;
+
+// Tables
+//
+// Customizes the `.table` component with basic values, each used across all table variations.
+
+$table-bg-dark: $bg-color-dark !default;
+
+$table-accent-bg-dark: $bg-addition-dark !default;
+$table-hover-bg-dark: darken($bg-addition-dark, 5%) !default;
+$table-border-color-dark: rgba($main-color-dark, 0.35) !default;
+
+// Buttons
+//
+// For each of Bootstrap's buttons, define text, background, and border color.
+
+$btn-link-color-dark: $link-color-dark !default;
+$btn-link-hover-color-dark: $link-hover-color-dark !default;
+$btn-link-disabled-color-dark: $text-muted-dark !default;
+
+// Forms
+
+$input-bg-dark: $bg-color-dark !default;
+$input-disabled-bg-dark: $bg-addition-dark !default;
+
+$input-color-dark: $text-color-dark !default;
+$input-border-color-dark: $bg-color-dark !default;
+
+$input-focus-bg-dark: $input-bg-dark !default;
+$input-focus-color-dark: $input-color-dark !default;
+
+$input-group-addon-color-dark: $text-muted-dark !default;
+$input-group-addon-bg-dark: $bg-addition-dark !default;
+$input-group-addon-border-color-dark: $input-border-color-dark !default;
+
+$input-search-image-dark: url(../assets/search/search-white.png);
+
+$form-select-color-dark: $input-color-dark !default;
+$form-select-bg-dark: $input-bg-dark !default;
+$form-select-disabled-bg-dark: $input-disabled-bg-dark !default;
+
+$form-select-border-color-dark: $input-border-color-dark !default;
+
+// Navs
+
+$nav-link-color-dark: $text-color-dark !default;
+$nav-link-hover-bg-dark: $bg-addition-dark !default;
+
+$nav-tabs-link-active-color-dark: $link-color-dark !default;
+$nav-tabs-link-active-bg-dark: $bg-addition-dark !default;
+
+$nav-pills-link-bg-dark: $bg-addition-dark !default;
+$nav-pills-link-active-color-dark: $text-bold-dark !default;
+
+$nav-tabs-tab-content-bg-dark: $bg-addition-dark;
+
+// Dropdowns
+//
+// Dropdown menu container and contents.
+
+$dropdown-bg-dark: rgba($bg-color-dark, 0.85) !default;
+$dropdown-border-color-dark: darken($dropdown-bg-dark, 10%) !default;
+
+$dropdown-link-color-dark: $text-color-dark !default;
+
+$dropdown-header-color-dark: $bg-addition-dark !default;
+
+// Pagination
+
+$pagination-color-dark: $text-color-dark !default;
+
+$pagination-hover-bg-dark: $bg-addition-dark !default;
+
+$pagination-active-color-dark: $text-color-dark !default;
+$pagination-active-bg-dark: $red-dark !default;
+
+$pagination-disabled-color-dark: $text-muted-dark !default;
+
+// Cards
+
+$card-border-color-dark: $bg-addition-dark !default;
+$card-bg-dark: $bg-color-dark !default;
+
+// Popovers
+
+$popover-bg-dark: rgba($main-color-dark, 0.85) !default;
+
+$popover-arrow-color-dark: $popover-bg-dark !default;
+
+// Modals
+
+$modal-header-border-color-dark: $bg-addition-dark !default;
+$modal-footer-border-color-dark: $modal-header-border-color-dark !default;
+
+// Progress bars
+
+$progress-bg-dark: rgba(black, 0.15) !default;
+
+// List group
+
+$list-group-bg-dark: $bg-color-dark !default;
+
+$list-group-hover-bg-dark: $bg-addition-dark !default;
+
+// Image thumbnails
+
+$thumbnail-bg-dark: $bg-color-dark !default;
+
+// Breadcrumbs
+
+$breadcrumb-color-dark: darken($text-color-dark, 25%) !default;
+$breadcrumb-active-color-dark: $text-color-dark !default;
+
+// Carousel
+
+$carousel-control-color-dark: $text-color-dark !default;
+
+$carousel-indicator-active-bg-dark: $red !default;
+
+// Code
+
+$pre-color-dark: $text-color-dark !default;

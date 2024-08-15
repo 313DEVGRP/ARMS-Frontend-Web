@@ -3,7 +3,7 @@ $font-style: normal;
 $font-url: './NanumGothic/nanum-gothic-v11-latin_korean';
 
 @font-face {
-  font-family: 'Nanum Gothic';
+  font-family: $font-family;
   font-style: $font-style;
   font-weight: $font-weight-normal;
   src:
@@ -16,7 +16,7 @@ $font-url: './NanumGothic/nanum-gothic-v11-latin_korean';
 }
 
 @font-face {
-  font-family: 'Nanum Gothic';
+  font-family: $font-family;
   font-style: $font-style;
   font-weight: $font-weight-bold;
   src:
@@ -29,9 +29,9 @@ $font-url: './NanumGothic/nanum-gothic-v11-latin_korean';
 }
 
 @font-face {
-  font-family: 'Nanum Gothic';
+  font-family: $font-family;
   font-style: $font-style;
-  font-weight: $font-weight-extra-bold;
+  font-weight: $font-weight-bolder;
   src:
     local('NanumGothic'),
     url('#{$font-url}-800.woff2') format('woff2') /* Super Modern Browsers */,
