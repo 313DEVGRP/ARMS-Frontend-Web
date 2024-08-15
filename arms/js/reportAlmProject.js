@@ -24,18 +24,10 @@ function execDocReady() {
 			"../reference/light-blue/lib/jquery.fileupload.js",
 			"../reference/light-blue/lib/jquery.fileupload-fp.js",
 			"../reference/light-blue/lib/jquery.fileupload-ui.js",
-		],
-		[
-			//날짜 검색
-			"../reference/light-blue/lib/bootstrap-datepicker.js",
-			"../reference/jquery-plugins/datetimepicker-2.5.20/build/jquery.datetimepicker.min.css",
-			"../reference/jquery-plugins/datetimepicker-2.5.20/build/jquery.datetimepicker.full.min.js",
-			//
-			"../reference/lightblue4/docs/lib/widgster/widgster.js",
-			"../reference/lightblue4/docs/lib/slimScroll/jquery.slimscroll.min.js"
-		],
 
-		[
+			"../reference/lightblue4/docs/lib/widgster/widgster.js",
+			"../reference/lightblue4/docs/lib/slimScroll/jquery.slimscroll.min.js",
+
 			"../reference/jquery-plugins/select2-4.0.2/dist/css/select2_lightblue4.css",
 			"../reference/jquery-plugins/lou-multi-select-0.9.12/css/multiselect-lightblue4.css",
 			"../reference/jquery-plugins/multiple-select-1.5.2/dist/multiple-select-bluelight.css",
@@ -58,15 +50,18 @@ function execDocReady() {
 			"../reference/jquery-plugins/dataTables-1.10.16/extensions/Buttons/js/buttons.print.js",
 			"../reference/jquery-plugins/dataTables-1.10.16/extensions/Buttons/js/jszip.min.js"
 		],
-
 		[
+			//날짜 검색
+			"../reference/light-blue/lib/bootstrap-datepicker.js",
+			"../reference/jquery-plugins/datetimepicker-2.5.20/build/jquery.datetimepicker.min.css",
+			"../reference/jquery-plugins/datetimepicker-2.5.20/build/jquery.datetimepicker.full.min.js",
 			//chart Colors
 			"./js/common/colorPalette.js",
 			// Apache Echarts
 			"../reference/jquery-plugins/echarts-5.4.3/dist/echarts.min.js",
-			"./js/common/chart/eCharts/donutChart.js",
-		]
-		// 추가적인 플러그인 그룹들을 이곳에 추가하면 됩니다.
+			"./js/common/chart/eCharts/donutChart.js"
+		],
+	// 추가적인 플러그인 그룹들을 이곳에 추가하면 됩니다.(그룹 최대 4개)
 	];
 
 	loadPluginGroupsParallelAndSequential(pluginGroups)
@@ -81,7 +76,7 @@ function execDocReady() {
 
 			//제품(서비스) 셀렉트 박스 이니시에이터
 			makePdServiceSelectBox();
-			//버전 멀티 셀렉트 박스 이니시에이터
+			//버전 멀티 셀렉트 박스 이니시에이터ㅎ
 			makeVersionMultiSelectBox();
 			//날짜
 			dateTimePicker();
