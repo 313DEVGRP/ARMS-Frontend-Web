@@ -262,7 +262,7 @@ function getTop5LogName(search_string, range_date){
 	}
 
 	$.ajax({
-		url: "/engine-search-api/engine/search/log-aggs-top5/with-date",
+		url: "/engine-search-api/engine/search/log/aggs-top5",
 		type: "GET",
 		data: { "search_string": search_string, "from": start_date, "to" : end_date },
 		dataType: "json",

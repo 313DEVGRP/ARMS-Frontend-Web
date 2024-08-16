@@ -27,6 +27,15 @@ function execDocReady() {
             "../reference/light-blue/lib/jquery.fileupload-ui.js"
         ],
         [
+            "../reference/jquery-plugins/select2-4.0.2/dist/css/select2_lightblue4.css",
+            "../reference/jquery-plugins/lou-multi-select-0.9.12/css/multiselect-lightblue4.css",
+            "../reference/jquery-plugins/multiple-select-1.5.2/dist/multiple-select-bluelight.css",
+            "../reference/jquery-plugins/select2-4.0.2/dist/js/select2.min.js",
+            "../reference/jquery-plugins/lou-multi-select-0.9.12/js/jquery.quicksearch.js",
+            "../reference/jquery-plugins/lou-multi-select-0.9.12/js/jquery.multi-select.js",
+            "../reference/jquery-plugins/multiple-select-1.5.2/dist/multiple-select.min.js"
+        ],
+        [
             "../reference/lightblue4/docs/lib/slimScroll/jquery.slimscroll.min.js",
             "../reference/jquery-plugins/unityping-0.1.0/dist/jquery.unityping.min.js",
             "../reference/lightblue4/docs/lib/widgster/widgster.js"
@@ -304,7 +313,7 @@ function getTop5LogName(search_string, range_date) {
     }
 
     $.ajax({
-        url: "/engine-search-api/engine/search/log-aggs-top5/with-date",
+        url: "/engine-search-api/engine/search/log/aggs-top5",
         type: "GET",
         data: { search_string: search_string, from: start_date, to: end_date },
         dataType: "json",
