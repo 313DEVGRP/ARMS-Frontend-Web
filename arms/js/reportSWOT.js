@@ -27,7 +27,8 @@ function execDocReady() {
 			"../reference/lightblue4/docs/lib/widgster/widgster.js",
 			//d3 변경
 			"../reference/jquery-plugins/d3-5.16.0/d3.min.js",
-			"../reference/lightblue4/docs/lib/slimScroll/jquery.slimscroll.min.js"],
+			"../reference/lightblue4/docs/lib/slimScroll/jquery.slimscroll.min.js",
+			"../reference/jquery-plugins/timerStyles.js"],
 
 		["../reference/jquery-plugins/dataTables-1.10.16/media/css/jquery.dataTables_lightblue4.css",
 			"../reference/jquery-plugins/dataTables-1.10.16/extensions/Responsive/css/responsive.dataTables_lightblue4.css",
@@ -56,6 +57,22 @@ function execDocReady() {
 			//사이드 메뉴 처리
 			$('.widget').widgster();
 			setSideMenu("sidebar_menu_report", "sidebar_menu_report_swot");
+
+			//coming soon
+			$("#count-down").TimeCircles(
+				{
+					circle_bg_color: "#f8f8f8",
+					use_background: true,
+					bg_width: .2,
+					fg_width: 0.013,
+					time: {
+						Days: { color: "#f8f8f8" },
+						Hours: { color: "#f8f8f8" },
+						Minutes: { color: "#f8f8f8" },
+						Seconds: { color: "#f8f8f8" }
+					}
+				}
+			);
 
 			// 스크립트 실행 로직을 이곳에 추가합니다.
 			const svg = d3.select('#matrix');

@@ -49,7 +49,8 @@ function execDocReady() {
             "../reference/light-blue/lib/bootstrap-datepicker.js",
             "../reference/jquery-plugins/datetimepicker-2.5.20/build/jquery.datetimepicker.min.css",
             "../reference/jquery-plugins/datetimepicker-2.5.20/build/jquery.datetimepicker.full.min.js",
-            "../reference/lightblue4/docs/lib/widgster/widgster.js"
+            "../reference/lightblue4/docs/lib/widgster/widgster.js",
+            "../reference/jquery-plugins/timerStyles.js"
         ],
 
         [
@@ -87,6 +88,22 @@ function execDocReady() {
             //사이드 메뉴 처리
             $(".widget").widgster();
             setSideMenu("sidebar_menu_jira", "sidebar_menu_state_mapping");
+
+            //coming soon
+            $("#count-down").TimeCircles(
+                {
+                    circle_bg_color: "#f8f8f8",
+                    use_background: true,
+                    bg_width: .2,
+                    fg_width: 0.013,
+                    time: {
+                        Days: { color: "#f8f8f8" },
+                        Hours: { color: "#f8f8f8" },
+                        Minutes: { color: "#f8f8f8" },
+                        Seconds: { color: "#f8f8f8" }
+                    }
+                }
+            );
 
             //ALM 서버 셀렉트 박스 이니시에이터
             make_alm_server_select_box();

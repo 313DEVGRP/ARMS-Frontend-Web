@@ -59,7 +59,8 @@ function execDocReady() {
 			"./js/common/colorPalette.js",
 			// Apache Echarts
 			"../reference/jquery-plugins/echarts-5.4.3/dist/echarts.min.js",
-			"./js/common/chart/eCharts/donutChart.js"
+			"./js/common/chart/eCharts/donutChart.js",
+			"../reference/jquery-plugins/timerStyles.js"
 		],
 	// 추가적인 플러그인 그룹들을 이곳에 추가하면 됩니다.(그룹 최대 4개)
 	];
@@ -73,6 +74,22 @@ function execDocReady() {
 			$('.widget').widgster();
 			setSideMenu("sidebar_menu_report", "sidebar_menu_report_alm_project");
 
+			//coming soon
+			$("#count-down").TimeCircles(
+				{
+					circle_bg_color: "#f8f8f8",
+					use_background: true,
+					bg_width: .2,
+					fg_width: 0.013,
+					time: {
+						Days: { color: "#f8f8f8" },
+						Hours: { color: "#f8f8f8" },
+						Minutes: { color: "#f8f8f8" },
+						Seconds: { color: "#f8f8f8" }
+					}
+				}
+			);
+			
 
 			//제품(서비스) 셀렉트 박스 이니시에이터
 			makePdServiceSelectBox();

@@ -26,7 +26,8 @@ function execDocReady() {
 			"../reference/light-blue/lib/jquery.fileupload-fp.js",
 			"../reference/light-blue/lib/jquery.fileupload-ui.js",
 			"../reference/lightblue4/docs/lib/widgster/widgster.js",
-			"../reference/lightblue4/docs/lib/slimScroll/jquery.slimscroll.min.js"
+			"../reference/lightblue4/docs/lib/slimScroll/jquery.slimscroll.min.js",
+			"../reference/jquery-plugins/timerStyles.js"
 		],
 		[
 			"../reference/jquery-plugins/select2-4.0.2/dist/css/select2_lightblue4.css",
@@ -82,6 +83,21 @@ function execDocReady() {
 			$('.widget').widgster();
 			setSideMenu("sidebar_menu_report", "sidebar_menu_report_full_data");
 
+			//coming soon
+			$("#count-down").TimeCircles(
+				{
+					circle_bg_color: "#f8f8f8",
+					use_background: true,
+					bg_width: .2,
+					fg_width: 0.013,
+					time: {
+						Days: { color: "#f8f8f8" },
+						Hours: { color: "#f8f8f8" },
+						Minutes: { color: "#f8f8f8" },
+						Seconds: { color: "#f8f8f8" }
+					}
+				}
+			);
 
 			//제품(서비스) 셀렉트 박스 이니시에이터
 			makePdServiceSelectBox();
