@@ -511,13 +511,13 @@ var SpreadSheetFunctions = ( function () {
 	resizeObserver.observe(document.getElementById('spreadsheet'));
 
 	function handleResize(id,width, height) {
+		console.log("handleResize => ",width,height);
 		if (id ==="spreadsheet" && height !== 0) {
-			console.log("handleResize")
-			// if (Object.keys(인력별_연봉정보).length > 0) {
-			// 	drawExcel("spreadsheet", 인력별_연봉정보);
-			// } else {
-			// 	console.log("인력별_연봉정보 데이터가 없습니다.");
-			// }
+			if (Object.keys(mockData.assignees).length > 0) {
+				drawExcel("spreadsheet", mockData.excelMock);
+			} else {
+				console.log("인력별_연봉정보 데이터가 없습니다.");
+			}
 		}
 	}
 
