@@ -202,6 +202,8 @@ function makePdServiceSelectBox() {
 		statusCode: {
 			200: function (data) {
 				//////////////////////////////////////////////////////////
+				$("#reqAddTableSelect").append('<li><input type="search" id="searchInput" class="form-control searchDarkBack" placeholder="Search Product"></li>');
+
 				for (var k in data.response) {
 					var obj = data.response[k];
 					$("#reqAddTableSelect").append(tableSelectOption(obj));
@@ -209,6 +211,13 @@ function makePdServiceSelectBox() {
 					var newOption = new Option(obj.c_title, obj.c_id, false, false);
 					$("#selected_pdService").append(newOption).trigger("change");
 				}
+				$('#searchInput').on('keyup', filterList);
+				$('#searchInput').on('keydown', function(e) {
+                  if (e.key === ' ') {
+                    e.preventDefault();
+                    $(this).val($(this).val() + ' ');
+                  }
+                });
 				//////////////////////////////////////////////////////////
 				jSuccess("제품(서비스) 조회가 완료 되었습니다.");
 			}
@@ -262,7 +271,28 @@ function makePdServiceSelectBox() {
 		setDefaultBtnText();
 	});
 } // end makePdServiceSelectBox()
+function filterList() {
+    let searchText = $('#searchInput').val().toLowerCase();
+    let hasResults = false;
 
+    $('#reqAddTableSelect li:not(:first)').each(function() {
+        let itemText = $(this).text().toLowerCase();
+        if (itemText.includes(searchText)) {
+            $(this).show();
+            hasResults = true;
+        } else {
+            $(this).hide();
+        }
+    });
+
+    if (!hasResults) {
+        if ($('#noResultsMessage').length === 0) {
+        $('#reqAddTableSelect').append('<li id="noResultsMessage" class="text-center text-muted" >검색 결과가 없습니다.</li>');
+        }
+    } else {
+        $('#noResultsMessage').remove();
+    }
+}
 ////////////////////////////////////////////////////////////////////////////////////////
 //버전 멀티 셀렉트 박스
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -1962,7 +1992,7 @@ function tableSelectOption(obj) {
 	const $li = document.createElement("li");
 	const $title = document.getElementById("tableTitle");
 
-	$li.innerHTML = `<a href="#reqTable" data-toggle="tab">${obj.c_title}</a>`;
+	$li.innerHTML = `<a href="#reqTable" data-toggle="tab" aria-expanded="false">${obj.c_title}</a>`;
 
 	$li.addEventListener("click", (e) => {
 		tableSelect(obj.c_id);
