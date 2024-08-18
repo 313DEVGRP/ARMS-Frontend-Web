@@ -50,8 +50,15 @@ var gojs = (function () {
             $(go.Node,
                 { movable: false },
                 'Spot',
-                { selectionAdorned: false, textEditable: true, locationObjectName: 'BODY' },
+                { selectionAdorned: false, textEditable: false, locationObjectName: 'BODY' },
                 new go.Binding('location', 'loc', go.Point.parse).makeTwoWay(go.Point.stringify),
+                {
+                    doubleClick: (e, node) => {
+                        // 더블 클릭 시 실행할 메소드 호출
+                        console.log(node.data.c_id);
+                        popup_modal('update_popup', node.data.c_id);
+                    }
+                },
                 // the main body consists of a Rectangle surrounding the text
                 $(go.Panel,
                     'Auto',
