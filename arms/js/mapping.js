@@ -819,7 +819,7 @@ function update_radio_buttons(container_selector, value) {
 
     let radio_buttons = $(container_selector + " input[type='radio']");
     radio_buttons.each(function () {
-        if (value && $(this).val() === value) {
+        if (value && $(this).val() == value) {
             $(this).parent().addClass("active");
             $(this).prop("checked", true);
         }
@@ -856,24 +856,8 @@ function save_req_state_btn_click() {
                 200: function () {
                     jSuccess('"' + state_name + '"' + " 상태가 생성되었습니다.");
                     $("#close_modal_popup").trigger("click");
-                    // 선택된 서버가 있을  Mapping 화면 재로드
-                    if ($("#selected_alm_server").val()) {
-                        let selected_alm_server_c_id = $("#selected_alm_server").val();
-                        let alm_server_data = alm_server_list[selected_alm_server_c_id];
-                        let alm_server_type = alm_server_data.c_jira_server_type;
 
-                        if (alm_server_type === "클라우드") {
-                            $("#cloud_project_tree").show();
-                            $("#select-project-div").show();
-                            $("#select-issuetype-div").show();
-                            build_alm_server_jstree(selected_alm_server_c_id);
-                            let data = {};
-                            gojs.load(data);
-                        }
-                        else {
-                            mapping_data_load(selected_alm_server_c_id, alm_server_type);
-                        }
-                    }
+                    init_mapping_diagram();
                 }
             }
         });
@@ -898,6 +882,8 @@ function update_req_state_btn_click() {
             .then((result) => {
                 console.log(result);
                 $("#close_modal_popup").trigger("click");
+
+                init_mapping_diagram();
             })
             .catch((error) => {
                 // 오류가 발생한 경우 처리합니다.
@@ -921,12 +907,37 @@ function delete_req_state_btn_click() {
             .then((result) => {
                 console.log(result);
                 $("#close_modal_popup").trigger("click");
+
+                init_mapping_diagram();
             })
             .catch((error) => {
                 // 오류가 발생한 경우 처리합니다.
                 console.error('Error fetching data:', error);
             });
     });
+}
+
+function init_mapping_diagram() {
+    // 선택된 서버가 있을  Mapping 화면 재로드
+    if ($("#selected_alm_server").val()) {
+        let selected_alm_server_c_id = $("#selected_alm_server").val();
+        let alm_server_data = alm_server_list[selected_alm_server_c_id];
+        let alm_server_type = alm_server_data.c_jira_server_type;
+
+        if (alm_server_type === "클라우드") {
+            $("#select-project").text("선택되지 않음");
+            $("#select-issuetype").text("선택되지 않음");
+            $("#cloud_project_tree").show();
+            $("#select-project-div").show();
+            $("#select-issuetype-div").show();
+            build_alm_server_jstree(selected_alm_server_c_id);
+            let data = {};
+            gojs.load(data);
+        }
+        else {
+            mapping_data_load(selected_alm_server_c_id, alm_server_type);
+        }
+    }
 }
 
 function update_arms_state(state_c_id, state_category_mapping_id, state_name, state_contents) {
