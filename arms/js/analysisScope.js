@@ -19,13 +19,14 @@ function execDocReady() {
 			"../reference/light-blue/lib/vendor/http_blueimp.github.io_JavaScript-Load-Image_js_load-image.js",
 			"../reference/light-blue/lib/vendor/http_blueimp.github.io_JavaScript-Canvas-to-Blob_js_canvas-to-blob.js",
 			"../reference/light-blue/lib/jquery.iframe-transport.js",
-			"../reference/light-blue/lib/jquery.fileupload.js",
+			"../reference/lightblue4/docs/lib/widgster/widgster.js",
+			"../reference/lightblue4/docs/lib/slimScroll/jquery.slimscroll.min.js"
+			/*"../reference/light-blue/lib/jquery.fileupload.js",
 			"../reference/light-blue/lib/jquery.fileupload-fp.js",
-			"../reference/light-blue/lib/jquery.fileupload-ui.js",
-			//chart Colors
-			"./js/common/colorPalette.js",
-			// Apache Echarts
-			"../reference/jquery-plugins/echarts-5.4.3/dist/echarts.min.js"
+			"../reference/light-blue/lib/jquery.fileupload-ui.js",*/
+			/*"../reference/jquery-plugins/datetimepicker-2.5.20/build/jquery.datetimepicker.min.css",
+			"../reference/light-blue/lib/bootstrap-datepicker.js",
+			"../reference/jquery-plugins/datetimepicker-2.5.20/build/jquery.datetimepicker.full.min.js",*/
 		],
 		[
 			"../reference/jquery-plugins/select2-4.0.2/dist/css/select2_lightblue4.css",
@@ -35,29 +36,6 @@ function execDocReady() {
 			"../reference/jquery-plugins/lou-multi-select-0.9.12/js/jquery.quicksearch.js",
 			"../reference/jquery-plugins/lou-multi-select-0.9.12/js/jquery.multi-select.js",
 			"../reference/jquery-plugins/multiple-select-1.5.2/dist/multiple-select.min.js"
-		],
-		[
-			"../reference/jquery-plugins/datetimepicker-2.5.20/build/jquery.datetimepicker.min.css",
-			"../reference/light-blue/lib/bootstrap-datepicker.js",
-			"../reference/jquery-plugins/datetimepicker-2.5.20/build/jquery.datetimepicker.full.min.js",
-			"../reference/lightblue4/docs/lib/widgster/widgster.js",
-			"../reference/lightblue4/docs/lib/slimScroll/jquery.slimscroll.min.js",
-			// 투입 인력별 요구사항 관여 차트
-			"../reference/jquery-plugins/Jit-2.0.1/jit.js",
-			"../reference/jquery-plugins/Jit-2.0.1/Examples/css/Treemap.css",
-			// 제품-버전-투입인력 차트
-			"../reference/jquery-plugins/d3-sankey-v0.12.3/d3-sankey.min.js"
-		],
-		[
-			// d3-5.16.0 네트워크 차트
-			"../reference/jquery-plugins/d3-5.16.0/d3.min.js",
-			// 최상단 메뉴
-			"js/analysis/topmenu/topMenuApi.js",
-			"./js/common/chart/eCharts/basicRadar.js",
-			// 버전 별 요구사항 현황 (RadialPolarBarChart)
-			"./js/common/chart/eCharts/RadialPolarBarChart.js",
-			//CirclePacking with d3 Chart
-			"./js/common/chart/eCharts/circularPackingChart.js"
 		],
 		[
 			"../reference/jquery-plugins/dataTables-1.10.16/media/css/jquery.dataTables_lightblue4.css",
@@ -71,9 +49,28 @@ function execDocReady() {
 			"../reference/jquery-plugins/dataTables-1.10.16/extensions/Buttons/js/buttons.html5.js",
 			"../reference/jquery-plugins/dataTables-1.10.16/extensions/Buttons/js/buttons.print.js",
 			"../reference/jquery-plugins/dataTables-1.10.16/extensions/Buttons/js/jszip.min.js",
+		],
+		[
+			// d3-5.16.0 네트워크 차트
+			"../reference/jquery-plugins/d3-5.16.0/d3.min.js",
+			// 최상단 메뉴
+			"js/analysis/topmenu/topMenuApi.js",
+			"./js/common/chart/eCharts/basicRadar.js",
+			// 버전 별 요구사항 현황 (RadialPolarBarChart)
+			"./js/common/chart/eCharts/RadialPolarBarChart.js",
+			//CirclePacking with d3 Chart
+			"./js/common/chart/eCharts/circularPackingChart.js",
+			// 투입 인력별 요구사항 관여 차트
+			"../reference/jquery-plugins/Jit-2.0.1/jit.js",
+			"../reference/jquery-plugins/Jit-2.0.1/Examples/css/Treemap.css",
+			// 제품-버전-투입인력 차트
+			"../reference/jquery-plugins/d3-sankey-v0.12.3/d3-sankey.min.js",
+			//chart Colors
+			"./js/common/colorPalette.js",
+			// Apache Echarts
+			"../reference/jquery-plugins/echarts-5.4.3/dist/echarts.min.js",
 			"./js/common/chart/d3/sankey.js"
 		]
-		// 추가적인 플러그인 그룹들을 이곳에 추가하면 됩니다.
 	];
 
 	loadPluginGroupsParallelAndSequential(pluginGroups)

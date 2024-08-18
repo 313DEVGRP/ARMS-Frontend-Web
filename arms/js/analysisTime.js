@@ -20,25 +20,6 @@ function execDocReady() {
 			"../reference/light-blue/lib/vendor/http_blueimp.github.io_JavaScript-Load-Image_js_load-image.js",
 			"../reference/light-blue/lib/vendor/http_blueimp.github.io_JavaScript-Canvas-to-Blob_js_canvas-to-blob.js",
 			"../reference/light-blue/lib/jquery.iframe-transport.js",
-			// echarts
-			"../reference/jquery-plugins/echarts-5.4.3/dist/echarts.min.js",
-			// d3(게이지 차트 사용)
-			"../reference/jquery-plugins/d3-5.16.0/d3.min.js",
-			// chart Colors
-			"./js/common/colorPalette.js",
-			// 최상단 메뉴
-			"js/analysis/topmenu/topMenuApi.js",
-			"./js/common/chart/eCharts/basicRadar.js",
-			// 버전 timeline js, css
-			"./js/analysis/time/D_analysisTime.js",
-			"./js/analysis/time/timeline_analysisTime.js",
-			"./js/dashboard/chart/infographic_custom.css",
-			// 히트맵 사용 js, css
-			"./js/analysis/time/calendar_yearview_blocks_analysisTime.js",
-			"../reference/jquery-plugins/github-calendar-heatmap/css/calendar_yearview_blocks.css",
-		],
-
-		[
 			"../reference/lightblue4/docs/lib/slimScroll/jquery.slimscroll.min.js",
 			"../reference/jquery-plugins/unityping-0.1.0/dist/jquery.unityping.min.js",
 			"../reference/light-blue/lib/bootstrap-datepicker.js",
@@ -46,7 +27,6 @@ function execDocReady() {
 			"../reference/jquery-plugins/datetimepicker-2.5.20/build/jquery.datetimepicker.full.min.js",
 			"../reference/lightblue4/docs/lib/widgster/widgster.js"
 		],
-
 		[
 			"../reference/jquery-plugins/select2-4.0.2/dist/css/select2_lightblue4.css",
 			"../reference/jquery-plugins/lou-multi-select-0.9.12/css/multiselect-lightblue4.css",
@@ -69,6 +49,24 @@ function execDocReady() {
 			"../reference/jquery-plugins/dataTables-1.10.16/extensions/Buttons/js/buttons.html5.js",
 			"../reference/jquery-plugins/dataTables-1.10.16/extensions/Buttons/js/buttons.print.js",
 			"../reference/jquery-plugins/dataTables-1.10.16/extensions/Buttons/js/jszip.min.js"
+		],
+		[
+			// echarts
+			"../reference/jquery-plugins/echarts-5.4.3/dist/echarts.min.js",
+			// d3(게이지 차트 사용)
+			"../reference/jquery-plugins/d3-5.16.0/d3.min.js",
+			// chart Colors
+			"./js/common/colorPalette.js",
+			// 최상단 메뉴
+			"js/analysis/topmenu/topMenuApi.js",
+			"./js/common/chart/eCharts/basicRadar.js",
+			// 버전 timeline js, css
+			"./js/analysis/time/D_analysisTime.js",
+			"./js/analysis/time/timeline_analysisTime.js",
+			"./js/dashboard/chart/infographic_custom.css",
+			// 히트맵 사용 js, css
+			"./js/analysis/time/calendar_yearview_blocks_analysisTime.js",
+			"../reference/jquery-plugins/github-calendar-heatmap/css/calendar_yearview_blocks.css",
 		]
 		// 추가적인 플러그인 그룹들을 이곳에 추가하면 됩니다.
 	];
