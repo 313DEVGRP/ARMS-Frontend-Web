@@ -59,9 +59,6 @@ function execDocReady() {
             "../reference/jquery-plugins/dataTables-1.10.16/extensions/Buttons/js/jszip.min.js",
             "../reference/jquery-plugins/dataTables-1.10.16/extensions/Buttons/js/pdfmake.min.js",
             "../reference/jquery-plugins/dataTables-1.10.16/extensions/Buttons/js/vfs_fonts.js",
-            // timezone-picker
-            "../reference/jquery-plugins/kevalbhatt-timezone-picker-2.0.0/dist/timezone-picker.min.js",
-            "../reference/jquery-plugins/kevalbhatt-timezone-picker-2.0.0/dist/styles/timezone-picker.css"
         ]
         // 추가적인 플러그인 그룹들을 이곳에 추가하면 됩니다.
     ];
@@ -74,7 +71,6 @@ function execDocReady() {
             $(".widget").widgster();
             setSideMenu("sidebar_menu_config", "sidebar_menu_config_language");
 
-            drawExcel("modal_excel");
         })
         .catch(function (error) {
             console.error("플러그인 로드 중 오류 발생");
@@ -82,118 +78,3 @@ function execDocReady() {
         });
 }
 
-
-/////////////////////////////////////////////////
-// 엑셀 그리기
-/////////////////////////////////////////////////
-function drawExcel(targetId) {
-    console.log("generalConfig :: drawExcel");
-    let $targetId = "#"+targetId;
-
-    if($($targetId)[0].jexcel) {
-        $($targetId)[0].jexcel.destroy();
-    }
-
-    var excel_width = $($targetId).width() - 50;
-
-    // 컬럼 설정
-    var columnList = [
-        { type: "text", title: "설명", wRatio: 0.16},
-        { type: "text", title: "리눅스", wRatio: 0.21},
-        { type: "text", title: "윈도우", wRatio: 0.21},
-        { type: "text", title: "윈도우 2008 R2 & SP2", wRatio: 0.21},
-        { type: "text", title: "유닉스",  wRatio: 0.20},
-    ];
-
-    SpreadSheetFunctions.setColumns(columnList);
-    SpreadSheetFunctions.setColumnWidth(excel_width);
-
-    var customOption = {
-        search: true,
-        updateTable: function(instance, cell, col, row, val, id) {
-            cell.style.textAlign = "left";
-            cell.style.whiteSpace = "normal";
-        }
-    };
-
-    SpreadSheetFunctions.setOptions(customOption);
-    let data;
-    $.getJSON('./mock/engine_command.json', function(jsonData) {
-        data = jsonData.map(arr => arr.slice(0,-1));
-
-        $($targetId).spreadsheet($.extend({}, {
-            columns: SpreadSheetFunctions.getColumns(),
-            data: data
-        }, SpreadSheetFunctions.getOptions()));
-        SpreadSheetFunctions.setExcelData(data);
-        $("#modal_excel .jexcel_content").css("width","100%");
-        $("#modal_excel .jexcel_content").css("max-height","420px");
-    }).fail(function(jqxhr, textStatus, error) {
-        console.error("Error loading JSON file: " + textStatus + ", " + error);
-    });
-}
-
-var SpreadSheetFunctions = (function () {
-
-    let $tabFunction_data;   // 엑셀 데이터
-    let $tabFunction_columns;// 엑셀 컬럼
-    let $tabFunction_options;// 엑셀 (커스텀)옵션 :: 정의 안할 경우 default
-
-    var setExcelData = function(data) {
-        $tabFunction_data = data;
-    };
-    var getExcelData = function () {
-        return $tabFunction_data;
-    };
-    var setColumns = function(columns) {
-        console.log("setColumns start");
-        $tabFunction_columns = columns;
-        console.log("setColumns fin");
-    };
-    var getColumns = function () {
-        return $tabFunction_columns;
-    };
-    var setOptions = function(options) {
-        $tabFunction_options = options;
-    };
-    var getOptions = function() {
-        return $tabFunction_options ? $tabFunction_options : null;
-    };
-    var setColumnWidth = function (width) {
-        console.log("setColumnWidth start");
-        if ($tabFunction_columns) {
-            $tabFunction_columns = $tabFunction_columns.map(column => ({
-                ...column, width: width * column.wRatio
-            }));
-        }
-        console.log("setColumnWidth end");
-    };
-    /*
-        var resizeObserver = new ResizeObserver(function(entries) {
-            for (let entry of entries) {
-                var width = entry.contentRect.width;
-                var height = entry.contentRect.height;
-                handleResize(entry.target.id, width, height);
-            }
-        });
-
-        // 모달요소 크기 변화 관찰
-        resizeObserver.observe(document.getElementById('modal_excel'));*/
-
-    function handleResize(id,width, height) {
-        if (id ==="modal_excel" && height !== 0) {
-            if ($tabFunction_data) {
-                drawExcel("modal_excel");
-            } else {
-                console.log("엑셀 데이터 없음");
-            }
-        }
-    }
-
-    return {
-        setExcelData, getExcelData,
-        setColumns, getColumns,
-        setOptions, getOptions,
-        setColumnWidth,
-    };
-})();

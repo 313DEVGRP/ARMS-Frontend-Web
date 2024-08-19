@@ -8,7 +8,6 @@
 		$.getStylesheet("../reference/jquery-plugins/jspreadsheet-4.13.1/dist/jspreadsheet.css"),
 		$.getStylesheet("../reference/jquery-plugins/jspreadsheet-4.13.1/dist/jspreadsheet.datatables.css"),
 		$.getStylesheet("../reference/jquery-plugins/jspreadsheet-4.13.1/dist/jspreadsheet.theme.css"),
-		$.getStylesheet("../reference/jquery-plugins/fontawesome-free-6.3.0-web/css/all.min.css"),
 		$.getStylesheet("./css/jspreadsheet/custom_sheet.css")
 	).done(function () {
 		//$("#hsh").show(); 에서 $.fn.show(); 와 동일하다.

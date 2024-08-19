@@ -1,0 +1,200 @@
+:root {
+    --jexcel_header_color: #000;
+    --jexcel_header_color_highlighted: #000;
+    --jexcel_header_background: #f3f3f3;
+    --jexcel_header_background_highlighted: #dcdcdc;
+    --jexcel_content_color: #000;
+    --jexcel_content_color_highlighted: #000;
+    --jexcel_content_background: #fff;
+    --jexcel_content_background_highlighted: rgba(0,0,0,0.05);
+    --jexcel_menu_background: #fff;
+    --jexcel_menu_background_highlighted: #ebebeb;
+    --jexcel_menu_color: #555;
+    --jexcel_menu_color_highlighted: #555;
+    --jexcel_menu_box_shadow: 2px 2px 2px 0px rgba(143, 144, 145, 1);
+    --jexcel_border_color: #ccc;
+    --jexcel_border_color_highlighted: #000;
+    --active_color: #007aff;
+
+    /*
+    dark theme 설정
+    */
+    --dark_toolbar_background: rgba(51,51,51,0.9);
+    --dark_toolbar_color: #FFF;
+    --dark_jexcel_header_background: rgba(51,51,51,0.95);
+    --dark_jexcel_border_color_5: rgba(51,51,51,0.5);
+    /*--dark_jexcel_row_col_header_color: #646463;*/
+    --dark_jexcel_row_col_header_color: #FFF;
+    --dark_border_color: #737271;
+}
+
+.tb-default-color {
+    color: #000 !important;
+}
+
+.jexcel tbody tr td {
+    border-left: 1px solid #ccc !important;
+}
+.jexcel tbody tr:nth-child(even) td{
+    /*background-color: #E6E6E6;*/
+}
+
+.jexcel {
+    background: #DDD;
+}
+
+.jexcel_pagination {
+    max-height: 40px;
+}
+.jexcel_toolbar {
+    margin: 0 !important;
+}
+
+.jexcel_container .jexcel_content {
+    box-shadow: none !important;
+}
+
+.jexcel_content{
+    padding-right: 0px !important;
+}
+
+.cell-header {
+    font-size: 13px !important;
+}
+.cell-content {
+    background: rgba(51,51,51,0.8) !important;
+    color: #FFF !important;
+    font-size: 12px;
+    line-height: 15px !important; /* 행간 설정 */
+}
+
+.jexcel_toolbar i.jexcel_toolbar_item {
+    line-height: 16px !important;
+}
+
+/* DarkTheme 을 위한 설정 */
+/* 툴바 */
+.jexcel_toolbar {
+    background: rgba(51,51,51,0.9) !important; /* rgba(51,51,51,0.9) */
+    border: none !important;
+    margin: 0 !important;
+    border-bottom: 1px solid rgba(51,51,51,0.9) !important; /* rgba(51,51,51,0.9) */
+}
+.tb-default-color,
+.jexcel_toolbar_item {
+    color: var(--dark_toolbar_color) !important;
+}
+.jexcel thead {
+    background-color: transparent !important;
+}
+/* 행 헤더 스타일 */
+.jexcel thead tr td,
+table.jexcel thead tr td{
+    height: 30px !important;
+
+    color: var(--dark_jexcel_row_col_header_color) !important;
+    font-weight: 300 !important;
+    font-size: 12px !important;
+
+    background: rgba(51,51,51,0.95); !important;
+
+    border:none !important;
+    border-right: 1px solid #d9d9d94d !important;
+    border-bottom: 1px solid #d9d9d94d !important;
+}
+.jexcel tbody tr td.jexcel_row,
+table.jexcel tbody tr td.jexcel_row {
+    color: var(--dark_jexcel_row_col_header_color) !important;
+    font-weight: 300 !important;
+    font-size: 12px !important;
+
+    background: rgba(51,51,51,0.95) !important;
+
+    border:none !important;
+    border-right: 1px solid #d9d9d94d !important;
+    border-bottom: 1px solid #d9d9d94d !important;
+}
+
+.jexcel thead tr td.selected,
+table.jexcel thead tr td.selected {
+    background-color: rgba(51,51,51,0.7) !important;
+}
+.jexcel tbody tr.selected td.jexcel_row,
+table.jexcel tbody tr.selected td.jexcel_row {
+    background-color: rgba(51,51,51,0.7) !important;
+}
+
+.jexcel .editor input,
+table.jexcel .editor input {
+    color: #FFF !important;
+}
+
+.jexcel,
+table.jexcel {
+    border: none !important;
+}
+/* 일반 셀 설정 */
+.jexcel tbody tr td,
+table.jexcel tbody tr td {
+    border-top: none !important;
+    color: #FFF;
+
+    background-color: rgba(51,51,51,0.8);
+
+    border-top: none !important;
+    border-right: 1px solid var(--dark_jexcel_border_color_5) !important;
+    border-bottom: 1px solid var(--dark_jexcel_border_color_5) !important;
+    border-left: none !important;;
+    padding: 5px !important;
+    line-height: 1.5;
+}
+.jexcel .highlight,
+table.jexcel .highlight {
+    background-color: rgba(51,51,51,0.7) !important;
+}
+
+.jexcel_pagination div div {
+    background: rgba(51,51,51,0.5) !important;
+    color: var(--dark_jexcel_row_col_header_color) !important;
+    border: 1px solid rgba(51,51,51,0.7) !important;
+}
+.jexcel_pagination .jexcel_page {
+    font-size: 11px !important;
+}
+.jexcel_pagination .jexcel_page_selected {
+    background-color: rgba(51,51,51,0.9) !important;
+}
+
+/* custom_icon setting*/
+#modal_excel .fa:before {
+    width: 16px;
+    display: inline-block;
+    height: 16px;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 16px;
+    color: #FFF;
+}
+
+.fa.fa-font.fa-background {
+    color: #FFF;
+    background-color: #000000;
+}
+
+.search-box {
+    margin-left: auto;
+    min-width: 220px;
+    background-color: #4d4d4d4d !important;
+    border: 1px dashed #d9d9d94d;
+    border-radius: 3px;
+}
+.jexcel_search::placeholder {
+    color:#D9D9D9A0;
+}
+.jexcel_search:focus,
+.jexcel_search:active {
+    outline: none;
+    transition: border linear 0.2s, box-shadow linear 0.2s;
+    border-color: #a4c6ff;
+    box-shadow: 0 0 10px rgba(164, 198, 255, 0.8);
+}
