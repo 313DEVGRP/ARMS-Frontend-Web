@@ -28,10 +28,8 @@ function execDocReady() {
             "../reference/light-blue/lib/jquery.fileupload.js",
             "../reference/light-blue/lib/jquery.fileupload-fp.js",
             "../reference/light-blue/lib/jquery.fileupload-ui.js",
-            //chart Colors
-            "./js/common/colorPalette.js",
-            // Apache Echarts
-            "../reference/jquery-plugins/echarts-5.4.3/dist/echarts.min.js"
+            "../reference/lightblue4/docs/lib/widgster/widgster.js",
+            "../reference/lightblue4/docs/lib/slimScroll/jquery.slimscroll.min.js"
         ],
         [
             "../reference/jquery-plugins/select2-4.0.2/dist/css/select2_lightblue4.css",
@@ -40,26 +38,16 @@ function execDocReady() {
             "../reference/jquery-plugins/select2-4.0.2/dist/js/select2.min.js",
             "../reference/jquery-plugins/lou-multi-select-0.9.12/js/jquery.quicksearch.js",
             "../reference/jquery-plugins/lou-multi-select-0.9.12/js/jquery.multi-select.js",
-            "../reference/jquery-plugins/multiple-select-1.5.2/dist/multiple-select.min.js"
-        ],
-        [
-            "../reference/jquery-plugins/datetimepicker-2.5.20/build/jquery.datetimepicker.min.css",
-            "../reference/light-blue/lib/bootstrap-datepicker.js",
-            "../reference/jquery-plugins/datetimepicker-2.5.20/build/jquery.datetimepicker.full.min.js",
-            "../reference/lightblue4/docs/lib/widgster/widgster.js",
-            "../reference/lightblue4/docs/lib/slimScroll/jquery.slimscroll.min.js",
-            // 투입 인력별 요구사항 관여 차트
-            "../reference/jquery-plugins/Jit-2.0.1/jit.js",
-            "../reference/jquery-plugins/Jit-2.0.1/Examples/css/Treemap.css",
-            // 제품-버전-투입인력 차트
-            "../reference/jquery-plugins/d3-sankey-v0.12.3/d3-sankey.min.js"
-        ],
-        [
-            // d3-5.16.0 네트워크 차트
-            "../reference/jquery-plugins/d3-5.16.0/d3.min.js",
-            //  최상단 메뉴
-            "./js/analysis/topmenu/topMenuApi.js",
-            "./js/common/chart/eCharts/basicRadar.js"
+            "../reference/jquery-plugins/multiple-select-1.5.2/dist/multiple-select.min.js",
+            "../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jsuites.js",
+            "../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/index.js",
+            "../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jsuites.css",
+            "../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jspreadsheet.css",
+            "../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jspreadsheet.datatables.css",
+            "../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jspreadsheet.theme.css",
+            "./js/common/jspreadsheet/spreadsheet.js",
+            "./css/jspreadsheet/custom_icon.css",
+            "./css/jspreadsheet/custom_sheet.css"
         ],
         [
             "../reference/jquery-plugins/dataTables-1.10.16/media/css/jquery.dataTables_lightblue4.css",
@@ -73,17 +61,27 @@ function execDocReady() {
             "../reference/jquery-plugins/dataTables-1.10.16/extensions/Buttons/js/buttons.html5.js",
             "../reference/jquery-plugins/dataTables-1.10.16/extensions/Buttons/js/buttons.print.js",
             "../reference/jquery-plugins/dataTables-1.10.16/extensions/Buttons/js/jszip.min.js",
-            "./js/common/chart/d3/sankey.js"
         ],
         [
-            "https://fonts.googleapis.com/css?family=Material+Icons",
-            "../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jsuites.js",
-            "../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jsuites.css",
-            "../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/index.js",
-            "../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jspreadsheet.css",
-            // "../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jspreadsheet.datatables.css",
-            "../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jspreadsheet.theme.css"
-        ]
+            /*"../reference/jquery-plugins/datetimepicker-2.5.20/build/jquery.datetimepicker.min.css",
+            "../reference/light-blue/lib/bootstrap-datepicker.js",
+            "../reference/jquery-plugins/datetimepicker-2.5.20/build/jquery.datetimepicker.full.min.js",*/
+            //chart Colors
+            "./js/common/colorPalette.js",
+            // Apache Echarts
+            "../reference/jquery-plugins/echarts-5.4.3/dist/echarts.min.js",
+            // 투입 인력별 요구사항 관여 차트
+            "../reference/jquery-plugins/Jit-2.0.1/jit.js",
+            "../reference/jquery-plugins/Jit-2.0.1/Examples/css/Treemap.css",
+            // 제품-버전-투입인력 차트
+            "../reference/jquery-plugins/d3-sankey-v0.12.3/d3-sankey.min.js",
+            // d3-5.16.0 네트워크 차트
+            "../reference/jquery-plugins/d3-5.16.0/d3.min.js",
+            //  최상단 메뉴
+            "./js/analysis/topmenu/topMenuApi.js",
+            "./js/common/chart/eCharts/basicRadar.js",
+            "./js/common/chart/d3/sankey.js"
+        ],
         // 추가적인 플러그인 그룹들을 이곳에 추가하면 됩니다.
     ];
 
@@ -602,7 +600,8 @@ function manpowerInput(전체담당자목록) {
     });
     console.log(" [ analysisCost :: manpowerInput ] :: 인력별_연봉정보 => " + JSON.stringify(인력별_연봉정보));
 
-    jspreadsheetRender(인력별_연봉정보);
+    drawExcel("spreadsheet", 인력별_연봉정보);
+    //jspreadsheetRender(인력별_연봉정보);
 
     // 템플릿 다운로드
     excel_download(인력별_연봉정보);
@@ -1487,6 +1486,130 @@ function 인력별_연봉대비_성과차트(전체담당자목록) {
     window.addEventListener('resize', myChart.resize);
 }
 
+/////////////////////////////////////////////////////
+// 엑셀 그리기
+/////////////////////////////////////////////////////
+function drawExcel(targetId, data) {
+    console.log("analysisCost :: drawExcel");
+    console.log(data);
+    let $targetId = "#" + targetId;
+
+    if($($targetId)[0].jexcel) {
+        console.log($($targetId)[0].jexcel);
+        $($targetId)[0].jexcel.destroy();
+    }
+    console.log("width=> " + $($targetId).width());
+    var excelWidth=$($targetId).width() - 50;
+
+    var columnList = [
+        { type: "text", title: "이름", wRatio: 0.25, readOnly: true },
+        { type: "text", title: "키",   wRatio: 0.25, readOnly: true },
+        { type: "text", title: "연봉", wRatio: 0.49 }
+    ];
+
+    SpreadSheetFunctions.setColumns(columnList);
+    SpreadSheetFunctions.setColumnWidth(excelWidth);
+
+    var customOptions = {
+        pagination:10,
+        contextMenu: [],
+        updateTable: function(instace, cell, col, row, val, id) {
+            cell.style.whiteSpace = "normal";
+            if(col === 2) {
+                cell.style.textAlign = "right";
+                cell.style.color = "#a4c6ff";
+            } else {
+                cell.style.textAlign = "left";
+            }
+        },
+        onchange: function(instance, cell, x, y, value) {
+            var cellName = jspreadsheet.getColumnNameFromId([x,y]);
+            console.log('onchange :: ' + cell + " :;  x :: " + x + " :: y :: " + y +" :: cellName ::" + cellName + ' to: ' + value + '\n');
+            if (x == 2) {
+                var key = instance.jexcel.getValueFromCoords(1, y);
+                if (!modifiedRows[key]) {
+                    modifiedRows[key] = {};
+                }
+                modifiedRows[key].이름 = instance.jexcel.getValueFromCoords(0, y);
+                modifiedRows[key].키 = instance.jexcel.getValueFromCoords(1, y);
+                modifiedRows[key].연봉 = value;
+            }
+        }
+    };
+
+    SpreadSheetFunctions.setExcelData(data);
+    SpreadSheetFunctions.setOptions(customOptions);
+
+    $($targetId).spreadsheet($.extend({}, {
+        columns: SpreadSheetFunctions.getColumns(),
+        data: SpreadSheetFunctions.getExcelData()
+    }, SpreadSheetFunctions.getOptions()));
+
+}
+
+var SpreadSheetFunctions = ( function () {
+    let $tabFunction_data;   // 엑셀 데이터
+    let $tabFunction_columns;// 엑셀 컬럼
+    let $tabFunction_options;// 엑셀 (커스텀)옵션 :: 정의 안할 경우 default
+    let $sheetInstance;
+    var setESheet = function(obj) {
+        $sheetInstance = obj;
+    };
+    var setExcelData = function(data) {
+        $tabFunction_data = data;
+    };
+    var getExcelData = function () {
+        return $tabFunction_data;
+    };
+    var setColumns = function(columns) {
+        console.log("setColumns");
+        $tabFunction_columns = columns;
+    };
+    var getColumns = function () {
+        return $tabFunction_columns;
+    };
+    var setOptions = function(options) {
+        $tabFunction_options = options;
+    };
+    var getOptions = function() {
+        return $tabFunction_options ? $tabFunction_options : null;
+    };
+
+    var setColumnWidth = function (width) {
+        $tabFunction_columns = $tabFunction_columns.map(column => ({
+            ...column, width: width * column.wRatio
+        }));
+    };
+
+    var resizeObserver = new ResizeObserver(function(entries) {
+        for (let entry of entries) {
+            var width = entry.contentRect.width;
+            var height = entry.contentRect.height;
+            handleResize(entry.target.id, width, height);
+        }
+    });
+
+    // 모달요소 크기 변화 관찰
+    resizeObserver.observe(document.getElementById('spreadsheet'));
+
+    function handleResize(id,width, height) {
+        if (id ==="spreadsheet" && height !== 0) {
+            if (Object.keys(인력별_연봉정보).length > 0) {
+                drawExcel("spreadsheet", 인력별_연봉정보);
+            } else {
+                console.log("인력별_연봉정보 데이터가 없습니다.");
+            }
+        }
+    }
+
+    return {
+      setExcelData, getExcelData,
+      setColumns, getColumns,
+      setOptions, getOptions,
+      setColumnWidth
+    };
+})();
+
 function jspreadsheetRender(data) {
     var spreadsheetElement = document.getElementById("spreadsheet");
 
@@ -1587,6 +1710,8 @@ function jspreadsheetRender(data) {
 
 $(document).ready(function() {
     $("#cost-excel-batch-update").on('click', function() {
+
+        console.log(modifiedRows);
         if (Object.keys(modifiedRows).length === 0) {
             jError("수정된 연봉 데이터가 없습니다.");
             return;

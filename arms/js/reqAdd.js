@@ -16,6 +16,7 @@ var reqColumnList = [
 	{ data: "c_left",  title: "<span class='toggle-column'>c_left</span>", visible: false, defaultContent: "-"},
 	{ data: "c_title", title: "<span class=''>요구사항</span>", defaultContent: "-"}
 ];
+
 function execDocReady() {
 	var pluginGroups = [
 		[
@@ -66,10 +67,12 @@ function execDocReady() {
 			"../reference/jquery-plugins/swiper-11.1.4/swiper-bundle.min.js",
 			"../reference/jquery-plugins/swiper-11.1.4/swiper-bundle.min.css",
 			"./js/common/swiperHelper.js",
-			"./css/customSwiper.css"
+			"./css/customSwiper.css",
+			"./js/reqAddTable.js",
+			"./js/reqAddPivot.js",
+			"./css/jiraServerCustom.css"
 		],
 		// 추가적인 플러그인 그룹들을 이곳에 추가하면 됩니다.
-		["js/reqAddTable.js", "js/reqAddPivot.js", "css/jiraServerCustom.css"]
 	];
 
 	loadPluginGroupsParallelAndSequential(pluginGroups)
@@ -143,6 +146,25 @@ function execDocReady() {
 			switch_action_for_mode();
 			tab_click_event();
 
+			get_arms_req_state_list()
+				.then((state_list) => {
+					let req_state_list = [];
+					for (let k in state_list) {
+						let state = state_list[k];
+						//--- 테이블 보기에서 사용하는 전역변수
+						req_state_map[state.c_id] = state;
+						ReqStatus[state.c_title] = state.c_id;
+						req_state_list.push(state);
+					}
+					console.log(req_state_list);
+					binding_state_list("detailview_req_state", req_state_list, true);
+					binding_state_list("editview_req_state", req_state_list, false);
+				})
+				.catch((error) => {
+					console.error('Error fetching data:', error);
+					reject(error);  // 에러 발생 시 프라미스를 거부
+				});
+
 			drawio();
 			drawdb();
 			// 스크립트 실행 로직을 이곳에 추가합니다.
@@ -180,6 +202,8 @@ function makePdServiceSelectBox() {
 		statusCode: {
 			200: function (data) {
 				//////////////////////////////////////////////////////////
+				$("#reqAddTableSelect").append('<li><input type="search" id="searchInput" class="form-control searchDarkBack" placeholder="Search Product"></li>');
+
 				for (var k in data.response) {
 					var obj = data.response[k];
 					$("#reqAddTableSelect").append(tableSelectOption(obj));
@@ -187,6 +211,13 @@ function makePdServiceSelectBox() {
 					var newOption = new Option(obj.c_title, obj.c_id, false, false);
 					$("#selected_pdService").append(newOption).trigger("change");
 				}
+				$('#searchInput').on('keyup', filterList);
+				$('#searchInput').on('keydown', function(e) {
+                  if (e.key === ' ') {
+                    e.preventDefault();
+                    $(this).val($(this).val() + ' ');
+                  }
+                });
 				//////////////////////////////////////////////////////////
 				jSuccess("제품(서비스) 조회가 완료 되었습니다.");
 			}
@@ -240,7 +271,28 @@ function makePdServiceSelectBox() {
 		setDefaultBtnText();
 	});
 } // end makePdServiceSelectBox()
+function filterList() {
+    let searchText = $('#searchInput').val().toLowerCase();
+    let hasResults = false;
 
+    $('#reqAddTableSelect li:not(:first)').each(function() {
+        let itemText = $(this).text().toLowerCase();
+        if (itemText.includes(searchText)) {
+            $(this).show();
+            hasResults = true;
+        } else {
+            $(this).hide();
+        }
+    });
+
+    if (!hasResults) {
+        if ($('#noResultsMessage').length === 0) {
+        $('#reqAddTableSelect').append('<li id="noResultsMessage" class="text-center text-muted" >검색 결과가 없습니다.</li>');
+        }
+    } else {
+        $('#noResultsMessage').remove();
+    }
+}
 ////////////////////////////////////////////////////////////////////////////////////////
 //버전 멀티 셀렉트 박스
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -706,15 +758,21 @@ function bindDataEditTab(ajaxData) {
 		}
 	});
 	//편집하기 - 상태 버튼
-	let stateRadioButtons = $("#editview_req_state input[type='radio']");
-	stateRadioButtons.each(function () {
-		if (ajaxData.c_req_state_link && $(this).val() == ajaxData.c_req_state_link) {
-			$(this).parent().addClass("active");
-			$(this).prop("checked", true);
-		} else {
-			$(this).prop("checked", false);
-		}
-	});
+	req_state_setting("editview_req_state", false)
+		.then(() => {
+			let stateRadioButtons = $("#editview_req_state input[type='radio']");
+			stateRadioButtons.each(function () {
+				if (ajaxData.c_req_state_link && $(this).val() == ajaxData.c_req_state_link) {
+					$(this).parent().addClass("active");
+					$(this).prop("checked", true);
+				} else {
+					$(this).prop("checked", false);
+				}
+			});
+		})
+		.catch((error) => {
+			console.error('Error fetching data:', error);
+		});
 
 	var datepickerOption = {
 		timepicker: false,
@@ -830,6 +888,7 @@ function bindDataEditTab(ajaxData) {
 
 // ------------------ 상세보기 ------------------ //
 function bindDataDetailTab(ajaxData) {
+
 	console.log(ajaxData);
 
 	//제품(서비스) 데이터 바인딩
@@ -879,16 +938,22 @@ function bindDataDetailTab(ajaxData) {
 			$(this).prop("checked", false);
 		}
 	});
-	//상세보기 - 상태 버튼
-	let stateRadioButtons = $("#detailview_req_state input[type='radio']");
-	stateRadioButtons.each(function () {
-		if (ajaxData.c_req_state_link && $(this).val() == ajaxData.c_req_state_link) {
-			$(this).parent().addClass("active");
-			$(this).prop("checked", true);
-		} else {
-			$(this).prop("checked", false);
-		}
-	});
+	// 상세보기 - 상태 버튼
+	req_state_setting("detailview_req_state", true)
+		.then(() => {
+			let stateRadioButtons = $("#detailview_req_state input[type='radio']");
+			stateRadioButtons.each(function () {
+				if (ajaxData.c_req_state_link && $(this).val() == ajaxData.c_req_state_link) {
+					$(this).parent().addClass("active");
+					$(this).prop("checked", true);
+				} else {
+					$(this).prop("checked", false);
+				}
+			});
+		})
+		.catch((error) => {
+			console.error('Error fetching data:', error);
+		});
 
 	if (ajaxData.c_req_start_date) {
 		$("#detailview_req_start_date").val(formatDate(new Date(ajaxData.c_req_start_date)));
@@ -1112,7 +1177,14 @@ function registNewPopup() {
 	//radio 버튼 - 상태 초기화
 	$("input[name='popup_req_priority_options']:checked").prop("checked", false);
 	$("input[name='popup_req_difficulty_options']:checked").prop("checked", false);
-	$("input[name='popup_req_state_options']:checked").prop("checked", false);
+	//등록하기 - 상태 버튼
+	req_state_setting("popup_req_state", false)
+		.then(() => {
+			$("input[name='popup_req_state_options']:checked").prop("checked", false);
+		})
+		.catch((error) => {
+			console.error('Error fetching data:', error);
+		});
 
 	var datepickerOption = {
 		timepicker: false,
@@ -1330,7 +1402,10 @@ function click_btn_for_req_save() {
 		let	select_req_difficulty_link = difficulty_value === undefined ? "5" : difficulty_value;
 
 		let state_value = $("#popup_req_state input[name='popup_req_state_options']:checked").val();
-		let	select_req_state_link = state_value === undefined ? "10" : state_value;
+		if (state_value === undefined) {
+			alert("요구사항 상태 설정이 필요합니다.");
+			return false;
+		}
 
 		let start_date_value = $("#popup_req_start_date").val();
 		let c_req_start_date;
@@ -1373,7 +1448,7 @@ function click_btn_for_req_save() {
 			Object.assign(data_object_param, {
 				c_req_priority_link: select_req_priority_link,
 				c_req_difficulty_link: select_req_difficulty_link,
-				c_req_state_link: select_req_state_link,
+				c_req_state_link: state_value,
 				c_req_reviewer01: reviewers01,
 				c_req_reviewer02: reviewers02,
 				c_req_reviewer03: reviewers03,
@@ -1917,7 +1992,7 @@ function tableSelectOption(obj) {
 	const $li = document.createElement("li");
 	const $title = document.getElementById("tableTitle");
 
-	$li.innerHTML = `<a href="#reqTable" data-toggle="tab">${obj.c_title}</a>`;
+	$li.innerHTML = `<a href="#reqTable" data-toggle="tab" aria-expanded="false">${obj.c_title}</a>`;
 
 	$li.addEventListener("click", (e) => {
 		tableSelect(obj.c_id);
@@ -2013,7 +2088,7 @@ function tableSelect(id) {
   				data: params,
         		statusCode: {
    					200: function () {
-       				jSuccess("요구사항이 변경되었습니다.");
+       					jSuccess("요구사항이 변경되었습니다.");
         			}
        			},
                 error: function() {

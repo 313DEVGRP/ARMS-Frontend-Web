@@ -20,9 +20,9 @@
 						테이블 보기
 						<i class="fa fa-caret-down"></i>
 					</a>
-					<ul
-						id="reqAddTableSelect"
-						class="dropdown-menu req-table"></ul>
+					<ul id="reqAddTableSelect"
+						class="dropdown-menu req-table">
+					</ul>
 				</li>
 			</ul>
 		</header>
@@ -2473,6 +2473,37 @@
 	<!-- /.modal-dialog -->
 </div>
 <style>
+	#reqAddTableSelect {
+        padding: 0;
+        margin: 0;
+        overflow-y: auto;
+        max-height: 500px;
+        width: 200px;
+    }
+
+    #reqAddTableSelect li {
+        list-style: none;
+    }
+
+    #reqAddTableSelect li a {
+        text-decoration: none;
+        display: block;
+    }
+
+    #reqAddTableSelect li a:hover {
+        background-color: #4a4a4a;
+    }
+	#reqAddTableSelect li:first-child {
+		position: sticky;
+		top: 0;
+		z-index: 1;
+	}
+    #reqAddTableSelect li input#searchInput {
+        margin: 0 0 5px;
+    }
+    #noResultsMessage{
+    	display: block !important;
+    }
 
 	.open [type="radio"] {
          accent-color: #DB2A34;

@@ -15,6 +15,7 @@ let userRealmRoles;
 let permissions;
 let userEmail;
 let scrollPos = 0;
+
 ////////////////////////////////////////////////////////////////////////////////////////
 //Document Ready
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -103,9 +104,40 @@ function menu_setting() {
 		$("#menu_alm").removeClass("hide");
 		$("#menu_requirement").removeClass("hide");
 		$("#menu_analysis").removeClass("hide");
+		$("#menu_report").removeClass("hide");
+
 	}
-	
-	
+
+	if($("#menu_login").hasClass("hide") === false) {
+
+		console.log("class가 존재함. 로그인이 안됬다는 의미.");
+
+		// 현재 페이지의 URL 가져오기
+		var href = window.location.href;
+
+		// 현재 페이지의 origin 가져오기
+		var origin = window.location.origin;
+
+		// origin을 제외한 URL 경로 얻기
+		var path = href.replace(origin, '');
+
+		console.log(path);
+
+		if (path == "/php/gnuboard5/" || path == "/php/gnuboard5/index.php") {
+			const indexPHPTG = 	new tourguide.TourGuideClient({           // 상세 정보 투어 가이드
+				exitOnClickOutside: true,
+				autoScroll: false,
+				hidePrev: true,
+				hideNext: true,
+				showStepDots: false,
+				showStepProgress: false,
+				steps: TgGroup.indexPHPStep()
+			});
+
+			indexPHPTG.start();
+		}
+
+	}
 
 }
 
@@ -2132,7 +2164,28 @@ function get_arms_req_state_list() {
 	});
 }
 
-function req_state_setting(container_id, req_state_list, is_disabled) {
+function req_state_setting(element, is_disabled) {
+	return new Promise((resolve, reject) => {
+		// ARMS 상태 조회 후 동적 반영
+		get_arms_req_state_list()
+			.then((state_list) => {
+				let req_state_list = [];
+				for (var k in state_list) {
+					var state = state_list[k];
+					req_state_list.push(state);
+				}
+				console.log(req_state_list);
+				binding_state_list(element, req_state_list, is_disabled);
+				resolve();  // 상태 설정이 완료되면 프라미스를 해결
+			})
+			.catch((error) => {
+				console.error('Error fetching data:', error);
+				reject(error);  // 에러 발생 시 프라미스를 거부
+			});
+	});
+}
+
+function binding_state_list(container_id, req_state_list, is_disabled) {
 	const container = $('#' + container_id);
 	container.empty();
 

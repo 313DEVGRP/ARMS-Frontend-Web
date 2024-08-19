@@ -3,9 +3,7 @@ var selectName; // 제품 이름
 var selectedIndex; // 데이터테이블 선택한 인덱스
 var selectedPage; // 데이터테이블 선택한 인덱스
 var selectVersion; // 선택한 버전 아이디
-var selectVersionName; // 선택한 버전 이름
 var dataTableRef; // 데이터테이블 참조 변수
-var selectConnectID; // 제품(서비스) - 버전 - 지라 연결 정보 아이디
 var versionList;
 
 function execDocReady() {

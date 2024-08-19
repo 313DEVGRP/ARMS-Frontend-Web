@@ -24,15 +24,14 @@ function execDocReady() {
             "../reference/light-blue/lib/vendor/http_blueimp.github.io_JavaScript-Load-Image_js_load-image.js",
             "../reference/light-blue/lib/vendor/http_blueimp.github.io_JavaScript-Canvas-to-Blob_js_canvas-to-blob.js",
             "../reference/light-blue/lib/jquery.iframe-transport.js",
-            "../reference/light-blue/lib/jquery.fileupload.js",
+/*            "../reference/light-blue/lib/jquery.fileupload.js",
             "../reference/light-blue/lib/jquery.fileupload-fp.js",
             "../reference/light-blue/lib/jquery.fileupload-ui.js",
-            //d3
-            "../reference/jquery-plugins/d3-5.16.0/d3.min.js",
-            //chart Colors
-            "./js/common/colorPalette.js",
-            // Apache Echarts
-            "../reference/jquery-plugins/echarts-5.4.3/dist/echarts.min.js",
+            "../reference/jquery-plugins/datetimepicker-2.5.20/build/jquery.datetimepicker.min.css",
+            "../reference/light-blue/lib/bootstrap-datepicker.js",
+            "../reference/jquery-plugins/datetimepicker-2.5.20/build/jquery.datetimepicker.full.min.js",*/
+            "../reference/lightblue4/docs/lib/widgster/widgster.js",
+            "../reference/lightblue4/docs/lib/slimScroll/jquery.slimscroll.min.js",
         ],
         [
             "../reference/jquery-plugins/select2-4.0.2/dist/css/select2_lightblue4.css",
@@ -41,14 +40,22 @@ function execDocReady() {
             "../reference/jquery-plugins/select2-4.0.2/dist/js/select2.min.js",
             "../reference/jquery-plugins/lou-multi-select-0.9.12/js/jquery.quicksearch.js",
             "../reference/jquery-plugins/lou-multi-select-0.9.12/js/jquery.multi-select.js",
-            "../reference/jquery-plugins/multiple-select-1.5.2/dist/multiple-select.min.js"
+            "../reference/jquery-plugins/multiple-select-1.5.2/dist/multiple-select.min.js",
+            // jspreadsheet
+            "../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jsuites.js",
+            "../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jsuites.css",
+            "../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/index.js",
+            "../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jspreadsheet.css",
+            // "../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jspreadsheet.datatables.css",
+            "../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jspreadsheet.theme.css"
         ],
         [
-            "../reference/jquery-plugins/datetimepicker-2.5.20/build/jquery.datetimepicker.min.css",
-            "../reference/light-blue/lib/bootstrap-datepicker.js",
-            "../reference/jquery-plugins/datetimepicker-2.5.20/build/jquery.datetimepicker.full.min.js",
-            "../reference/lightblue4/docs/lib/widgster/widgster.js",
-            "../reference/lightblue4/docs/lib/slimScroll/jquery.slimscroll.min.js",
+            //d3
+            "../reference/jquery-plugins/d3-5.16.0/d3.min.js",
+            //chart Colors
+            "./js/common/colorPalette.js",
+            // Apache Echarts
+            "../reference/jquery-plugins/echarts-5.4.3/dist/echarts.min.js",
             // 투입 인력별 요구사항 관여 차트
             "../reference/jquery-plugins/Jit-2.0.1/jit.js",
             "../reference/jquery-plugins/Jit-2.0.1/Examples/css/Treemap.css",
@@ -58,23 +65,12 @@ function execDocReady() {
             "./js/common/chart/d3/sankey.js",
             // 최상단 메뉴
             "./js/analysis/topmenu/topMenuApi.js",
-            "./js/common/chart/eCharts/basicRadar.js"
-        ],
-        [
+            "./js/common/chart/eCharts/basicRadar.js",
             "./js/common/table.js",
             "./js/analysis/api/resourceApi.js",
             "./js/analysis/table/workerStatusTable.js",
             "./js/common/chart/eCharts/horizontalBarChart.js",
             "./js/common/chart/eCharts/simplePie.js"
-        ],
-        [
-            // jspreadsheet
-            "../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jsuites.js",
-            "../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jsuites.css",
-            "../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/index.js",
-            "../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jspreadsheet.css",
-            // "../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jspreadsheet.datatables.css",
-            "../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jspreadsheet.theme.css"
         ],
         [
             "../reference/jquery-plugins/dataTables-1.10.16/media/css/jquery.dataTables_lightblue4.css",

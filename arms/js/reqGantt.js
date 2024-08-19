@@ -745,13 +745,16 @@ function bindDataEditTab(ajaxData) {
 			.addClass("active");
 	}
 
-	$("#editview_req_state").children(".btn.active").removeClass("active");
-	if (!isEmpty(ajaxData.reqStateEntity)) {
-		var selectReqStateID = "editview_req_state_options" + ajaxData.reqStateEntity.c_id;
-		$("#" + selectReqStateID)
-			.parent()
-			.addClass("active");
-	}
+	$("#editview_req_state input[name='editview_req_state_options']:checked").prop("checked", false);
+	let stateRadioButtons = $("#editview_req_state input[type='radio']");
+	stateRadioButtons.each(function () {
+		if (ajaxData.reqStateEntity && ajaxData.reqStateEntity.c_id == $(this).val()) {
+			$(this).parent().addClass("active");
+			$(this).prop("checked", true);
+		} else {
+			$(this).prop("checked", false);
+		}
+	});
 
 	// -------------------- reviewer setting -------------------- //
 	//reviewer clear
@@ -1043,8 +1046,11 @@ function click_btn_for_req_add() {
 					? "5" : $("#addview_req_priority .btn.active input").val();
 		let	select_req_difficulty_link = $("#addview_req_difficulty .btn.active input").val() === undefined
 					? "5" : $("#addview_req_difficulty .btn.active input").val();
-		let	select_req_state_link = $("#addview_req_state .btn.active input").val() === undefined
-					? "10" : $("#addview_req_state .btn.active input").val();
+		let select_req_state_link = $("#addview_req_state input[name='addview_req_state_options']:checked").val();
+		if (select_req_state_link === undefined) {
+			alert("요구사항 상태가 선택되지 않았습니다.");
+			return false;
+		}
 
 		let start_date_value = $("#addview_req_start_date").val();
 		let c_req_start_date;
@@ -1508,7 +1514,7 @@ function handle_change_date(start, end) {
 		return {
 			dayDiff: dayDiff,
 			todayDiff: dayDiff,
-			plan_progress: 100
+			plan_progress: 100,
 		};
 	}
 
@@ -1577,12 +1583,11 @@ function setGanttTasks(data) {
 				assignee: cur.c_req_owner,
 				reporter: cur.c_req_writer,
 				name: cur.c_title,
-				progress: cur.c_req_plan_progress || 1,
+				progress: 0,
 				dependencies: dependencies,
 				priority: cur.state,
 				custom_class: cur.status, // optional
 				type: cur.c_type,
-				etc: cur.c_req_etc,
 				manager: cur.c_req_manager,
 				result: cur.c_req_output,
 				level: cur.c_level,
@@ -1599,16 +1604,26 @@ function setGanttTasks(data) {
 				common_object.end = getDate(cur.c_req_end_date);
 			}
 
-			if (cur.c_type === "folder") {
-				common_object.etc = "폴더";
+			if (cur && cur.c_type === "folder") {
+				common_object.etc = `<i class="fa fa-folder-open"></i> 폴더`;
 			}
 			else {
-				common_object.etc = cur.reqStateEntity.c_title;
+				// 비고란 아이콘 및 상태명
+				if (cur.reqStateEntity && cur.reqStateEntity.c_title && cur.reqStateEntity.reqStateCategoryEntity && cur.reqStateEntity.reqStateCategoryEntity.c_category_icon) {
+					// 카테고리 연결 상태
+					common_object.etc = cur.reqStateEntity.reqStateCategoryEntity.c_category_icon + " "+ cur.reqStateEntity.c_title;
+				}
+				else if (cur.reqStateEntity && cur.reqStateEntity.c_title) {
+					// 카테고리 미 연결 상태
+					common_object.etc = cur.reqStateEntity.c_title;
+				}
+
 				common_object.total_resource = cur.c_req_total_resource == null ? 0 : cur.c_req_total_resource;
 				common_object.plan_resource =  cur.c_req_plan_resource == null ? 0 : cur.c_req_plan_resource;
 				// 	common_object.total_resource = cur.c_req_total_time == null ? 0 : cur.c_req_total_time;
 				// 	common_object.plan_resouce = cur.c_req_plan_time == null ? 0 : cur.c_req_plan_time;
-				common_object.plan = cur.c_req_plan_progress == null ? 0 : cur.c_req_plan_progress;
+				// common_object.plan = cur.c_req_plan_progress == null ? 0 : cur.c_req_plan_progress;
+				common_object.plan = 0;
 				common_object.performance = cur.c_req_performance_progress == null ? 0 : cur.c_req_performance_progress;
 			}
 
@@ -1628,7 +1643,7 @@ async function draggableNode(data) {
 		data: {
 			c_id: data.c_id,
 			ref: data.ref,
-			c_position: data.c_position,
+			c_position: Number(data.c_position) + 1,
 			copy: 0,
 			multiCounter: 0
 		},
@@ -1834,15 +1849,7 @@ function initGantt(data) {
 				data: "etc",
 				title: "비고",
 				render: (data, row) => {
-					let iconClass = mappingStateIconClass(data);
-					let iconWrapper = $("<i />")
-						.addClass(iconClass);
-
-					let textWrapper = $("<span />")
-						.text(" " + data);
-
-					let parentElement = $("<div />").append(iconWrapper).append(textWrapper);
-
+					let parentElement = $("<span />").append(data);
 					return parentElement[0];
 				}
 			},
@@ -1917,9 +1924,10 @@ function addZero(n) {
 // 모달
 ///////////////////////////////////////////////////////////////////////////////
 function updateNodeModalOpen(item) {
+	req_state_setting("editview_req_state", false);
+
 	selectedId = item.id;
 	selectedType = item.type;
-
 	// $(".widget-tabs").children("header").children("ul").children("li:nth-child(1)").hide(); //상세보기
 	$(".widget-tabs").children("header").children("ul").children("li:nth-child(1)").hide(); //편집하기
 	$(".widget-tabs").children("header").children("ul").children("li:nth-child(2)").hide(); //리스트보기
@@ -1959,6 +1967,8 @@ function updateNodeModalOpen(item) {
 }
 
 function addNodeModalOpen(parentId) {
+	req_state_setting("addview_req_state", false);
+
 	//제품(서비스) 데이터 바인딩
 	parentIdOfSelected = parentId;
 	var selectedPdServiceText = $("#selected_pdService").select2("data")[0].text;
@@ -1988,7 +1998,7 @@ function addNodeModalOpen(parentId) {
 
 	$("#addview_req_priority").children(".btn.active").removeClass("active");
 	$("#addview_req_difficulty").children(".btn.active").removeClass("active");
-	$("#addview_req_state").children(".btn.active").removeClass("active");
+	$("#addview_req_state input[name='addview_req_state_options']:checked").prop("checked", false);
 
 	CKEDITOR.instances.add_tabmodal_editor.setData($("<p />").text("요구사항 내용을 기록합니다."));
 

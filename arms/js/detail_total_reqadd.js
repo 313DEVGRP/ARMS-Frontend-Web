@@ -380,16 +380,22 @@ function bindDataDetailTab(ajaxData) {
 			$(this).prop("checked", false);
 		}
 	});
-	//상세보기 - 상태 버튼
-	let stateRadioButtons = $("#detailview_req_state input[type='radio']");
-	stateRadioButtons.each(function () {
-		if (ajaxData.reqStateEntity && $(this).val() == ajaxData.reqStateEntity["c_id"]) {
-			$(this).parent().addClass("active");
-			$(this).prop("checked", true);
-		} else {
-			$(this).prop("checked", false);
-		}
-	});
+
+	req_state_setting("detailview_req_state", true)
+		.then(() => {
+			let stateRadioButtons = $("#detailview_req_state input[type='radio']");
+			stateRadioButtons.each(function () {
+				if (ajaxData.reqStateEntity && $(this).val() == ajaxData.reqStateEntity["c_id"]) {
+					$(this).parent().addClass("active");
+					$(this).prop("checked", true);
+				} else {
+					$(this).prop("checked", false);
+				}
+			});
+		})
+		.catch((error) => {
+			console.error('Error fetching data:', error);
+		});
 
 	if (ajaxData.c_req_start_date) {
 		$("#detailview_req_start_date").val(formatDate(new Date(ajaxData.c_req_start_date)));
@@ -426,8 +432,20 @@ function bindDataDetailTab(ajaxData) {
 	} else {
 		$("#detailview_req_reviewer05").val(ajaxData.c_req_reviewer05);
 	}
-	CKEDITOR.instances.detailview_req_contents.setData(ajaxData.c_req_contents);
-	CKEDITOR.instances.detailview_req_contents.setReadOnly(true);
+
+	// ckedtior 로드가 완료되기 전에 데이터를 set해서 오류 발생
+	let editor_instance_wait = setInterval(function () {
+		try {
+			var editor_instance = CKEDITOR.instances['detailview_req_contents'];
+			if (editor_instance) {
+				CKEDITOR.instances.detailview_req_contents.setData(ajaxData.c_req_contents);
+				CKEDITOR.instances.detailview_req_contents.setReadOnly(true);
+				clearInterval(editor_instance_wait);
+			}
+		} catch (err) {
+			console.log("CKEDITOR 로드가 완료되지 않아서 재시도 중...");
+		}
+	}, 313 /*milli*/);
 
 	if (ajaxData.c_drawio_image_raw != null && ajaxData.c_drawio_image_raw != "") {
 		var imageSrcArray = Array(1).fill(ajaxData.c_drawio_image_raw);

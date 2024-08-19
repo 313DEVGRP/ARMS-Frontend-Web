@@ -49,7 +49,8 @@ function execDocReady() {
             "../reference/light-blue/lib/bootstrap-datepicker.js",
             "../reference/jquery-plugins/datetimepicker-2.5.20/build/jquery.datetimepicker.min.css",
             "../reference/jquery-plugins/datetimepicker-2.5.20/build/jquery.datetimepicker.full.min.js",
-            "../reference/lightblue4/docs/lib/widgster/widgster.js"
+            "../reference/lightblue4/docs/lib/widgster/widgster.js",
+            "../reference/jquery-plugins/timerStyles.js"
         ],
 
         [
@@ -75,18 +76,7 @@ function execDocReady() {
             "../reference/jquery-plugins/dataTables-1.10.16/extensions/Buttons/js/dataTables.buttons.min.js",
             "../reference/jquery-plugins/dataTables-1.10.16/extensions/Buttons/js/buttons.html5.js",
             "../reference/jquery-plugins/dataTables-1.10.16/extensions/Buttons/js/buttons.print.js",
-            "../reference/jquery-plugins/dataTables-1.10.16/extensions/Buttons/js/jszip.min.js"
-        ],
-        [
-            // 칸반 보드
-            /*"../reference/jquery-plugins/jkanban-1.3.1/dist/jkanban.min.css",
-            "../reference/jquery-plugins/jkanban-1.3.1/dist/jkanban.min.js",
-            "../arms/js/reqKanban/kanban.js",
-            "../reference/jquery-plugins/jquery.flowchart-master/jquery.flowchart.css",
-            "../reference/jquery-plugins/jquery.flowchart-master/jquery.flowchart.js",
-            "https://cdnjs.cloudflare.com/ajax/libs/jquery.panzoom/3.2.2/jquery.panzoom.min.js",
-            "../reference/jquery-plugins/jquery-mousewheel-main/jquery.mousewheel.js",*/
-            // "../reference/gojs/go.css",
+            "../reference/jquery-plugins/dataTables-1.10.16/extensions/Buttons/js/jszip.min.js",
             "../reference/gojs/go-debug.js",
             "../arms/js/mapping/gojs_setup.js"
         ]
@@ -97,7 +87,23 @@ function execDocReady() {
         .then(function () {
             //사이드 메뉴 처리
             $(".widget").widgster();
-            setSideMenu("sidebar_menu_jira", "sidebar_menu_product_mapping");
+            setSideMenu("sidebar_menu_jira", "sidebar_menu_state_mapping");
+
+            //coming soon
+            $("#count-down").TimeCircles(
+                {
+                    circle_bg_color: "#f8f8f8",
+                    use_background: true,
+                    bg_width: .2,
+                    fg_width: 0.013,
+                    time: {
+                        Days: { color: "#f8f8f8" },
+                        Hours: { color: "#f8f8f8" },
+                        Minutes: { color: "#f8f8f8" },
+                        Seconds: { color: "#f8f8f8" }
+                    }
+                }
+            );
 
             //ALM 서버 셀렉트 박스 이니시에이터
             make_alm_server_select_box();
@@ -343,7 +349,7 @@ function mapping_data_load(alm_server_id, alm_server_type, project_id, issueType
                 console.log('ALM Status List:', alm_status_list);
 
                 if (alm_status_list.length === 0) {
-                    alert("선택된 이슈유형이 없습니다. 서버 관리에서 프로젝트의 이슈유형을 선택해주세요.");
+                    alert("프로젝트의 이슈유형에 연결된 상태가 없습니다. 서버 데이터 확인이 필요합니다.");
                     let data = {};
                     gojs.load(data);
                     return;
@@ -813,7 +819,7 @@ function update_radio_buttons(container_selector, value) {
 
     let radio_buttons = $(container_selector + " input[type='radio']");
     radio_buttons.each(function () {
-        if (value && $(this).val() === value) {
+        if (value && $(this).val() == value) {
             $(this).parent().addClass("active");
             $(this).prop("checked", true);
         }
@@ -843,31 +849,15 @@ function save_req_state_btn_click() {
         };
 
         $.ajax({
-            url: "/auth-user/api/arms/reqState/addNode.do",
+            url: "/auth-user/api/arms/reqState/addStateNode.do",
             type: "POST",
             data: data,
             statusCode: {
                 200: function () {
                     jSuccess('"' + state_name + '"' + " 상태가 생성되었습니다.");
                     $("#close_modal_popup").trigger("click");
-                    // 선택된 서버가 있을  Mapping 화면 재로드
-                    if ($("#selected_alm_server").val()) {
-                        let selected_alm_server_c_id = $("#selected_alm_server").val();
-                        let alm_server_data = alm_server_list[selected_alm_server_c_id];
-                        let alm_server_type = alm_server_data.c_jira_server_type;
 
-                        if (alm_server_type === "클라우드") {
-                            $("#cloud_project_tree").show();
-                            $("#select-project-div").show();
-                            $("#select-issuetype-div").show();
-                            build_alm_server_jstree(selected_alm_server_c_id);
-                            let data = {};
-                            gojs.load(data);
-                        }
-                        else {
-                            mapping_data_load(selected_alm_server_c_id, alm_server_type);
-                        }
-                    }
+                    init_mapping_diagram();
                 }
             }
         });
@@ -892,6 +882,8 @@ function update_req_state_btn_click() {
             .then((result) => {
                 console.log(result);
                 $("#close_modal_popup").trigger("click");
+
+                init_mapping_diagram();
             })
             .catch((error) => {
                 // 오류가 발생한 경우 처리합니다.
@@ -915,12 +907,37 @@ function delete_req_state_btn_click() {
             .then((result) => {
                 console.log(result);
                 $("#close_modal_popup").trigger("click");
+
+                init_mapping_diagram();
             })
             .catch((error) => {
                 // 오류가 발생한 경우 처리합니다.
                 console.error('Error fetching data:', error);
             });
     });
+}
+
+function init_mapping_diagram() {
+    // 선택된 서버가 있을  Mapping 화면 재로드
+    if ($("#selected_alm_server").val()) {
+        let selected_alm_server_c_id = $("#selected_alm_server").val();
+        let alm_server_data = alm_server_list[selected_alm_server_c_id];
+        let alm_server_type = alm_server_data.c_jira_server_type;
+
+        if (alm_server_type === "클라우드") {
+            $("#select-project").text("선택되지 않음");
+            $("#select-issuetype").text("선택되지 않음");
+            $("#cloud_project_tree").show();
+            $("#select-project-div").show();
+            $("#select-issuetype-div").show();
+            build_alm_server_jstree(selected_alm_server_c_id);
+            let data = {};
+            gojs.load(data);
+        }
+        else {
+            mapping_data_load(selected_alm_server_c_id, alm_server_type);
+        }
+    }
 }
 
 function update_arms_state(state_c_id, state_category_mapping_id, state_name, state_contents) {

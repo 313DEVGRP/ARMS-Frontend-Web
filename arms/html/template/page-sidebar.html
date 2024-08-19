@@ -78,10 +78,14 @@
                 id="sidebar_menu_jira_manage">
                 <a href="/arms/template.html?page=jiraServer" data-locale="nav.alm.s">서버 관리</a>
             </li>
-<!--			<li class=""
-				id="sidebar_menu_product_mapping">
-				<a href="/arms/template.html?page=mapping" data-locale="nav.alm.m">매핑 관리</a>
-			</li>-->
+			<li class=""
+				id="sidebar_menu_state_mapping">
+				<a href="/arms/template.html?page=mapping" data-locale="nav.alm.m">상태 관리
+                    <span   class="label label-important"
+                            style="margin: 0 0 0 1px; line-height: initial; padding: 1px 2px 1px 2px; font-size: 9px;">B</span>
+                </a>
+
+			</li>
             <li class=""
                 id="sidebar_menu_product_jira_connect">
                 <a href="/arms/template.html?page=jiraConnection" data-locale="nav.alm.c">연결 관리</a>
@@ -138,12 +142,46 @@
                 id="sidebar_menu_analysis_resource">
                 <a href="/arms/template.html?page=analysisResource" data-locale="nav.analysis.r">자원 분석<span class="font12"> - Resource</span></a>
             </li>
-			<li class=""
-				id="sidebar_menu_analysis_cost">
-				<a href="/arms/template.html?page=analysisCost" data-locale="nav.analysis.c">비용 분석<span class="font12"> - Cost</span></a>
-			</li>
+            <li class=""
+                id="sidebar_menu_analysis_cost">
+                <a href="/arms/template.html?page=analysisCost" data-locale="nav.analysis.c">비용 분석<span class="font12"> - Cost</span></a>
+            </li>
         </ul>
     </li>
+
+		<li class="category-wrap hide"
+				id="menu_report"
+				style="padding-top: 10px;">
+			<span   class="category-label"
+                    id="sidebar_menu_report">
+				<i class="fa fa-file-text-o"></i>
+				Report
+			</span>
+			<ul id="report_elements_collapse">
+				<li class="" id="sidebar_menu_report_full_data">
+                    <a href="/arms/template.html?page=reportFullData" data-locale="nav.report.f">Full
+                        <span class="font12"> data search</span>
+                        <span   class="label label-important"
+                                style="margin: 0 0 0 1px; line-height: initial; padding: 1px 2px 1px 2px; font-size: 9px;">B</span>
+                    </a>
+				</li>
+				<li class="" id="sidebar_menu_report_swot">
+                    <a href="/arms/template.html?page=reportSWOT" data-locale="nav.report.s">SWOT
+                        <span class="font12"> overview</span>
+                        <span   class="label label-important"
+                                style="margin: 0 0 0 1px; line-height: initial; padding: 1px 2px 1px 2px; font-size: 9px;">B</span>
+                    </a>
+				</li>
+				<li class=""
+						id="sidebar_menu_report_alm_project">
+					<a href="/arms/template.html?page=reportAlmProject" data-locale="nav.report.s" style="font-size: 12.5px">ALM
+                        <span class="font12"> proj summ</span>
+                        <span   class="label label-important"
+                                style="margin: 0 0 0 1px; line-height: initial; padding: 1px 2px 1px 2px; font-size: 9px;">B</span>
+                    </a>
+				</li>
+			</ul>
+		</li>
 
     <li class="category-wrap hide"
         id="menu_detail"
@@ -241,6 +279,45 @@
 </ul>
 
 <h5 class="sidebar-nav-title">
+	상태 카테고리
+	<a
+			class="action-link"
+			href="#">
+		<i class="glyphicon glyphicon-plus"></i>
+	</a>
+</h5>
+<!-- some styled links in sidebar. ready to use as links to email folders, projects, groups, etc -->
+<ul class="sidebar-labels">
+	<li>
+		<a>
+			<!-- yep, .circle again -->
+			<i class="fa fa-folder-o text-danger" style="margin-right: 8px;"></i>
+			<span class="label-name font11"> 열림</span>
+		</a>
+	</li>
+	<li>
+		<a>
+			<!-- yep, .circle again -->
+			<i class="fa fa-fire" style="color: #E49400; margin-right: 8px;"></i>
+			<span class="label-name font11"> 진행중</span>
+		</a>
+	</li>
+	<li>
+		<a>
+			<!-- yep, .circle again -->
+			<i class="fa fa-fire-extinguisher text-success" style="margin-right: 8px;"></i>
+			<span class="label-name font11"> 해결됨</span>
+		</a>
+	</li>
+	<li>
+		<a>
+			<i class="fa fa-folder text-primary" style="margin-right: 8px;"></i>
+			<span class="label-name font11"> 닫힘</span>
+		</a>
+	</li>
+</ul>
+
+<h5 class="sidebar-nav-title">
 	Labels
 	<a
 		class="action-link"
@@ -261,7 +338,7 @@
 		<a href="#">
 			<!-- yep, .circle again -->
 			<i class="fa fa-circle" style="color: #e5603b;"></i>
-			<span class="label-name font11">선택된 ( selected )</span>
+			<span class="label-name font11">선택된 ( select )</span>
 		</a>
 	</li>
 	<li>
