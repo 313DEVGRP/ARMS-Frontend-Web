@@ -24,7 +24,6 @@
     --dark_toolbar_background: rgba(51,51,51,0.9);
     --dark_toolbar_color: #FFF;
     --dark_jexcel_header_background: rgba(51,51,51,0.95);
-    /*--dark_jexcel_row_col_header_color: #646463;*/
     --dark_jexcel_row_col_header_color: #EEE;
     --dark_jexcel_border_color_5: rgba(51,51,51,0.5);
     --dark_border_color: rgba(51,51,51,1);
@@ -210,15 +209,8 @@ table.jexcel .highlight {
     height: 16px;
     text-align: center;
     vertical-align: middle;
-}
-
-#modal_excel .fa:before {
-    width: 16px;
-    display: inline-block;
-    height: 16px;
-    text-align: center;
-    vertical-align: middle;
     line-height: 16px;
+    color: #f8f8f8;
 }
 
 .fa.fa-font.fa-background {

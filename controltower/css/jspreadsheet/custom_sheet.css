@@ -210,15 +210,8 @@ table.jexcel .highlight {
     height: 16px;
     text-align: center;
     vertical-align: middle;
-}
-
-#modal_excel .fa:before {
-    width: 16px;
-    display: inline-block;
-    height: 16px;
-    text-align: center;
-    vertical-align: middle;
     line-height: 16px;
+    color: #f8f8f8;
 }
 
 .fa.fa-font.fa-background {
