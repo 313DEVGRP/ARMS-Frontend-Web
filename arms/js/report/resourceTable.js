@@ -10,6 +10,7 @@
 				data: "assignee_displayName",
 				className: "dt-body-center",
 				visible: true,
+				width: "40%",
 				render: function (data, type, row, meta) {
 					if (type === "display") {
 						return '<label style="color: #a4c6ff">' + data + "</label>";
@@ -23,6 +24,7 @@
 				data: "assignee_emailAddress",
 				className: "dt-body-center",
 				visible: true,
+				width: "40%",
 				render: function (data, type, row, meta) {
 					if (type === "display") {
 						return '<label style="color: #a4c6ff">' + data +

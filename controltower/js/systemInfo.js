@@ -72,43 +72,117 @@ function execDocReady() {
 			// 사이드 메뉴 색상 설정
 			$(".widget").widgster();
 			setSideMenu("sidebar_menu_system", "sidebar_menu_system_info");
-
-			tab_click_event();
-
+			
+			// TimeZonePicker 그리기
 			$("#globe").timezonePicker({
 				// initialValue: "Asia/Seoul",
 				defaultValue: { value: "Asia/Seoul", attribute: "timezone" },
 				hoverText: function(e, data){
-					return (data.timezone + " (" + data.zonename + "+"+data.offset+")");
+					if (data.offset < 0 ) {
+						return (data.timezone + " (" + data.zonename + ", UTC"+data.offset+")");
+					} else {
+						return (data.timezone + " (" + data.zonename + ", UTC+"+data.offset+")");
+					}
 				},
 				quickLink: [{}],
 				selectBox: true,
 				showHoverText: true
 			});
 			$(".quick-link").css("display","none");
-			$("#globe .select2-selection__rendered").text("Asia/Seoul (KST+9)");
+			excludeTimeZone();
+			
+			$("#globe .select2-selection__rendered").text("Asia/Seoul (KST, UTC+9)");
+			timeZonePickerEvent();
 		})
 		.catch(function (error) {
 			console.error("플러그인 로드 중 오류 발생");
 			console.log(error);
 		});
 }
+////////////////////////////////////////////////////////////////////////////////////////
+// TimeZonePicker 관련 함수
+////////////////////////////////////////////////////////////////////////////////////////
+function excludeTimeZone() {
+	// 필터링할 타임존 목록
+	const excludedTimezones = [
+		//Atlantic (10)
+		"Atlantic/Azores", "Atlantic/Bermuda", "Atlantic/Canary", "Atlantic/Cape_Verde", "Atlantic/Faroe",
+		"Atlantic/Madeira", "Atlantic/Reykjavik","Atlantic/South_Georgia", 'Atlantic/St_Helena', "Atlantic/Stanley",
+		//Indian(11)
+		"Indian/Antananarivo","Indian/Chagos","Indian/Christmas","Indian/Cocos","Indian/Comoro",
+		"Indian/Kerguelen", "Indian/Mahe", "Indian/Maldives", "Indian/Mauritius", "Indian/Mayotte",
+		"Indian/Reunion",
+		//Pacific (37)
+		"Pacific/Apia", "Pacific/Chatham", "Pacific/Chuuk", "Pacific/Easter", "Pacific/Enderbury",
+		"Pacific/Fakaofo", "Pacific/Efate", "Pacific/Fiji", "Pacific/Funafuti", "Pacific/Galapagos",
+		"Pacific/Gambier", "Pacific/Kwajalein", "Pacific/Guadalcanal", "Pacific/Guam", "Pacific/Honolulu",
+		"Pacific/Johnston", "Pacific/Kiritimati", "Pacific/Kosrae", "Pacific/Majuro", "Pacific/Midway",
+		"Pacific/Marquesas", "Pacific/Nauru", "Pacific/Niue", "Pacific/Norfolk", "Pacific/Noumea",
+		"Pacific/Pago_Pago", "Pacific/Palau", "Pacific/Pitcairn", "Pacific/Pohnpei", "Pacific/Port_Moresby",
+		"Pacific/Rarotonga", "Pacific/Saipan", "Pacific/Tahiti", "Pacific/Tarawa", "Pacific/Tongatapu",
+		"Pacific/Wake", "Pacific/Wallis"
+	];
+	// DOM 에서 제외할 타임존에 해당하는 SVG 폴리곤 요소를 찾고 제거 또는 숨기기
+	excludedTimezones.forEach(timezone => {
+		// data-timezone 속성이 특정 시간대와 일치하는 폴리곤 요소를 제거
+		// $(`svg polygon[data-timezone="${timezone}"]`).remove();
+		// 또는 숨기기
+		$(`svg polygon[data-timezone="${timezone}"]`).hide();
+		$(`select.country-lov option[value="${timezone}"]`).remove();
+	});
+
+	// Select2를 업데이트하여 제거된 옵션 반영
+	$('select.country-lov').trigger('change');
+}
+
+function modifyTimeZoneOptionValue() {
+	// Timezone select의 option value 변경
+	$('select.country-lov option').each(function() {
+		// 현재 option의 value를 가져옴 (timezone만 포함됨)
+		var currentValue = $(this).val();
+
+		// option에 해당하는 timezone 데이터를 찾음
+		var timezoneData = timezones.find(function(zone) {
+			return zone.timezone === currentValue;
+		});
+
+		// timezone 데이터가 있을 경우 value를 timezone + offset으로 변경
+		if (timezoneData) {
+			var formattedOffset = `UTC${timezoneData.offset >= 0 ? '+' : ''}${timezoneData.offset}`;
+			var newText = `${timezoneData.timezone} (${timezoneData.zonename}, ${formattedOffset})`;
+			$(this).val(newText);
+		}
+	});
+	// Select2를 업데이트하여 변경된 값 반영
+	$('select.country-lov').trigger('change');
+
+}
+////////////////////////////////////////////////////////////////////////////////////////
+// 탭 클릭 이벤트 처리
+////////////////////////////////////////////////////////////////////////////////////////
+function updateTimeZoneText() {
+	let zoneText = "";
+	let selectedTZ = $("#globe").data('timezonePicker').getValue()[0];
+	if (selectedTZ.offset <0) {
+		zoneText = selectedTZ.timezone + " ("+selectedTZ.zonename+", UTC"+selectedTZ.offset+")";
+	} else {
+		zoneText = selectedTZ.timezone + " ("+selectedTZ.zonename+", UTC+"+selectedTZ.offset+")";
+	}
+
+	$("#globe .select2-selection__rendered").val(zoneText);
+	$("#globe .select2-selection__rendered").text(zoneText);
+}
+
+function timeZonePickerEvent() {
+	// TimeZonePicker 이벤트 핸들러 설정
+	$("#globe").on("map:option:changed", updateTimeZoneText);
+	$("#globe").on("click", updateTimeZoneText);
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // 탭 클릭 이벤트 처리
 ////////////////////////////////////////////////////////////////////////////////////////
 function tab_click_event() {
-	$("#globe").on("click", (event => {
-		let zoneText = "";
-		let selectedTZ = $("#globe").data('timezonePicker').getValue()[0];
-		if (selectedTZ.offset <0) {
-			zoneText = selectedTZ.timezone + " ("+selectedTZ.zonename+selectedTZ.offset+")";
-		} else {
-			zoneText = selectedTZ.timezone + " ("+selectedTZ.zonename+"+"+selectedTZ.offset+")";
-		}
-		$("#globe .select2-selection__rendered").val(zoneText);
-		$("#globe .select2-selection__rendered").text(zoneText);
-	}));
 
 	$('a[data-toggle="tab"]').on("shown.bs.tab", function (e) {
 		var target = $(e.target).attr("href"); // activated tab

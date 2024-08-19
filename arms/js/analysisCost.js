@@ -46,7 +46,6 @@ function execDocReady() {
             "../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jspreadsheet.datatables.css",
             "../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jspreadsheet.theme.css",
             "./js/common/jspreadsheet/spreadsheet.js",
-            "./css/jspreadsheet/custom_icon.css",
             "./css/jspreadsheet/custom_sheet.css"
         ],
         [
@@ -63,9 +62,6 @@ function execDocReady() {
             "../reference/jquery-plugins/dataTables-1.10.16/extensions/Buttons/js/jszip.min.js",
         ],
         [
-            /*"../reference/jquery-plugins/datetimepicker-2.5.20/build/jquery.datetimepicker.min.css",
-            "../reference/light-blue/lib/bootstrap-datepicker.js",
-            "../reference/jquery-plugins/datetimepicker-2.5.20/build/jquery.datetimepicker.full.min.js",*/
             //chart Colors
             "./js/common/colorPalette.js",
             // Apache Echarts
@@ -601,7 +597,6 @@ function manpowerInput(전체담당자목록) {
     console.log(" [ analysisCost :: manpowerInput ] :: 인력별_연봉정보 => " + JSON.stringify(인력별_연봉정보));
 
     drawExcel("spreadsheet", 인력별_연봉정보);
-    //jspreadsheetRender(인력별_연봉정보);
 
     // 템플릿 다운로드
     excel_download(인력별_연봉정보);
@@ -1498,13 +1493,12 @@ function drawExcel(targetId, data) {
         console.log($($targetId)[0].jexcel);
         $($targetId)[0].jexcel.destroy();
     }
-    console.log("width=> " + $($targetId).width());
-    var excelWidth=$($targetId).width() - 50;
 
+    var excelWidth=$($targetId).width() - 50;
     var columnList = [
         { type: "text", title: "이름", wRatio: 0.25, readOnly: true },
         { type: "text", title: "키",   wRatio: 0.25, readOnly: true },
-        { type: "text", title: "연봉", wRatio: 0.49 }
+        { type: "text", title: "연봉", wRatio: 0.5 }
     ];
 
     SpreadSheetFunctions.setColumns(columnList);
@@ -1610,103 +1604,6 @@ var SpreadSheetFunctions = ( function () {
     };
 })();
 
-function jspreadsheetRender(data) {
-    var spreadsheetElement = document.getElementById("spreadsheet");
-
-    if (spreadsheetElement.jexcel) {
-        spreadsheetElement.jexcel.destroy();
-    }
-
-    var sheet = jspreadsheet(spreadsheetElement, {
-        // allowComments: true,
-        contextMenu: function(o, x, y, e, items) {
-            var items = [];
-
-            // Save
-            items.push({
-                title: jSuites.translate('Save as'),
-                shortcut: 'Ctrl + S',
-                icon: 'save',
-                onclick: function () {
-                    o.download();
-                }
-            });
-
-            return items;
-        },
-        search:true,
-        pagination:10,
-        data: data,
-        columns: [
-            { type: "text", title: "이름", readOnly: true },
-            { type: "text", title: "키",  readOnly: true  },
-            { type: "text", title: "연봉"  }
-        ],
-        onbeforechange: function(instance, cell, x, y, value) {
-            var cellName = jspreadsheet.getColumnNameFromId([x,y]);
-            console.log('The cell ' + cellName + ' will be changed' + '\n');
-        },
-        oninsertcolumn: function(instance) {
-            console.log('Column added' + '\n');
-        },
-        onchange: function(instance, cell, x, y, value) {
-            var cellName = jspreadsheet.getColumnNameFromId([x,y]);
-            console.log('onchange :: ' + cell + " :;  x :: " + x + " :: y :: " + y +" :: cellName ::" + cellName + ' to: ' + value + '\n');
-            if (x == 2) {
-                var key = instance.jexcel.getValueFromCoords(1, y);
-                if (!modifiedRows[key]) {
-                    modifiedRows[key] = {};
-                }
-                modifiedRows[key].이름 = instance.jexcel.getValueFromCoords(0, y);
-                modifiedRows[key].키 = instance.jexcel.getValueFromCoords(1, y);
-                modifiedRows[key].연봉 = value;
-            }
-        },
-        oninsertrow: function(instance, rowNumber) {
-            console.log('Row added' + rowNumber);
-        },
-        ondeleterow: function(instance, rowNumber) {
-            console.log('Row deleted' + rowNumber);
-        },
-        ondeletecolumn: function(instance) {
-            console.log('Column deleted' +'\n');
-        },
-        onselection: function(instance, x1, y1, x2, y2, origin) {
-            var cellName1 = jspreadsheet.getColumnNameFromId([x1, y1]);
-            var cellName2 = jspreadsheet.getColumnNameFromId([x2, y2]);
-            console.log('The selection from ' + cellName1 + ' to ' + cellName2 + '' + '\n');
-        },
-        onsort: function(instance, cellNum, order) {
-            var order = (order) ? 'desc' : 'asc';
-            console.log('The column  ' + cellNum + ' sorted by ' + order + '\n');
-        },
-        onresizerow: function(instance, cell, height) {
-            console.log('The row  ' + cell + ' resized to height ' + height + ' px' + '\n');
-        },
-        onresizecolumn: function(instance, cell, width) {
-            console.log('The column  ' + cell + ' resized to width ' + width + ' px' + '\n');
-        },
-        onmoverow: function(instance, from, to) {
-            console.log('The row ' + from + ' was move to the position of ' + to + ' ' + '\n');
-        },
-        onmovecolumn: function(instance, from, to) {
-            console.log('The col ' + from + ' was move to the position of ' + to + ' ' + '\n');
-        },
-        onload: function(instance) {
-            console.log('New data is loaded' + '\n');
-        },
-        onblur: function(instance) {
-            console.log('The table ' + $(instance).prop('id') + ' is blur' + '\n');
-        },
-        onfocus: function(instance) {
-            console.log('The table ' + $(instance).prop('id') + ' is focus' + '\n');
-        },
-        onpaste: function(data) {
-            console.log('Paste on the table ' + $(instance).prop('id') + '' + '\n');
-        },
-    });
-
-}
 
 $(document).ready(function() {
     $("#cost-excel-batch-update").on('click', function() {

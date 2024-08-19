@@ -466,6 +466,14 @@ var gojs = (function () {
                 return;
             }
 
+            // ARMS 상태 - ARMS 상태 연결 막기
+            if (from_node.category === 'NoAdd' && to_node.category === "NoAdd") {
+                jNotify("ARMS 상태끼리는 연결할 수 없습니다.");
+                isLinkDeletion = false;
+                myDiagram.remove(link);
+                return;
+            }
+
             // ARMS 상태는 상태 카테고리 1개에만 연결 가능
             if (to_node.category === "NoAdd" && to_node.findLinksInto().count > 1) {
                 const existing_link = to_node.findLinksInto().first();
@@ -555,6 +563,14 @@ var gojs = (function () {
                 const existing_link = to_node.findLinksInto().first();
                 jNotify("ALM 상태(" + to_node.data.text + ")는 이미 "+ existing_link.data.fromNode.text +" 상태와 연결되어있습니다.");
                 remove_new_link_and_restore();
+                return;
+            }
+
+            // ARMS 상태 - ARMS 상태 연결 막기
+            if (from_node.category === 'NoAdd' && to_node.category === "NoAdd") {
+                jNotify("ARMS 상태끼리는 연결할 수 없습니다.");
+                isLinkDeletion = false;
+                myDiagram.remove(link);
                 return;
             }
 

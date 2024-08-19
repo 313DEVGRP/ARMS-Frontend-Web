@@ -2,20 +2,18 @@
 	"use strict";
 
 	$.when(
-		$.getJavascript("../reference/jquery-plugins/jspreadsheet-4.13.1/dist/index.js"),
-		$.getJavascript("../reference/jquery-plugins/jsuites-4.17.7/dist/jsuites.js"),
-		$.getStylesheet("../reference/jquery-plugins/jsuites-4.17.7/dist/jsuites.css"),
-		$.getStylesheet("../reference/jquery-plugins/jspreadsheet-4.13.1/dist/jspreadsheet.css"),
-		$.getStylesheet("../reference/jquery-plugins/jspreadsheet-4.13.1/dist/jspreadsheet.datatables.css"),
-		$.getStylesheet("../reference/jquery-plugins/jspreadsheet-4.13.1/dist/jspreadsheet.theme.css"),
-		$.getStylesheet("../reference/jquery-plugins/fontawesome-free-6.3.0-web/css/all.min.css"),
+		$.getJavascript("../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jsuites.js"),
+		$.getJavascript("../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/index.js"),
+		$.getStylesheet("../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jsuites.css"),
+		$.getStylesheet("../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jspreadsheet.css"),
+		$.getStylesheet("../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jspreadsheet.theme.css"),
 		$.getStylesheet("./css/jspreadsheet/custom_sheet.css")
 	).done(function () {
 		//$("#hsh").show(); 에서 $.fn.show(); 와 동일하다.
 
 		$.fn.spreadsheet = function (option) {
 			var $this = $(this);
-			var spreadsheet = $this.data("mad.spreadsheet");// data-mad-spreadsheet
+			var spreadsheet = $this.data("arms.spreadsheet");
 
 			if (typeof option === "string") {
 				if (!spreadsheet) { return false; }
