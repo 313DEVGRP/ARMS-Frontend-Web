@@ -64,7 +64,6 @@ function execDocReady() {
 			"../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jspreadsheet.datatables.css",
 			"../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jspreadsheet.theme.css",
 			"./js/common/jspreadsheet/spreadsheet.js",
-			"./css/jspreadsheet/custom_icon.css",
 			"./css/jspreadsheet/custom_sheet.css",
 			//chart Colors
 			"./js/common/colorPalette.js",
@@ -509,6 +508,54 @@ function drawExcel(targetId, data) {
 		{ readOnly: true, type: "calendar", title: "ALM 이슈 해결일", wRatio: 0.1},
 		{ readOnly: true, type: "text", title: "ALM 이슈 삭제여부", wRatio: 0.1}
 	];
+
+
+	// 1. 제품(서비스) 이름
+	// 2. 제품(서비스) 버전 ( 시작 날짜~ 종료 날짜 표시 )
+	// 3. 연결된 ALM Project 이름
+	// 4. 암스가 생성한 요구사항 제목
+	// 5. 암스가 생성한 요구사항 상태 ( 암스의 상태 / 고객사 맵핑 상태 )
+	// 6. 요구사항 이슈의 담당자
+	// 7. ALM 에 생성된 요구사항 이슈의 상태 ( ALM 상태 )
+	// 6. 요구사항 이슈의 하위 이슈 개수 / 연결 이슈 개수
+	// 7. 요구사항 이슈의 생성된 날짜
+	// 8. 요구사항 이슈의 최근 업데이트 날짜
+	// 9. 요구사항 이슈의 해결된 날짜 / 닫힘이 된 날짜
+
+	var columnList_수정_key제외 = [
+		{ readOnly: true, type: "text", title: "제품(서비스)", wRatio: 0.1},				//0
+		{ readOnly: true, type: "text", title: "버전(일정)", wRatio: 0.1}, 					//1 버전(시작일 ~ 종료일)
+		{ readOnly: true, type: "text", title: "ALM Project", wRatio: 0.1}, 				//2 ALM Project
+		{ readOnly: true, type: "text", title: "요구사항 구분", wRatio: 0.1}, 			//3 요구사항 이슈, 연결이슈, 하위이슈
+		{ readOnly: true, type: "text", title: "A-RMS 요구사항", wRatio: 0.1},  		//4 암스가 생성한 요구사항
+		{ readOnly: true, type: "text", title: "A-RMS 요구사항 상태", wRatio: 0.1}, //5 암스 요구사항 상태
+		{ readOnly: true, type: "text", title: "ALM 이슈 제목", wRatio: 0.2},				//6
+		{ readOnly: true, type: "text", title: "ALM 이슈 상태", wRatio: 0.1}, 			//7
+		{ readOnly: true, type: "text", title: "ALM 이슈 담당자", wRatio: 0.1}, 		//8
+		{ readOnly: true, type: "calendar", title: "ALM 이슈 생성일", wRatio: 0.1}, //9
+		{ readOnly: true, type: "calendar", title: "ALM 이슈 수정일", wRatio: 0.1}, //10
+		{ readOnly: true, type: "calendar", title: "ALM 이슈 해결일", wRatio: 0.1}, //11 해결된 날짜 또는 닫힌 날짜
+	];
+
+	var columnList_수정_키포함 = [
+		{ readOnly: true, type: "text", title: "제품(서비스) 키", wRatio: 0.1}, 		//0
+		{ readOnly: true, type: "text", title: "제품(서비스)", wRatio: 0.1},				//1
+		{ readOnly: true, type: "text", title: "버전 키", wRatio: 0.1},				  		//2
+		{ readOnly: true, type: "text", title: "버전(일정)", wRatio: 0.1}, 					//3 버전(시작일 ~ 종료일)
+		{ readOnly: true, type: "text", title: "ALM Project 키", wRatio: 0.1}, 			//4 ALM Project
+		{ readOnly: true, type: "text", title: "ALM Project", wRatio: 0.1}, 				//5 ALM Project
+		{ readOnly: true, type: "text", title: "요구사항 구분", wRatio: 0.1}, 			//6 요구사항 이슈, 연결이슈, 하위이슈
+		{ readOnly: true, type: "text", title: "C_REQ_LINK", wRatio: 0.1}, 				  //7
+		{ readOnly: true, type: "text", title: "A-RMS 요구사항", wRatio: 0.1},  	  //8 암스가 생성한 요구사항
+		{ readOnly: true, type: "text", title: "A-RMS 요구사항 상태", wRatio: 0.1}, //9 암스 요구사항 상태
+		{ readOnly: true, type: "text", title: "ALM 이슈 제목", wRatio: 0.2},				//10
+		{ readOnly: true, type: "text", title: "ALM 이슈 상태", wRatio: 0.1}, 	 		//11
+		{ readOnly: true, type: "text", title: "ALM 이슈 담당자", wRatio: 0.1}, 		//12
+		{ readOnly: true, type: "calendar", title: "ALM 이슈 생성일", wRatio: 0.1}, //13
+		{ readOnly: true, type: "calendar", title: "ALM 이슈 수정일", wRatio: 0.1}, //14
+		{ readOnly: true, type: "calendar", title: "ALM 이슈 해결일", wRatio: 0.1}, //15 해결된 날짜 또는 닫힌 날짜
+	];
+
 
 	SpreadSheetFunctions.setColumns(columnList);
 	SpreadSheetFunctions.setColumnWidth(excelWidth);
