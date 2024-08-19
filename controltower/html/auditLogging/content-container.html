@@ -1,7 +1,7 @@
 <div class="col-lg-12">
     <!-- 검색 창 -->
     <div class="row">
-        <div class="col-lg-10 col-md-offset-1">
+        <div class="col-lg-12">
             <section class="widget" style="margin-bottom: 25px;">
                 <div class="body" style="margin-top: 0px;">
                     <div class="row">
@@ -57,84 +57,6 @@
     </div>
     <!-- 검색 결과 -->
     <div class="row">
-        <div class="col-lg-3" style="position: sticky; top: 10px;">
-            <div class="row">
-                <div class="col-lg-12">
-                    <section
-                            class="widget padding-increased"
-                            id="log_aggs">
-                        <header style="margin: 10px 0">
-                            <h4 style="font-size: 13px; font-weight: 600">
-                                <i class="fa fa-bars"></i>
-                                로그 집계
-                            </h4>
-                            <div class="widget-controls">
-                                <a
-                                        data-widgster="toleft"
-                                        title="change width to left"
-                                        href="#">
-                                    <i class="glyphicon glyphicon-chevron-left"></i>
-                                </a>
-                                <a
-                                        data-widgster="expand"
-                                        title="Expand"
-                                        href="#">
-                                    <i class="glyphicon glyphicon-chevron-up"></i>
-                                </a>
-                                <a
-                                        data-widgster="collapse"
-                                        title="Collapse"
-                                        href="#">
-                                    <i class="glyphicon glyphicon-chevron-down"></i>
-                                </a>
-                                <a
-                                        data-widgster="toright"
-                                        title="change width to right"
-                                        href="#">
-                                    <i class="glyphicon glyphicon-chevron-right"></i>
-                                </a>
-                                <a
-                                        data-widgster="restore"
-                                        title="Restore"
-                                        href="#">
-                                    <span class="glyphicon glyphicon-repeat"></span>
-                                </a>
-                                <a
-                                        data-widgster="fullscreen"
-                                        title="Fullscreen"
-                                        href="#">
-                                    <i
-                                            class="glyphicon glyphicon-fullscreen"
-                                            style="font-size: 11px"></i>
-                                </a>
-                            </div>
-                        </header>
-                        <div
-                                class="gradient_middle_border"
-                                style="width: 100%; height: 2px"></div>
-                        <blockquote class="font13">
-                            집계 결과 상위 5 항목 입니다.
-                            <div style="float: right">
-                                <button
-                                        class="btn btn-transparent btn-xs"
-                                        style="margin-top: -3px; color: #acacac; background: rgba(51, 51, 51, 0.2); padding: 1px 9px"
-                                        onclick="return true;">
-                                    Help
-                                    <i
-                                            class="fa fa-question"
-                                            style="font-size: 14px; vertical-align: middle; color: #acacac"></i>
-                                </button>
-                            </div>
-                        </blockquote>
-                        <div class="body">
-                            <div class="box" style="margin-bottom: 0px">
-                                <span id="log-agg-top5"> &nbsp;&nbsp; </span>
-                            </div>
-                        </div>
-                    </section>
-                </div>
-            </div>
-        </div>
         <div class="col-lg-9 col-md-9">
             <div class="row">
                 <div class="search_main_wrapper col-lg-12 col-layer">
@@ -214,6 +136,84 @@
                                     <li class="active"><a href="#">1</a></li>
                                     <li><a href="#">Next</a></li>
                                 </ul>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3" style="position: sticky; top: 10px;">
+            <div class="row">
+                <div class="col-lg-12">
+                    <section
+                            class="widget padding-increased"
+                            id="log_aggs">
+                        <header style="margin: 10px 0">
+                            <h4 style="font-size: 13px; font-weight: 600">
+                                <i class="fa fa-bars"></i>
+                                로그 집계
+                            </h4>
+                            <div class="widget-controls">
+                                <a
+                                        data-widgster="toleft"
+                                        title="change width to left"
+                                        href="#">
+                                    <i class="glyphicon glyphicon-chevron-left"></i>
+                                </a>
+                                <a
+                                        data-widgster="expand"
+                                        title="Expand"
+                                        href="#">
+                                    <i class="glyphicon glyphicon-chevron-up"></i>
+                                </a>
+                                <a
+                                        data-widgster="collapse"
+                                        title="Collapse"
+                                        href="#">
+                                    <i class="glyphicon glyphicon-chevron-down"></i>
+                                </a>
+                                <a
+                                        data-widgster="toright"
+                                        title="change width to right"
+                                        href="#">
+                                    <i class="glyphicon glyphicon-chevron-right"></i>
+                                </a>
+                                <a
+                                        data-widgster="restore"
+                                        title="Restore"
+                                        href="#">
+                                    <span class="glyphicon glyphicon-repeat"></span>
+                                </a>
+                                <a
+                                        data-widgster="fullscreen"
+                                        title="Fullscreen"
+                                        href="#">
+                                    <i
+                                            class="glyphicon glyphicon-fullscreen"
+                                            style="font-size: 11px"></i>
+                                </a>
+                            </div>
+                        </header>
+                        <div
+                                class="gradient_middle_border"
+                                style="width: 100%; height: 2px"></div>
+                        <blockquote class="font13">
+                            집계 결과 상위 5 항목 입니다.
+                            <div style="float: right">
+                                <button
+                                        class="btn btn-transparent btn-xs"
+                                        style="margin-top: -3px; color: #acacac; background: rgba(51, 51, 51, 0.2); padding: 1px 9px"
+                                        onclick="return true;">
+                                    Help
+                                    <i
+                                            class="fa fa-question"
+                                            style="font-size: 14px; vertical-align: middle; color: #acacac"></i>
+                                </button>
+                            </div>
+                        </blockquote>
+                        <div class="body">
+                            <div class="box" style="margin-bottom: 0px">
+                                <span id="log-agg-top5"> &nbsp;&nbsp; </span>
                             </div>
                         </div>
                     </section>
