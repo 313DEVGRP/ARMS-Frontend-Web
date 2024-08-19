@@ -130,9 +130,15 @@ table.jexcel thead tr td{
     background: rgba(51,51,51,0.95); !important;
 
     border:none !important;
-    border-right: 1px solid #d9d9d94d !important;
-    border-bottom: 1px solid #d9d9d94d !important;
+    border-right: 1px solid #f8f8f81a !important;
+    border-bottom: 1px solid #f8f8f81a !important;
 }
+
+.jexcel thead tr td:last-child,
+table.jexcel thead tr td:last-child {
+    border-right: 1px solid rgba(51,51,51,0.5) !important;
+}
+
 .jexcel tbody tr td.jexcel_row,
 table.jexcel tbody tr td.jexcel_row {
     color: var(--dark_jexcel_row_col_header_color) !important;
@@ -142,8 +148,8 @@ table.jexcel tbody tr td.jexcel_row {
     background: rgba(51,51,51,0.95) !important;
 
     border:none !important;
-    border-right: 1px solid #d9d9d94d !important;
-    border-bottom: 1px solid #d9d9d94d !important;
+    border-right: 1px solid #f8f8f81a !important;
+    border-bottom: 1px solid #f8f8f81a !important;
 }
 .jexcel thead tr td.selected,
 table.jexcel thead tr td.selected {
@@ -169,7 +175,7 @@ table.jexcel {
 .jexcel tbody tr td,
 table.jexcel tbody tr td {
     border-top: none !important;
-    color: #FFF;
+    color: #f8f8f8;
 
     background-color: rgba(51,51,51,0.8);
 
@@ -216,8 +222,8 @@ table.jexcel .highlight {
 }
 
 .fa.fa-font.fa-background {
-    color: #FFF;
-    background-color: #000000;
+    color: #f8f8f8;
+    background-color: rgba(248,248,248,0.1);
 }
 
 .search-box {
