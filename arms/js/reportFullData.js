@@ -1,5 +1,6 @@
 var selectedPdServiceId; // 제품(서비스) 아이디
-var selectedVersionId; // 선택된 버전 아이디
+var selectedVersionIds; // 선택된 버전 아이디
+var selectedAlmProjectIds; // 선택된 ALM Project 아이디
 
 var pdServiceListData;
 var versionListData;
@@ -103,6 +104,8 @@ function execDocReady() {
 			makePdServiceSelectBox();
 			//버전 멀티 셀렉트 박스 이니시에이터
 			makeVersionMultiSelectBox();
+			// ALM 프로젝트 멀티 셀렉트 박스 이니시에이터
+			makeProjectMultiSelectBox();
 			//날짜
 			dateTimePicker();
 
@@ -227,14 +230,11 @@ function makePdServiceSelectBox() {
 		// 디폴트는 base version 을 선택하게 하고 ( select all )
 		//~> 이벤트 연계 함수 :: Version 표시 jsTree 빌드
 		bind_VersionData_By_PdService();
-		drawExcel("spreadsheet", mockData.excelMock);
-		// API 호출 후 redraw 방식
-		table.redrawTable(mockData.assignees);
 	});
 } // end makePdServiceSelectBox()
 
 function bind_VersionData_By_PdService() {
-	$(".multiple-select option").remove();
+	$("#multiple-version option").remove();
 	$.ajax({
 		url: "/auth-user/api/arms/pdService/getVersionList.do?c_id=" + $("#selected_pdService").val(),
 		type: "GET",
@@ -252,19 +252,21 @@ function bind_VersionData_By_PdService() {
 																"start_date" : obj.c_pds_version_start_date,
 																"end_date" : obj.c_pds_version_end_date});
 					var newOption = new Option(obj.c_title, obj.c_id, true, false);
-					$(".multiple-select").append(newOption);
+					$("#multiple-version").append(newOption);
 				}
-				var versionTag = $(".multiple-select").val();
-				selectedVersionId = pdServiceVersionIds.join(",");
-				
+				selectedVersionIds = pdServiceVersionIds.join(",");
+
+				$("#multiple-version")
+					.multipleSelect("refresh")
+					.multipleSelect("checkAll");
+
 				// 시작일 종료일 세팅(datetimepicker)
 				setEdgeDateRange(versionListData);
-
+				// 선택 된 제품 버전에 해당하는 ALM 프로젝트 조회
+				fetchJiraProjects(selectedPdServiceId, selectedVersionIds);
 				if (data.length > 0) {
 					console.log("display 재설정.");
 				}
-
-				$(".multiple-select").multipleSelect("refresh");
 			}
 		}
 	});
@@ -275,18 +277,14 @@ function bind_VersionData_By_PdService() {
 ////////////////////////////////////////
 function makeVersionMultiSelectBox() {
 	//버전 선택시 셀렉트 박스 이니시에이터
-	$(".multiple-select").multipleSelect({
+	$("#multiple-version").multipleSelect({
 		filter: true,
 		// selectBox 닫혔을 때
 		onClose: function() {
-			console.log("onOpen event fire!\n");
-
-			var checked = $("#checkbox1").is(":checked");
-			var endPointUrl = "";
-			var versionTag = $(".multiple-select").val();
+			var versionTag = $("#multiple-version").val();
 			console.log("[ fullDataSheet :: makeVersionMultiSelectBox ] :: versionTag");
 			console.log(versionTag);
-			selectedVersionId = versionTag.join(",");
+			selectedVersionIds = versionTag.join(",");
 
 			if (versionTag === null || versionTag == "") {
 				alert("버전이 선택되지 않았습니다.");
@@ -296,15 +294,88 @@ function makeVersionMultiSelectBox() {
 			let filteredVersionData = versionListData.filter(item => versionTag.includes(item.c_id.toString()));
 			// 시작일 종료일 세팅(datetimepicker)
 			setEdgeDateRange(filteredVersionData);
+			fetchJiraProjects(selectedPdServiceId, selectedVersionIds);
 
-			$(".ms-parent").css("z-index", 1000);
+			$("#multiple-version").siblings(".ms-parent").css("z-index", 1000);
 		},
 		// selectBox 열렸을 때
 		onOpen: function() {
-			$(".ms-parent").css("z-index", 9999);
+			$("#multiple-version").siblings(".ms-parent").css("z-index", 9999);
 		}
 	});
 }
+function makeProjectMultiSelectBox () {
+	// ALM 프로젝트 선택 시 셀렉트 박스 이니시에이터
+	$("#multiple-alm-project").multipleSelect({
+		filter: true,
+		onClose: function() {
+			var projectIds = $("#multiple-alm-project").val();
+			selectedAlmProjectIds = projectIds.join(",");
+
+			if (selectedAlmProjectIds === null || selectedAlmProjectIds == "") {
+				alert("ALM 프로젝트가 선택되지 않았습니다.");
+				return;
+			}
+
+			fetchExcelData();
+
+			$("#multiple-alm-project").siblings(".ms-parent").css("z-index", 1000);
+		},
+		onOpen: function() {
+			$("#multiple-alm-project").siblings(".ms-parent").css("z-index", 9999);
+		}
+	});
+}
+
+////////////////////////////////////////
+// 선택 된 제품, 제품 버전 ID 값을 서버에 전달하여 관련 ALM 프로젝트 목록 조회
+////////////////////////////////////////
+function fetchJiraProjects(pdServiceId, versionIds = null) {
+	let url = "/auth-user/api/arms/jiraProjectPure/getJiraProjects.do?pdServiceId=" + pdServiceId;
+
+	if (versionIds) {
+		url += "&pdServiceVersionIds=" + versionIds;
+	}
+
+	$("#multiple-alm-project option").remove();
+
+	$.ajax({
+		url: url,
+		type: "GET",
+		dataType: "json",
+		success: function(data) {
+			console.log("[Jira Projects] Data:", data);
+			let projectIds = [];
+			for (var k in data.response) {
+				var obj = data.response[k];
+				projectIds.push(obj.c_id);
+				var newOption = new Option(obj.c_title, obj.c_id, true, false);
+				$("#multiple-alm-project").append(newOption);
+			}
+			selectedAlmProjectIds = projectIds.join(",");
+
+			$("#multiple-alm-project")
+				.multipleSelect("refresh")
+				.multipleSelect("checkAll");
+
+			fetchExcelData();
+
+		},
+		error: function(xhr, status, error) {
+			console.error("[Jira Projects] Error:", error);
+		}
+	});
+}
+
+////////////////////////////////////////
+// TODO: 모든 검색 필터(제품, 제품 버전, ALM 프로젝트, 날짜 등) 선택이 완료 된 경우, 데이터를 조회한다.
+////////////////////////////////////////
+function fetchExcelData() {
+	// TODO: 필수 인자 서버로 전달하여 API 호출. 응답 데이터 받아 렌더링
+	drawExcel("spreadsheet", mockData.excelMock);
+	table.redrawTable(mockData.assignees);
+}
+
 
 ////////////////////////////////////////
 // 기간 설정 세팅
