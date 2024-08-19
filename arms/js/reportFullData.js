@@ -447,13 +447,14 @@ function setEdgeDateRange(versionData) {
 ////////////////////////////////////////
 // resource 목록 정보
 ////////////////////////////////////////
-var initTable = function () {
-	 var resourceTable = new $.fn.ResourceTable("#resource_table");
+var initTable = function() {
+	var resourceTable = new $.fn.ResourceTable("#resource_table");
 
-	 resourceTable.dataTableBuild({
+	resourceTable.dataTableBuild({
 		rowGroup: [0],
-		isAddCheckbox: true
-	 });
+		isAddCheckbox: true,
+		autoWidth: false
+	});
 
 	return {
 		redrawTable: resourceTable.reDraw.bind(resourceTable)
