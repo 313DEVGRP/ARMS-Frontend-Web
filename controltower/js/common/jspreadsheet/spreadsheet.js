@@ -7,8 +7,7 @@
 		$.getStylesheet("../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jsuites.css"),
 		$.getStylesheet("../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jspreadsheet.css"),
 		$.getStylesheet("../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jspreadsheet.theme.css"),
-		$.getStylesheet("./css/jspreadsheet/custom_sheet.css"),
-		$.getStylesheet("./css/jspreadsheet/custom_icon.css")
+		$.getStylesheet("./css/jspreadsheet/custom_sheet.css")
 	).done(function () {
 		//$("#hsh").show(); 에서 $.fn.show(); 와 동일하다.
 

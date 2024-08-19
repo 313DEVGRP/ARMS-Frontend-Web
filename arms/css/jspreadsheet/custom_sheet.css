@@ -198,6 +198,14 @@ table.jexcel .highlight {
 }
 
 /* custom_icon setting*/
+.fa:before {
+    width: 16px;
+    display: inline-block;
+    height: 16px;
+    text-align: center;
+    vertical-align: middle;
+}
+
 #modal_excel .fa:before {
     width: 16px;
     display: inline-block;

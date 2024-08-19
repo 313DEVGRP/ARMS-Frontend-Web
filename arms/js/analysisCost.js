@@ -46,7 +46,6 @@ function execDocReady() {
             "../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jspreadsheet.datatables.css",
             "../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jspreadsheet.theme.css",
             "./js/common/jspreadsheet/spreadsheet.js",
-            "./css/jspreadsheet/custom_icon.css",
             "./css/jspreadsheet/custom_sheet.css"
         ],
         [
