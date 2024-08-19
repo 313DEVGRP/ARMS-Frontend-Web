@@ -42,7 +42,16 @@ function execDocReady() {
             "../reference/lightblue4/docs/lib/slimScroll/jquery.slimscroll.min.js",
             "../reference/lightblue4/docs/lib/jquery.sparkline/index.js",
             "../reference/lightblue4/docs/js/charts.js",
-            "./js/common/jspreadsheet/spreadsheet.js"
+
+            "../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jsuites.js",
+            "../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/index.js",
+            "../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jsuites.css",
+            "../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jspreadsheet.css",
+            "../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jspreadsheet.datatables.css",
+            "../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jspreadsheet.theme.css",
+            "./js/common/jspreadsheet/spreadsheet.js",
+            "./css/jspreadsheet/custom_icon.css",
+            "./css/jspreadsheet/custom_sheet.css"
         ],
 
         [
