@@ -1,0 +1,101 @@
+@use 'sass:math';
+
+.sidebar {
+  position: absolute;
+  width: $sidebar-width;
+  padding: 10px 0;
+  z-index: 1;
+  top: 0;
+  margin: $sidebar-mt 0 0 25px;
+
+  .side-nav {
+    .navbar-nav {
+      padding-top: 10px;
+
+      &:first-child {
+        padding-top: 0;
+      }
+
+      &:has(.nav-link.active) {
+        .navbar-text {
+          color: var(--#{$prefix}link-color);
+        }
+      }
+
+      .navbar-text {
+        padding: 10px;
+      }
+
+      ul {
+        .nav-item {
+          font-weight: $font-weight-bold;
+          border-radius: $border-radius-lg;
+
+          &:hover,
+          &:focus {
+            background: $sidebar-item-active-bg;
+          }
+
+          .nav-link {
+            @include transition(background-color 0.2s);
+            padding: 4px 10px 4px 35px;
+
+            &.active {
+              color: var(--#{$prefix}link-color);
+            }
+          }
+        }
+      }
+    }
+
+    .navbar-nav.sidebar-labels {
+      .navbar-text {
+        margin: 35px 0 5px 20px;
+        padding: 0;
+      }
+
+      ul {
+        padding: 10px 0 10px 20px;
+
+        .nav-item {
+          .nav-link {
+            padding-left: 4px;
+
+            span {
+              font-size: 11px;
+            }
+          }
+        }
+      }
+
+      @include media-breakpoint-down(sm) {
+        display: none;
+      }
+    }
+
+    .navbar-nav.sidebar-alerts {
+      > .navbar-text {
+        margin: 35px 0 5px 20px;
+        padding: 0;
+      }
+
+      .alert {
+        margin-bottom: 0;
+        padding: math.div($line-height-computed, 2) 12px math.div($line-height-computed, 2) 20px;
+
+        .progress {
+          height: 5px;
+          margin-top: 4.5px;
+        }
+
+        small {
+          font-size: 92%;
+        }
+      }
+
+      @include media-breakpoint-down(sm) {
+        display: none;
+      }
+    }
+  }
+}

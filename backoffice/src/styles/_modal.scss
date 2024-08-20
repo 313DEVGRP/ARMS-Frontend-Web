@@ -1,0 +1,20 @@
+.modal {
+  --#{$prefix}modal-header-border-color: #{$modal-header-border-color};
+  --#{$prefix}modal-footer-border-color: #{$modal-footer-border-color};
+
+  border-radius: 10px;
+  border: $border-width solid var(--#{$prefix}main-color);
+  background: var(--#{$prefix}gradient), var(--#{$prefix}body-image);
+  background-attachment: fixed;
+}
+
+.modal-footer {
+  padding: 5px;
+}
+
+[data-bs-theme='dark'] {
+  .modal {
+    --#{$prefix}modal-header-border-color: #{$modal-header-border-color-dark};
+    --#{$prefix}modal-footer-border-color: #{$modal-footer-border-color-dark};
+  }
+}

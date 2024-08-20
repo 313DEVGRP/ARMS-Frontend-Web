@@ -1,0 +1,126 @@
+// Reboot
+
+html {
+  min-height: 100vh;
+}
+
+// Body
+
+body {
+  background: var(--#{$prefix}gradient), var(--#{$prefix}body-image);
+  padding-bottom: 10px;
+  background-attachment: fixed;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  &::-webkit-scrollbar-thumb {
+    height: 30%;
+    background: var(--#{$prefix}body-bg);
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: $gray-700;
+  }
+}
+
+// Lists
+
+ol,
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+// Links
+
+a {
+  @include transition(color 0.2s);
+
+  &:focus {
+    outline: none;
+  }
+}
+
+// Code
+
+code,
+pre {
+  border-radius: $border-radius;
+}
+
+pre {
+  padding: 8.5px;
+  margin-bottom: 9px;
+  font-size: $font-size-sm;
+  line-height: $line-height-base;
+  word-break: break-all;
+  word-wrap: break-word;
+  color: var(--#{$prefix}body-color);
+  background-color: var(--#{$prefix}secondary-bg);
+  border: 1px solid var(--#{$prefix}body-bg);
+  border-radius: $border-radius;
+
+  code {
+    padding: 0;
+    white-space: pre-wrap;
+    background-color: transparent;
+    border-radius: 0;
+  }
+}
+
+kbd {
+  font-size: $font-size-sm;
+  color: var(--#{$prefix}body-color);
+  background-color: var(--#{$prefix}main-color);
+  border-radius: $border-radius;
+  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.25);
+
+  kbd {
+    font-size: 1rem;
+    font-weight: $font-weight-bold;
+    box-shadow: none;
+  }
+}
+
+// Forms
+//
+
+form {
+  margin-bottom: 0;
+}
+
+label,
+input,
+button,
+select,
+optgroup,
+textarea {
+  font-weight: $font-weight-base;
+}
+
+legend small {
+  color: var(--#{$prefix}text-muted);
+  font-size: $font-size-xl;
+}
+
+select:focus,
+input[type='file']:focus,
+input[type='radio']:focus,
+input[type='checkbox']:focus {
+  outline: none;
+}
+
+iframe {
+  box-sizing: border-box;
+}
+
+fieldset {
+  width: 100%;
+}
+
+[role='button'] {
+  cursor: pointer;
+}

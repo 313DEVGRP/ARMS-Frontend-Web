@@ -1,0 +1,31 @@
+@use 'sass:map';
+
+$color-utils: ();
+
+@each $color in ($grays, $blues, $indigos, $purples, $pinks, $reds, $oranges, $yellows, $greens, $teals, $cyans) {
+  $color-utils: map.merge($color-utils, $color);
+}
+
+@each $key, $value in $color-utils {
+  .fill-#{$key} {
+    fill: $value !important;
+  }
+
+  .color-#{$key} {
+    color: $value !important;
+  }
+
+  .bg-#{$key} {
+    color: $value !important;
+  }
+}
+
+@each $key, $value in (50: 50px, 100: 100px, 150: 150px, 200: 200px, 250: 250px, 300: 300px) {
+  .width-#{$key} {
+    width: $value !important;
+  }
+
+  .height-#{$key} {
+    height: $value !important;
+  }
+}

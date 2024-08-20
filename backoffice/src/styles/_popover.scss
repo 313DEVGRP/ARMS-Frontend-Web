@@ -1,0 +1,17 @@
+.popover {
+  // Popovers
+
+  --#{$prefix}popover-bg: #{$popover-bg};
+
+  --#{$prefix}popover-arrow-color: #{$popover-arrow-color};
+}
+
+[data-bs-theme='dark'] {
+  .popover {
+    // Popovers
+
+    --#{$prefix}popover-bg: #{$popover-bg-dark};
+
+    --#{$prefix}popover-arrow-color: #{$popover-arrow-color-dark};
+  }
+}
