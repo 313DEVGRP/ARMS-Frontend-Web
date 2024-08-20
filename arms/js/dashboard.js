@@ -15,6 +15,8 @@ var labelType, useGradients, nativeTextSupport, animate; //투입 인력별 요�
 var tot_ver_count, active_ver_count, req_count, subtask_count, resource_count;// , req_in_action;
 var top5ReqLinkedIssue = [];
 
+var stateInfo;
+
 function execDocReady() {
 
 	var pluginGroups = [
@@ -107,6 +109,8 @@ function execDocReady() {
 			makePdServiceSelectBox();
 			//버전 멀티 셀렉트 박스 이니시에이터
 			makeVersionMultiSelectBox();
+			// 상태 정보
+			getStateInfo();
 
 			$('.dashboard-top-section').matchHeight({
 				target: $('.dashboard-top-section-scope')
@@ -1113,6 +1117,21 @@ function dataTableDrawCallback(tableInfo) {
 		.responsive.recalc();
 }
 
+function getStateInfo(){
+    $.ajax({
+        url:"/auth-user/api/arms/reqState/getNodesWithoutRoot.do",
+        type:"GET",
+        dataType:"json",
+        progress: true,
+        statusCode:{
+            200: function(data){
+                console.log("[ dashboard :: getStateInfo] :: ARMS에 등록된 상태 정보");
+                stateInfo = data.result;
+            }
+        }
+    });
+}
+
 function reqStatePerAssigneeTop5(pdservice_id, pdServiceVersionLinks) {
 
 	var endPointUrl = "T_ARMS_REQADD_"+pdservice_id+"/getReqAddListByFilter.do";
@@ -1131,8 +1150,9 @@ function reqStatePerAssigneeTop5(pdservice_id, pdServiceVersionLinks) {
 				var colorArr = ColorPalette.common.reqStateColor;
 
 				var resultData = apiResponse.response;
-				//레전드 리스트
-				var legend_arr = ["open", "in-progress", "resolved", "closed"]; // 10, 11,12, 13
+
+                stateInfo.sort((a,b) => a.c_id - b.c_id); // c_id 기준 오름 차순 정렬
+                var stateTitleList = stateInfo.map(state => state.c_title); // 상태 목록
 
 				let keySumList = Object.keys(resultData).map(key => {
 					let sum = Object.values(resultData[key]).reduce((acc, value) => acc + value, 0);
@@ -1142,20 +1162,19 @@ function reqStatePerAssigneeTop5(pdservice_id, pdServiceVersionLinks) {
 
 				var assigneeList = keySumList.map(item => item.key);
 				var assigneeSize = assigneeList.length;
-				var arr_open = new Array(assigneeSize).fill(0);
-				var arr_in_progress = new Array(assigneeSize).fill(0);
-				var arr_resolved = new Array(assigneeSize).fill(0);
-				var arr_closed = new Array(assigneeSize).fill(0);
 
-				assigneeList.forEach((key, index) => {
-					arr_open[index] = resultData[key]["10"] || 0;
-					arr_in_progress[index] = resultData[key]["11"] || 0;
-					arr_resolved[index] = resultData[key]["12"] || 0;
-					arr_closed[index] = resultData[key]["13"] || 0;
-				});
+                var stateCount ={};
+                stateInfo.forEach(state =>{
+                    stateCount[state.c_id] = new Array(Object.keys(resultData).length).fill(0);
+                });
 
-				var statusArr = []; // 요구사항 상태가 4개므로
-				statusArr.push(arr_open, arr_in_progress, arr_resolved, arr_closed);
+                assigneeList.forEach((key,index) =>{
+                    stateInfo.forEach(state => {
+                        stateCount[state.c_id][index] = resultData[key][state.c_id] || 0;
+                    });
+                });
+
+                var statusArr = Object.values(stateCount);
 
 				var sampleSeries = {
 					type: 'bar',
@@ -1171,17 +1190,17 @@ function reqStatePerAssigneeTop5(pdservice_id, pdServiceVersionLinks) {
 					}
 				}
 
-				var arrSeries = new Array(4);
+				var arrSeries = new Array(stateTitleList.length);
 
-				for (let i=0; i<4; i++) {
+				for (let i=0; i< stateTitleList.length; i++) {
 					let _temp = JSON.parse(JSON.stringify(sampleSeries));
-					//var _temp = Object.assign({}, testSeries); 이 경우 2단 복사 안됨.
 					_temp.data = statusArr[i];
-					_temp.itemStyle.color = colorArr[i]; // 열림, 진행중, 해결됨, 닫힘
-					_temp.name = legend_arr[i];
+					_temp.itemStyle.color = colorArr[i];
+					_temp.name = stateTitleList[i];
 					arrSeries[i] = _temp;
 				}
-				drawBarOnPolar("polar_bar", assigneeList, legend_arr, arrSeries);
+
+				drawBarOnPolar("polar_bar", assigneeList, stateTitleList, arrSeries);
 
 			}
 		}
