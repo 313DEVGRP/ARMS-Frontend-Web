@@ -132,7 +132,7 @@
 				search: true,
 				pagination: 30,
 				tableOverflow: true,
-				textOverflow: true,
+				textOverflow: false,
 				tableWidth: "100%",
 				onchange: function (instance, cell, x, y, value) {
 					console.log(cell);
