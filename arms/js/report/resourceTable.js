@@ -5,9 +5,9 @@
 		$.fn.Table.call(this, selector);
 		this.columns = [
 			{
-				name: "assignee_displayName",
+				name: "displayName",
 				title: "작업자 명",
-				data: "assignee_displayName",
+				data: "displayName",
 				className: "dt-body-center",
 				visible: true,
 				width: "40%",
@@ -19,9 +19,9 @@
 				}
 			},
 			{
-				name: "assignee_emailAddress",
+				name: "emailAddress",
 				title: "작업자 메일",
-				data: "assignee_emailAddress",
+				data: "emailAddress",
 				className: "dt-body-center",
 				visible: true,
 				width: "40%",

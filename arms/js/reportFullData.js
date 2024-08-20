@@ -405,7 +405,7 @@ function fetchAssignees(pdServiceId, pdServiceVersionIds = null, almProjectIds =
 		dataType: "json",
 		success: function(data) {
 			console.log(data.response);
-			table.redrawTable(mockData.assignees);
+			table.redrawTable(data.response);
 		},
 		error: function(xhr, status, error) {
 			console.error(error);
