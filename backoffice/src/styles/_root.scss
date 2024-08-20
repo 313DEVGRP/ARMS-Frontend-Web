@@ -1,0 +1,164 @@
+:root,
+[data-bs-theme='light'] {
+  --#{$prefix}main-color: #{$main-color};
+
+  --#{$prefix}gradient: #{$gradient};
+
+  // Body
+  //
+  // Settings for the `<body>` element.
+
+  --#{$prefix}body-color: #{$body-color};
+  --#{$prefix}body-bg: #{$body-bg};
+
+  --#{$prefix}secondary-color: #{$secondary-color};
+  --#{$prefix}secondary-bg: #{$secondary-bg};
+
+  --#{$prefix}tertiary-color: #{$tertiary-color};
+  --#{$prefix}tertiary-bg: #{$tertiary-bg};
+
+  --#{$prefix}body-image: #{$body-image};
+
+  --#{$prefix}text-muted: #{$text-muted};
+
+  // Links
+  //
+  // Style anchor elements.
+
+  --#{$prefix}link-color: #{$link-color};
+  --#{$prefix}link-hover-color: #{$link-hover-color};
+
+  // Typography
+  //
+  // Font, line-height, and color for body text, headings, and more.
+
+  --#{$prefix}blockquote-border-color: #{$blockquote-border-color};
+
+  // Forms
+
+  --#{$prefix}input-bg: #{$input-bg};
+  --#{$prefix}input-disabled-bg: #{$input-disabled-bg};
+
+  --#{$prefix}input-color: #{$input-color};
+  --#{$prefix}input-border-color: #{$input-border-color};
+
+  --#{$prefix}input-focus-bg: #{$input-focus-bg};
+  --#{$prefix}input-focus-color: #{$input-focus-color};
+
+  --#{$prefix}input-group-addon-color: #{$input-group-addon-color};
+  --#{$prefix}input-group-addon-bg: #{$input-group-addon-bg};
+  --#{$prefix}input-group-addon-border-color: #{$input-group-addon-border-color};
+
+  --#{$prefix}input-search-image: #{$input-search-image};
+
+  --#{$prefix}form-select-color: #{$form-select-color};
+  --#{$prefix}form-select-bg: #{$form-select-bg};
+  --#{$prefix}form-select-disabled-bg: #{$form-select-disabled-bg};
+
+  --#{$prefix}form-select-border-color: #{$form-select-border-color};
+
+  // Cards
+
+  --#{$prefix}card-bg: #{$card-bg};
+
+  // Image thumbnails
+
+  --#{$prefix}thumbnail-bg: #{$thumbnail-bg};
+
+  // Breadcrumbs
+
+  --#{$prefix}breadcrumb-active-color: #{$breadcrumb-active-color};
+
+  // Carousel
+
+  --#{$prefix}carousel-control-color: #{$carousel-control-color};
+
+  --#{$prefix}carousel-indicator-active-bg: #{$carousel-indicator-active-bg};
+
+  // Code
+
+  --#{$prefix}pre-color: #{$pre-color};
+}
+
+[data-bs-theme='dark'] {
+  color-scheme: dark;
+
+  --#{$prefix}main-color: #{$main-color-dark};
+
+  --#{$prefix}gradient: #{$gradient-dark};
+
+  // Body
+  //
+  // Settings for the `<body>` element.
+
+  --#{$prefix}body-color: #{$body-color-dark};
+  --#{$prefix}body-bg: #{$body-bg-dark};
+
+  --#{$prefix}secondary-color: #{$secondary-color-dark};
+  --#{$prefix}secondary-bg: #{$secondary-bg-dark};
+
+  --#{$prefix}tertiary-color: #{$tertiary-color-dark};
+  --#{$prefix}tertiary-bg: #{$tertiary-bg-dark};
+
+  --#{$prefix}body-image: #{$body-image-dark};
+
+  --#{$prefix}text-muted: #{$text-muted-dark};
+
+  // Links
+  //
+  // Style anchor elements.
+
+  --#{$prefix}link-color: #{$link-color-dark};
+  --#{$prefix}link-hover-color: #{$link-hover-color-dark};
+
+  // Typography
+  //
+  // Font, line-height, and color for body text, headings, and more.
+
+  --#{$prefix}blockquote-border-color: #{$blockquote-border-color-dark};
+
+  // Forms
+
+  --#{$prefix}input-bg: #{$input-bg-dark};
+  --#{$prefix}input-disabled-bg: #{$input-disabled-bg-dark};
+
+  --#{$prefix}input-color: #{$input-color-dark};
+  --#{$prefix}input-border-color: #{$input-border-color-dark};
+
+  --#{$prefix}input-focus-bg: #{$input-focus-bg-dark};
+  --#{$prefix}input-focus-color: #{$input-focus-color-dark};
+
+  --#{$prefix}input-group-addon-color: #{$input-group-addon-color-dark};
+  --#{$prefix}input-group-addon-bg: #{$input-group-addon-bg-dark};
+  --#{$prefix}input-group-addon-border-color: #{$input-group-addon-border-color-dark};
+
+  --#{$prefix}input-search-image: #{$input-search-image-dark};
+
+  --#{$prefix}form-select-color: #{$form-select-color-dark};
+  --#{$prefix}form-select-bg: #{$form-select-bg-dark};
+  --#{$prefix}form-select-disabled-bg: #{$form-select-disabled-bg-dark};
+
+  --#{$prefix}form-select-border-color: #{$form-select-border-color-dark};
+
+  // Cards
+
+  --#{$prefix}card-bg: #{$card-bg-dark};
+
+  // Image thumbnails
+
+  --#{$prefix}thumbnail-bg: #{$thumbnail-bg-dark};
+
+  // Breadcrumbs
+
+  --#{$prefix}breadcrumb-active-color: #{$breadcrumb-active-color-dark};
+
+  // Carousel
+
+  --#{$prefix}carousel-control-color: #{$carousel-control-color-dark};
+
+  --#{$prefix}carousel-indicator-active-bg: #{$carousel-indicator-active-bg-dark};
+
+  // Code
+
+  --#{$prefix}pre-color: #{$pre-color-dark};
+}

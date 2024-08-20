@@ -1,0 +1,22 @@
+.breadcrumb {
+  --#{$prefix}breadcrumb-color: #{$breadcrumb-color};
+  --#{$prefix}breadcrumb-active-color: #{$breadcrumb-active-color};
+
+  color: var(--#{$prefix}breadcrumb-color);
+}
+
+.breadcrumb-item {
+  color: var(--#{$prefix}breadcrumb-color);
+
+  a,
+  &:hover {
+    color: var(--#{$prefix}breadcrumb-active-color);
+  }
+}
+
+[data-bs-theme='dark'] {
+  .breadcrumb {
+    --#{$prefix}breadcrumb-color: #{$breadcrumb-color-dark};
+    --#{$prefix}breadcrumb-active-color: #{$breadcrumb-active-color-dark};
+  }
+}

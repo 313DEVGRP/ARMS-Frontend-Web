@@ -1,0 +1,10 @@
+.container {
+  width: calc(100% - $sidebar-width - 1.5rem);
+  margin-left: $wrap-margin;
+  padding: 0 2.5641%;
+
+  @media (max-width: 540px) {
+    width: calc(100% - 1.5rem);
+    margin-left: 0;
+  }
+}

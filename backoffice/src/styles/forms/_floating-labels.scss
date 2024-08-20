@@ -1,0 +1,11 @@
+.form-floating {
+  > textarea:focus,
+  > textarea:not(:placeholder-shown) {
+    ~ label::after {
+      background-color: var(--#{$prefix}input-bg);
+    }
+  }
+  > textarea:disabled ~ label::after {
+    background-color: var(--#{$prefix}input-disabled-bg);
+  }
+}

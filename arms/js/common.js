@@ -316,8 +316,8 @@ function includeLayout(page) {
 				self.load(url, function () {
 					self.removeAttr("data-include");
 				});
-			} else if (str.indexOf("controltower") > 0) {
-				url = "/controltower/html/template/page-sidebar.html";
+			} else if (str.indexOf("backoffice") > 0) {
+				url = "/backoffice/html/template/page-sidebar.html";
 				self.load(url, function () {
 					self.removeAttr("data-include");
 				});
