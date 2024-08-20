@@ -1,7 +1,7 @@
 var selectedPdServiceId; // 제품(서비스) 아이디
 var selectedVersionIds; // 선택된 버전 아이디
 var selectedAlmProjectIds; // 선택된 ALM Project 아이디
-
+var selectedAccountId;
 var pdServiceListData;
 var versionListData;
 
@@ -316,7 +316,9 @@ function makeProjectMultiSelectBox () {
 				return;
 			}
 
-			fetchExcelData();
+			fetchAssignees(selectedPdServiceId);
+			fetchExcelData(selectedPdServiceId);
+
 
 			$("#multiple-alm-project").siblings(".ms-parent").css("z-index", 1000);
 		},
@@ -357,7 +359,8 @@ function fetchJiraProjects(pdServiceId, versionIds = null) {
 				.multipleSelect("refresh")
 				.multipleSelect("checkAll");
 
-			fetchExcelData();
+			fetchAssignees(selectedPdServiceId);
+			fetchExcelData(selectedPdServiceId);
 
 		},
 		error: function(xhr, status, error) {
@@ -369,10 +372,86 @@ function fetchJiraProjects(pdServiceId, versionIds = null) {
 ////////////////////////////////////////
 // TODO: 모든 검색 필터(제품, 제품 버전, ALM 프로젝트, 날짜 등) 선택이 완료 된 경우, 데이터를 조회한다.
 ////////////////////////////////////////
-function fetchExcelData() {
-	// TODO: 필수 인자 서버로 전달하여 API 호출. 응답 데이터 받아 렌더링
-	drawExcel("spreadsheet", mockData.excelMock);
-	table.redrawTable(mockData.assignees);
+function fetchAssignees(pdServiceId, pdServiceVersionIds = null, almProjectIds = null, startDate = null, endDate = null, accountId = null) {
+	let url = new UrlBuilder()
+		.setBaseUrl('/auth-user/api/arms/report/full-data/assignees')
+		.addQueryParam('pdServiceId', pdServiceId);
+
+	if(pdServiceVersionIds) {
+		url.addQueryParam('pdServiceVersionIds', pdServiceVersionIds);
+	}
+
+	if(almProjectIds) {
+		url.addQueryParam('almProjectIds', almProjectIds);
+	}
+
+	if(startDate) {
+		url.addQueryParam('startDate', startDate);
+	}
+
+	if(endDate) {
+		url.addQueryParam('endDate', endDate);
+	}
+
+	if(accountId) {
+		url.addQueryParam('accountId', accountId);
+	}
+
+	url = url.build();
+
+	$.ajax({
+		url: url,
+		type: "GET",
+		dataType: "json",
+		success: function(data) {
+			console.log(data.response);
+			table.redrawTable(data.response);
+		},
+		error: function(xhr, status, error) {
+			console.error(error);
+		}
+	});
+}
+
+function fetchExcelData(pdServiceId, pdServiceVersionIds = null, almProjectIds = null, startDate = null, endDate = null, accountId = null) {
+	let url = new UrlBuilder()
+		.setBaseUrl('/auth-user/api/arms/report/full-data/excel-data')
+		.addQueryParam('pdServiceId', pdServiceId);
+
+	if(pdServiceVersionIds) {
+		url.addQueryParam('pdServiceVersionIds', pdServiceVersionIds);
+	}
+
+	if(almProjectIds) {
+		url.addQueryParam('almProjectIds', almProjectIds);
+	}
+
+	if(startDate) {
+		url.addQueryParam('startDate', startDate);
+	}
+
+	if(endDate) {
+		url.addQueryParam('endDate', endDate);
+	}
+
+	if(accountId) {
+		url.addQueryParam('accountId', accountId);
+	}
+
+	url = url.build();
+
+	$.ajax({
+		url: url,
+		type: "GET",
+		dataType: "json",
+		success: function(data) {
+			console.log(data.response);
+			drawExcel("spreadsheet", mockData.excelMock);
+		},
+		error: function(xhr, status, error) {
+			console.error(error);
+		}
+	});
 }
 
 
@@ -440,8 +519,27 @@ function setEdgeDateRange(versionData) {
 	console.log("[ fullDataSheet :: setEdgeDateRange ] :: " +
 		"minMaxDate.min => " + minMaxDate.min+ ", minMaxDate.max => " +minMaxDate.max);
 
-	$('#date_timepicker_start').datetimepicker('setOptions', { value: minMaxDate.min });
-	$('#date_timepicker_end').datetimepicker('setOptions', { value: minMaxDate.max });
+	const oneMonthAgo = new Date(minMaxDate.max);
+	oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+
+	if (oneMonthAgo < minMaxDate.min) {
+		oneMonthAgo.setTime(minMaxDate.min.getTime());
+	}
+
+	$('#date_timepicker_start').datetimepicker('setOptions', {
+		minDate: minMaxDate.min,
+		maxDate: minMaxDate.max,
+		value: oneMonthAgo
+	});
+
+	$('#date_timepicker_end').datetimepicker('setOptions', {
+		minDate: minMaxDate.min,
+		maxDate: minMaxDate.max,
+		value: minMaxDate.max
+	});
+
+	// $('#date_timepicker_start').datetimepicker('setOptions', { value: minMaxDate.min });
+	// $('#date_timepicker_end').datetimepicker('setOptions', { value: minMaxDate.max });
 }
 
 ////////////////////////////////////////

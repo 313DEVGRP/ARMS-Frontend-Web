@@ -134,11 +134,10 @@
 			search: true,
 			pagination: 30,
 			tableOverflow: true,
-			textOverflow: true,
+			textOverflow: false,
 			tableWidth: "100%",
 			onchange: function(instacne, cell, x, y, value) {
 				console.log(cell);
-				//var cellName = Spreadsheet.getColumnNameFromId([x,y]);
 			},
 			onload: function (element) {
 				var $jexcel = $(element);
@@ -147,12 +146,12 @@
 						'row;align-items: center; font-style: normal; height: 100%; width:100% !important;"><i class="fa fa-search"></i>' +
 						' <input class="jexcel_search" placeholder="시트에서 검색" style="margin-left: 5px;background-color: transparent;border: none; width: 100%; color: #FFF">' +
 						'</span>');
-				$jexcel.find(".jexcel_toolbar_item[data-k='undo']").addClass("fa fa-mail-reply tb-default-color");
+				$jexcel.find(".jexcel_toolbar_item[data-k='undo']").addClass("fa fa-mail-reply ");
 				$jexcel.find(".jexcel_toolbar_item[data-k='redo']").addClass("fa fa-mail-forward ");
 				$jexcel.find(".jexcel_toolbar_item[data-k='save']").addClass("fa fa-save");
-				$jexcel.find(".jexcel_toolbar_item[data-k='text-align'][data-v='right']").addClass("fa fa-align-left fa-rotate-180");
-				$jexcel.find(".jexcel_toolbar_item[data-k='text-align'][data-v='center']").addClass("fa fa-align-center fa-rotate-180");
-				$jexcel.find(".jexcel_toolbar_item[data-k='text-align'][data-v='left']").addClass("fa fa-align-right fa-rotate-180");
+				$jexcel.find(".jexcel_toolbar_item[data-k='text-align'][data-v='left']").addClass("fa fa-align-left fa-flip-vertical");
+				$jexcel.find(".jexcel_toolbar_item[data-k='text-align'][data-v='center']").addClass("fa fa-align-center fa-flip-vertical");
+				$jexcel.find(".jexcel_toolbar_item[data-k='text-align'][data-v='right']").addClass("fa fa-align-right fa-flip-vertical");
 				$jexcel.find(".jexcel_toolbar_item[data-k='font-weight'][data-v='bold']").addClass("fa fa-bold");
 				$jexcel.find(".jexcel_toolbar_item[data-k='font-style'][data-v='italic']").addClass("fa fa-italic");
 				$jexcel.find(".jexcel_toolbar_item[data-k='text-decoration'][data-v='underline']").addClass("fa fa-underline");
