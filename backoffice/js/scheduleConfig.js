@@ -21,7 +21,11 @@ function execDocReady() {
             "../reference/light-blue/lib/jquery.iframe-transport.js",
             "../reference/light-blue/lib/jquery.fileupload.js",
             "../reference/light-blue/lib/jquery.fileupload-fp.js",
-            "../reference/light-blue/lib/jquery.fileupload-ui.js"
+            "../reference/light-blue/lib/jquery.fileupload-ui.js",
+            "../reference/jquery-plugins/unityping-0.1.0/dist/jquery.unityping.min.js",
+            "../reference/jquery-plugins/cron-editor-master/css/jquery-ui-mad.css",
+            "../reference/jquery-plugins/cron-editor-master/js/jquery-ui.js",
+            "../reference/jquery-plugins/cron-editor-master/js/jquery.croneditor_mad.js"
         ],
 
         [
@@ -102,12 +106,49 @@ function execDocReady() {
             }, 313 /*milli*/);
 
             drawExcel("schedule_history_excel");
+            // turn the div into a cron editor
+            cronInit();
+
         })
         .catch(function (error) {
             console.error("플러그인 로드 중 오류 발생");
             console.log(error);
         });
 }
+
+
+////////////////////////////////////////////////////////////////////////////////////////
+// --- 크론 컨트롤 --- //
+////////////////////////////////////////////////////////////////////////////////////////
+function cronInit() {
+    var croneditor = cronCreator("0 * * * * *");
+    croneditor.initByCronArr();
+    croneditor.drawCronByCronArr();
+    croneditor.drawEachMinutes();
+    croneditor.drawEachHours();
+    croneditor.drawEachDays();
+    croneditor.drawEachMonths();
+    croneditor.drawEachWeek();
+    croneditor.drawCronByCronArr();
+}
+
+function cronCreator(value) {
+    // 페이지 에러로 인한 주석 처리 : to.민규님
+    let cronValue = value;
+    $("#popup_cron_expression").val(value);
+
+    let cronArr = value.split(" ");
+
+    let croneditor = $(".cronDiv").croneditor({
+        cronArr: cronArr,
+        drawCron: function () {
+            let newCron = cronArr.join(" ");
+            $("#popup_cron_expression").val(newCron);
+        }
+    });
+    return croneditor;
+}
+
 
 
 ////////////////////////////////////////////////////////////////////////////////////////
