@@ -7,7 +7,7 @@
 		$.getStylesheet("../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jsuites.css"),
 		$.getStylesheet("../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jspreadsheet.css"),
 		$.getStylesheet("../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jspreadsheet.theme.css"),
-		$.getStylesheet("./css/jspreadsheet/custom_sheet.css")
+		$.getStylesheet("/arms/css/jspreadsheet/custom_sheet.css")
 	).done(function() {
 
 			$.fn.spreadsheet = function (option) {
