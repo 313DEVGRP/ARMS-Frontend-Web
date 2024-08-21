@@ -101,6 +101,8 @@ function drawExcel(target) {
     ];
     var customOption = {
         search: true,
+        allowInsertRow: false,
+        allowInsertColumn: false,
         updateTable: function(instance, cell, col, row, val, id) {
             cell.style.textAlign = "left";
             cell.style.whiteSpace = "normal";
