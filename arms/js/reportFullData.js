@@ -401,9 +401,9 @@ function fetchAssignees(pdServiceId, optionalParams = {}) {
 		.setBaseUrl('/auth-user/api/arms/report/full-data/assignees')
 		.addQueryParam('pdServiceId', pdServiceId);
 
-	const { pdServiceVersionIds = null, almProjectIds = null, startDate = null, endDate = null, assigneeEmails = null } = optionalParams;
+	const { pdServiceVersionIds = null, almProjectIds = null, startDate = null, endDate = null, emailAddress = null } = optionalParams;
 
-	const optionalQueryParams = { pdServiceVersionIds, almProjectIds, startDate, endDate, assigneeEmails };
+	const optionalQueryParams = { pdServiceVersionIds, almProjectIds, startDate, endDate, emailAddress };
 
 	Object.entries(optionalQueryParams).forEach(([key, value]) => {
 		if (value) {
@@ -438,9 +438,9 @@ function fetchExcelData(pdServiceId, optionalParams = {}) {
 		.setBaseUrl('/auth-user/api/arms/report/full-data/excel-data')
 		.addQueryParam('pdServiceId', pdServiceId);
 
-	const { pdServiceVersionIds = null, almProjectIds = null, startDate = null, endDate = null, assigneeEmails = null } = optionalParams;
+	const { pdServiceVersionIds = null, almProjectIds = null, startDate = null, endDate = null, emailAddress = null } = optionalParams;
 
-	const optionalQueryParams = { pdServiceVersionIds, almProjectIds, startDate, endDate, assigneeEmails };
+	const optionalQueryParams = { pdServiceVersionIds, almProjectIds, startDate, endDate, emailAddress };
 
 	Object.entries(optionalQueryParams).forEach(([key, value]) => {
 		if (value) {
@@ -567,7 +567,7 @@ var initTable = function() {
 
 	resourceTable.onAfterUpdate = function() {
 		fetchExcelData(selectedPdServiceId, {
-			assigneeEmails: resourceTable.getSelectedIds(),
+			emailAddress: resourceTable.getSelectedIds(),
 			pdServiceVersionIds: selectedVersionIds,
 			almProjectIds: selectedAlmProjectIds,
 			startDate: $('#date_timepicker_start').val(),
