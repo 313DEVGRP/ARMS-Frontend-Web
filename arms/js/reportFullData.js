@@ -1,7 +1,7 @@
 var selectedPdServiceId; // 제품(서비스) 아이디
 var selectedVersionIds; // 선택된 버전 아이디
 var selectedAlmProjectIds; // 선택된 ALM Project 아이디
-var selectedAccountId;
+
 var pdServiceListData;
 var versionListData;
 
@@ -316,9 +316,18 @@ function makeProjectMultiSelectBox () {
 				return;
 			}
 
-			fetchAssignees(selectedPdServiceId);
-			fetchExcelData(selectedPdServiceId);
-
+			fetchAssignees(selectedPdServiceId, {
+				pdServiceVersionIds: selectedVersionIds,
+				almProjectIds: selectedAlmProjectIds,
+				startDate: $('#date_timepicker_start').val(),
+				endDate: $('#date_timepicker_end').val()
+			});
+			fetchExcelData(selectedPdServiceId, {
+				pdServiceVersionIds: selectedVersionIds,
+				almProjectIds: selectedAlmProjectIds,
+				startDate: $('#date_timepicker_start').val(),
+				endDate: $('#date_timepicker_end').val()
+			});
 
 			$("#multiple-alm-project").siblings(".ms-parent").css("z-index", 1000);
 		},
@@ -359,8 +368,18 @@ function fetchJiraProjects(pdServiceId, versionIds = null) {
 				.multipleSelect("refresh")
 				.multipleSelect("checkAll");
 
-			fetchAssignees(selectedPdServiceId);
-			fetchExcelData(selectedPdServiceId);
+			fetchAssignees(selectedPdServiceId, {
+				pdServiceVersionIds: selectedVersionIds,
+				almProjectIds: selectedAlmProjectIds,
+				startDate: $('#date_timepicker_start').val(),
+				endDate: $('#date_timepicker_end').val()
+			});
+			fetchExcelData(selectedPdServiceId, {
+				pdServiceVersionIds: selectedVersionIds,
+				almProjectIds: selectedAlmProjectIds,
+				startDate: $('#date_timepicker_start').val(),
+				endDate: $('#date_timepicker_end').val()
+			});
 
 		},
 		error: function(xhr, status, error) {
@@ -370,34 +389,29 @@ function fetchJiraProjects(pdServiceId, versionIds = null) {
 }
 
 ////////////////////////////////////////
-// TODO: 모든 검색 필터(제품, 제품 버전, ALM 프로젝트, 날짜 등) 선택이 완료 된 경우, 데이터를 조회한다.
+// 모든 검색 필터(제품, 제품 버전, ALM 프로젝트, 날짜 등) 선택이 완료 된 경우, 데이터를 조회한다.
 ////////////////////////////////////////
-function fetchAssignees(pdServiceId, pdServiceVersionIds = null, almProjectIds = null, startDate = null, endDate = null, accountId = null) {
-	let url = new UrlBuilder()
+function fetchAssignees(pdServiceId, optionalParams = {}) {
+	if (!pdServiceId) {
+		jError("제품(서비스)가 선택되지 않았습니다.");
+		return false;
+	}
+
+	let urlBuilder = new UrlBuilder()
 		.setBaseUrl('/auth-user/api/arms/report/full-data/assignees')
 		.addQueryParam('pdServiceId', pdServiceId);
 
-	if(pdServiceVersionIds) {
-		url.addQueryParam('pdServiceVersionIds', pdServiceVersionIds);
-	}
+	const { pdServiceVersionIds = null, almProjectIds = null, startDate = null, endDate = null, assigneeEmails = null } = optionalParams;
 
-	if(almProjectIds) {
-		url.addQueryParam('almProjectIds', almProjectIds);
-	}
+	const optionalQueryParams = { pdServiceVersionIds, almProjectIds, startDate, endDate, assigneeEmails };
 
-	if(startDate) {
-		url.addQueryParam('startDate', startDate);
-	}
+	Object.entries(optionalQueryParams).forEach(([key, value]) => {
+		if (value) {
+			urlBuilder.addQueryParam(key, value);
+		}
+	});
 
-	if(endDate) {
-		url.addQueryParam('endDate', endDate);
-	}
-
-	if(accountId) {
-		url.addQueryParam('accountId', accountId);
-	}
-
-	url = url.build();
+	const url = urlBuilder.build();
 
 	$.ajax({
 		url: url,
@@ -413,32 +427,28 @@ function fetchAssignees(pdServiceId, pdServiceVersionIds = null, almProjectIds =
 	});
 }
 
-function fetchExcelData(pdServiceId, pdServiceVersionIds = null, almProjectIds = null, startDate = null, endDate = null, accountId = null) {
-	let url = new UrlBuilder()
+function fetchExcelData(pdServiceId, optionalParams = {}) {
+
+	if (!pdServiceId) {
+		jError("제품(서비스)가 선택되지 않았습니다.");
+		return false;
+	}
+
+	let urlBuilder = new UrlBuilder()
 		.setBaseUrl('/auth-user/api/arms/report/full-data/excel-data')
 		.addQueryParam('pdServiceId', pdServiceId);
 
-	if(pdServiceVersionIds) {
-		url.addQueryParam('pdServiceVersionIds', pdServiceVersionIds);
-	}
+	const { pdServiceVersionIds = null, almProjectIds = null, startDate = null, endDate = null, assigneeEmails = null } = optionalParams;
 
-	if(almProjectIds) {
-		url.addQueryParam('almProjectIds', almProjectIds);
-	}
+	const optionalQueryParams = { pdServiceVersionIds, almProjectIds, startDate, endDate, assigneeEmails };
 
-	if(startDate) {
-		url.addQueryParam('startDate', startDate);
-	}
+	Object.entries(optionalQueryParams).forEach(([key, value]) => {
+		if (value) {
+			urlBuilder.addQueryParam(key, value);
+		}
+	});
 
-	if(endDate) {
-		url.addQueryParam('endDate', endDate);
-	}
-
-	if(accountId) {
-		url.addQueryParam('accountId', accountId);
-	}
-
-	url = url.build();
+	const url = urlBuilder.build();
 
 	$.ajax({
 		url: url,
@@ -551,10 +561,22 @@ var initTable = function() {
 	resourceTable.dataTableBuild({
 		rowGroup: [0],
 		isAddCheckbox: true,
-		autoWidth: false
+		autoWidth: false,
+		idColumnIndex: 1
 	});
 
+	resourceTable.onAfterUpdate = function() {
+		fetchExcelData(selectedPdServiceId, {
+			assigneeEmails: resourceTable.getSelectedIds(),
+			pdServiceVersionIds: selectedVersionIds,
+			almProjectIds: selectedAlmProjectIds,
+			startDate: $('#date_timepicker_start').val(),
+			endDate: $('#date_timepicker_end').val()
+		});
+	};
+
 	return {
+		resourceTable: resourceTable,
 		redrawTable: resourceTable.reDraw.bind(resourceTable)
 	};
 };
