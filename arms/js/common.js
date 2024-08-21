@@ -2195,7 +2195,7 @@ function binding_state_list(container_id, req_state_list, is_disabled) {
 			continue;
 		}
 
-		const labelClass = is_disabled ? 'btn btn-disabled' : 'btn';
+		const labelClass = is_disabled ? 'btn btn-disabled font12' : 'btn font12';
 		const label = $('<label>', {
 			class: labelClass,
 			style: 'margin-right: 5px;'
