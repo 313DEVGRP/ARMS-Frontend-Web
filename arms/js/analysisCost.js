@@ -1481,129 +1481,189 @@ function 인력별_연봉대비_성과차트(전체담당자목록) {
     window.addEventListener('resize', myChart.resize);
 }
 
-/////////////////////////////////////////////////////
+/////////////////////////////////////////////////
 // 엑셀 그리기
-/////////////////////////////////////////////////////
-function drawExcel(targetId, data) {
-    console.log("analysisCost :: drawExcel");
-    console.log(data);
-    let $targetId = "#" + targetId;
-
-    if($($targetId)[0].jexcel) {
-        console.log($($targetId)[0].jexcel);
-        $($targetId)[0].jexcel.destroy();
-    }
-
-    var excelWidth=$($targetId).width() - 50;
+/////////////////////////////////////////////////
+function drawExcel(target, data) {
     var columnList = [
         { type: "text", title: "이름", wRatio: 0.25, readOnly: true },
         { type: "text", title: "키",   wRatio: 0.25, readOnly: true },
         { type: "text", title: "연봉", wRatio: 0.5 }
     ];
-
-    SpreadSheetFunctions.setColumns(columnList);
-    SpreadSheetFunctions.setColumnWidth(excelWidth);
-
-    var customOptions = {
-        pagination:10,
-        contextMenu: [],
-        updateTable: function(instace, cell, col, row, val, id) {
+    var customOption = {
+        search: true,
+        allowInsertRow: false,
+        allowInsertColumn: false,
+        updateTable: function(instance, cell, col, row, val, id) {
+            cell.style.textAlign = "left";
             cell.style.whiteSpace = "normal";
-            if(col === 2) {
-                cell.style.textAlign = "right";
-                cell.style.color = "#a4c6ff";
-            } else {
-                cell.style.textAlign = "left";
-            }
-        },
-        onchange: function(instance, cell, x, y, value) {
-            var cellName = jspreadsheet.getColumnNameFromId([x,y]);
-            console.log('onchange :: ' + cell + " :;  x :: " + x + " :: y :: " + y +" :: cellName ::" + cellName + ' to: ' + value + '\n');
-            if (x == 2) {
-                var key = instance.jexcel.getValueFromCoords(1, y);
-                if (!modifiedRows[key]) {
-                    modifiedRows[key] = {};
-                }
-                modifiedRows[key].이름 = instance.jexcel.getValueFromCoords(0, y);
-                modifiedRows[key].키 = instance.jexcel.getValueFromCoords(1, y);
-                modifiedRows[key].연봉 = value;
-            }
         }
     };
 
-    SpreadSheetFunctions.setExcelData(data);
-    SpreadSheetFunctions.setOptions(customOptions);
+    SpreadsheetFunctions.setTargetId(target);
+    SpreadsheetFunctions.setDefaultTargetRect();
 
-    $($targetId).spreadsheet($.extend({}, {
-        columns: SpreadSheetFunctions.getColumns(),
-        data: SpreadSheetFunctions.getExcelData()
-    }, SpreadSheetFunctions.getOptions()));
-
+    SpreadsheetFunctions.setColumns(columnList);
+    SpreadsheetFunctions.setColumnWidth(SpreadsheetFunctions.getTargetRect("width"));
+    SpreadsheetFunctions.setOptions(customOption);
+    SpreadsheetFunctions.startObserver();
+    SpreadsheetFunctions.setExcelData(data);
+    SpreadsheetFunctions.drawExcel(SpreadsheetFunctions.getTargetId());
 }
 
-var SpreadSheetFunctions = ( function () {
-    let $tabFunction_data;   // 엑셀 데이터
-    let $tabFunction_columns;// 엑셀 컬럼
-    let $tabFunction_options;// 엑셀 (커스텀)옵션 :: 정의 안할 경우 default
-    let $sheetInstance;
-    var setESheet = function(obj) {
-        $sheetInstance = obj;
+var SpreadsheetFunctions = (function () {
+    let targetId = { "v" : "", "jq" : ""};
+    let targetRect = {"width" : 0, "height" : 0};
+    let excelData;    // 엑셀 데이터
+    let excelColumns;  // 엑셀 컬럼
+    let customOptions;// 엑셀 커스텀 옵션들 :: 정의 안할 경우 default
+
+
+    var setDefaultTargetRect = function () {
+        let defaultWidth = $(getTargetId("jq")).width();
+        let defaultHeight = $(getTargetId("jq")).height();
+        setTargetRect(defaultWidth, defaultHeight);
     };
+    var setTargetRect = function(width, height) {
+        targetRect.width = width;
+        targetRect.height = height;
+    };
+
+    var getTargetRect = function (type) {
+        if (type === "width") {
+            return targetRect.width;
+        } else if (type  === "height") {
+            return targetRect.height;
+        } else {
+            return targetRect;
+        }
+    };
+
+    var setTargetId = function (target) {
+        targetId.v = target;
+        targetId.jq = "#"+target;
+    };
+
+    var getTargetId = function (type) {
+        if (type === "jq") {
+            return targetId.jq;
+        } else {
+            return targetId.v;
+        }
+    };
+
     var setExcelData = function(data) {
-        $tabFunction_data = data;
+        excelData = data;
     };
     var getExcelData = function () {
-        return $tabFunction_data;
+        return excelData;
     };
     var setColumns = function(columns) {
-        console.log("setColumns");
-        $tabFunction_columns = columns;
+        excelColumns = columns;
     };
     var getColumns = function () {
-        return $tabFunction_columns;
-    };
-    var setOptions = function(options) {
-        $tabFunction_options = options;
-    };
-    var getOptions = function() {
-        return $tabFunction_options ? $tabFunction_options : null;
+        return excelColumns;
     };
 
     var setColumnWidth = function (width) {
-        $tabFunction_columns = $tabFunction_columns.map(column => ({
-            ...column, width: width * column.wRatio
-        }));
+        if (excelColumns) {
+            excelColumns = excelColumns.map(column => ({
+                ...column, width: (width * column.wRatio) -1
+            }));
+        }
     };
+
+    function setColumnWidthAsync(width) {
+        return new Promise((resolve) => {
+            if (excelColumns) {
+                excelColumns = excelColumns.map(column => ({
+                    ...column, width: (width * column.wRatio) - 1
+                }));
+            }
+            resolve(); // 컬럼 너비 설정이 완료된 후 resolve 호출
+        });
+    }
+
+    var setOptions = function(options) {
+        customOptions = options;
+    };
+    var getOptions = function() {
+        return customOptions ? customOptions : null;
+    };
+
 
     var resizeObserver = new ResizeObserver(function(entries) {
         for (let entry of entries) {
-            var width = entry.contentRect.width;
-            var height = entry.contentRect.height;
-            handleResize(entry.target.id, width, height);
+            setTargetRect(entry.contentRect.width, entry.contentRect.height);
+            handleResize(entry.target.id, getTargetRect("width"), getTargetRect("height"));
         }
     });
 
-    // 모달요소 크기 변화 관찰
-    resizeObserver.observe(document.getElementById('spreadsheet'));
+    // 모달요소 크기 변화 관찰(Observer)
+    function startObserver() {
+        resizeObserver.observe($(getTargetId("jq"))[0]);
+    }
 
-    function handleResize(id,width, height) {
-        if (id ==="spreadsheet" && height !== 0) {
-            if (Object.keys(인력별_연봉정보).length > 0) {
-                drawExcel("spreadsheet", 인력별_연봉정보);
+    function handleResize(id, width, height) {
+        if (id === getTargetId() && height !== 0) {
+            if (excelData) {
+                drawResizedExcel(getTargetId());
             } else {
-                console.log("인력별_연봉정보 데이터가 없습니다.");
+                console.log("Spreadsheet.handleResize :: 엑셀 데이터 없음");
             }
+
+        } else {
+            console.log("Spreadsheet.handleResize :: id 불일치 또는 height 가 0 입니다.");
         }
     }
 
+    function drawResizedExcel(target) {
+        let $targetId = "#"+target;
+
+        if($($targetId).length > 0 && $($targetId)[0].jexcel) {
+            $($targetId)[0].jexcel.destroy();
+        }
+
+        setColumnWidthAsync(getTargetRect("width") - 50).then(() => {
+            $($targetId).spreadsheet($.extend({}, {
+                columns: getColumns(),
+                data: getExcelData()
+            }, getOptions()));
+
+            let jexcel_content_height = getTargetRect("height") - 40 - 30 - 35 - 34;
+            $($targetId + " .jexcel_content").css("max-height", jexcel_content_height);
+            $($targetId + " .jexcel_content").css("width", "100%");
+        });
+    }
+
+    function drawExcel(target) {
+        let $targetId = "#"+target;
+
+        if($($targetId).length > 0 && $($targetId)[0].jexcel) {
+            $($targetId)[0].jexcel.destroy();
+        }
+
+        $($targetId).spreadsheet($.extend({}, {
+            columns: getColumns(),
+            data: getExcelData()
+        }, getOptions()));
+
+        let jexcel_content_height = getTargetRect("height") - 40 - 30 - 35 - 34;
+        $($targetId + " .jexcel_content").css("max-height", jexcel_content_height);
+        $($targetId + " .jexcel_content").css("width", "100%");
+
+    }
+
     return {
-      setExcelData, getExcelData,
-      setColumns, getColumns,
-      setOptions, getOptions,
-      setColumnWidth
+        setTargetId,   getTargetId,
+        setTargetRect, getTargetRect, setDefaultTargetRect,
+        setExcelData,  getExcelData,
+        setColumns,    getColumns,   setColumnWidth,
+        setOptions,    getOptions,
+
+        startObserver, drawExcel
     };
 })();
-
 
 $(document).ready(function() {
     $("#cost-excel-batch-update").on('click', function() {
