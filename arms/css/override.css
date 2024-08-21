@@ -523,7 +523,7 @@ img {
 }
 
 .widget-content {
-	margin: 10px 0 15px;
+	margin: 0px 0px 15px 0px !important;
 }
 
 .widget-content > div {
