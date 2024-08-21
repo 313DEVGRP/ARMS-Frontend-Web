@@ -23,9 +23,9 @@ function execDocReady() {
             "../reference/light-blue/lib/jquery.fileupload-fp.js",
             "../reference/light-blue/lib/jquery.fileupload-ui.js",
             "../reference/jquery-plugins/unityping-0.1.0/dist/jquery.unityping.min.js",
-            "../reference/jquery-plugins/cron-editor-master/css/jquery-ui-mad.css",
+            "../reference/jquery-plugins/cron-editor-master/css/jquery-ui_arms.css",
             "../reference/jquery-plugins/cron-editor-master/js/jquery-ui.js",
-            "../reference/jquery-plugins/cron-editor-master/js/jquery.croneditor_mad.js"
+            "../reference/jquery-plugins/cron-editor-master/js/jquery.croneditor_arms.js"
         ],
 
         [
