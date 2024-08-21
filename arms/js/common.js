@@ -1224,7 +1224,7 @@ function dataTable_extendBuild(
 	$(".dataTables_length").find("select:eq(0)").css("min-height", "30px");
 	$(".dataTables_length").find("select:eq(0)").children().css("background", "#3B3D40");
 	$(".dataTables_length").find("select:eq(0)").css("border-radius", "5px");
-	$(jQueryElementID + "_wrapper").css("border-top", "1px solid rgba(51, 51, 51, 0.3)");
+	$(jQueryElementID + "_wrapper").css("border-top", "1px dashed rgba(51, 51, 51, 0.2)");
 	$(jQueryElementID + "_wrapper").css("padding-top", "5px");
 
 	// ----- 데이터 테이블 빌드 이후 별도 스타일 구성 ------ //

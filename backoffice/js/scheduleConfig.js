@@ -41,7 +41,15 @@ function execDocReady() {
             "../reference/lightblue4/docs/lib/widgster/widgster.js",
             "../reference/lightblue4/docs/lib/slimScroll/jquery.slimscroll.min.js",
             "../reference/lightblue4/docs/lib/jquery.sparkline/index.js",
-            "../reference/lightblue4/docs/js/charts.js"
+            "../reference/lightblue4/docs/js/charts.js",
+            "../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jsuites.js",
+            "../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/index.js",
+            "../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jsuites.css",
+            "../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jspreadsheet.css",
+            "../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jspreadsheet.datatables.css",
+            "../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jspreadsheet.theme.css",
+            "/arms/js/common/jspreadsheet/spreadsheet.js",
+            "/arms/css/jspreadsheet/custom_sheet.css"
         ],
 
         [
@@ -112,8 +120,60 @@ function dataTableLoad() {
         { name: "c_id", title: "제품(서비스) 아이디", data: "c_id", visible: false },
         {
             name: "c_title",
-            title: "제품(서비스) 이름",
+            title: "JOB 이름",
             data: "c_title",
+            render: function (data, type, row, meta) {
+                if (type === "display") {
+                    return '<label style="color: #a4c6ff">' + data + "</label>";
+                }
+                return data;
+            },
+            className: "dt-body-left",
+            visible: true
+        },
+        {
+            name: "c_job_status",
+            title: "JOB 상태",
+            data: "c_job_status",
+            render: function (data, type, row, meta) {
+                if (type === "display") {
+                    return '<label style="color: #a4c6ff">' + data + "</label>";
+                }
+                return data;
+            },
+            className: "dt-body-left",
+            visible: true
+        },
+        {
+            name: "c_job_last_time",
+            title: "JOB 마지막 실행 시간",
+            data: "c_job_last_time",
+            render: function (data, type, row, meta) {
+                if (type === "display") {
+                    return '<label style="color: #a4c6ff">' + data + "</label>";
+                }
+                return data;
+            },
+            className: "dt-body-left",
+            visible: true
+        },
+        {
+            name: "c_job_next_time",
+            title: "JOB 다음 실행 시간",
+            data: "c_job_next_time",
+            render: function (data, type, row, meta) {
+                if (type === "display") {
+                    return '<label style="color: #a4c6ff">' + data + "</label>";
+                }
+                return data;
+            },
+            className: "dt-body-left",
+            visible: true
+        },
+        {
+            name: "c_job_duration",
+            title: "JOB 평균 실행 시간",
+            data: "c_job_duration",
             render: function (data, type, row, meta) {
                 if (type === "display") {
                     return '<label style="color: #a4c6ff">' + data + "</label>";
