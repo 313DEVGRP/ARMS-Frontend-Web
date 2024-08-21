@@ -927,15 +927,12 @@ function delete_req_state_btn_click() {
             return false;
         }
 
-        let state_name = $("#popup_view_state_name").val().trim();
-        let change_state_name = $("#popup_view_change_state_div input[name='popup_view_change_state_div_options']:checked")
-            .closest("label") // input의 가장 가까운 부모 label 요소
-            .text()            // label 요소의 텍스트
-            .trim();
+        let state_name = $("#popup_view_change_state_name").val().trim();
+        let change_state_name = $("#select-change-state option:selected").text().trim();
 
         let isDelete = confirm(state_name + " 상태를 삭제 하고 " + change_state_name + " 상태로 변환하시겠습니까?");
         if (!isDelete) {
-            return;
+            return false;
         }
 
         remove_arms_state(state_id_before_change, state_name)
