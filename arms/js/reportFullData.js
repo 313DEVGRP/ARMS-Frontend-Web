@@ -1,7 +1,8 @@
 var selectedPdServiceId; // 제품(서비스) 아이디
 var selectedVersionIds; // 선택된 버전 아이디
 var selectedAlmProjectIds; // 선택된 ALM Project 아이디
-
+var previousStartDate = null;
+var previousEndDate = null;
 var pdServiceListData;
 var versionListData;
 
@@ -475,13 +476,28 @@ function dateTimePicker() {
 		timepicker: false,
 		theme: 'dark',
 		lang: "kr",
-		onSelectTime: function(current_time, $input) {
-			$('#date_timepicker_end').datetimepicker('setOptions', { minDate: current_time });
-		},
 		onShow: function(ct) {
 			this.setOptions({
 				maxDate: $('#date_timepicker_end').val() ? $('#date_timepicker_end').val() : false
 			});
+		},
+		onChangeDateTime: function(dp, $input) {
+			var newDate = $input.val();
+			if (previousEndDate !== newDate) {
+				previousEndDate = newDate;
+				fetchAssignees(selectedPdServiceId, {
+					pdServiceVersionIds: selectedVersionIds,
+					almProjectIds: selectedAlmProjectIds,
+					startDate: $('#date_timepicker_start').val(),
+					endDate: $('#date_timepicker_end').val()
+				});
+				fetchExcelData(selectedPdServiceId, {
+					pdServiceVersionIds: selectedVersionIds,
+					almProjectIds: selectedAlmProjectIds,
+					startDate: $('#date_timepicker_start').val(),
+					endDate: $('#date_timepicker_end').val()
+				});
+			}
 		}
 	});
 	$('#date_timepicker_end').datetimepicker({
@@ -490,13 +506,28 @@ function dateTimePicker() {
 		timepicker: false,
 		theme: 'dark',
 		lang: "kr",
-		onSelectTime: function(current_time, $input) {
-			$('#date_timepicker_start').datetimepicker('setOptions', { maxDate: current_time });
-		},
 		onShow: function(ct) {
 			this.setOptions({
 				minDate: $('#date_timepicker_start').val() ? $('#date_timepicker_start').val() : false
 			});
+		},
+		onChangeDateTime: function(dp, $input) {
+			var newDate = $input.val();
+			if (previousStartDate !== newDate) {
+				previousStartDate = newDate;
+				fetchAssignees(selectedPdServiceId, {
+					pdServiceVersionIds: selectedVersionIds,
+					almProjectIds: selectedAlmProjectIds,
+					startDate: $('#date_timepicker_start').val(),
+					endDate: $('#date_timepicker_end').val()
+				});
+				fetchExcelData(selectedPdServiceId, {
+					pdServiceVersionIds: selectedVersionIds,
+					almProjectIds: selectedAlmProjectIds,
+					startDate: $('#date_timepicker_start').val(),
+					endDate: $('#date_timepicker_end').val()
+				});
+			}
 		}
 	});
 }
