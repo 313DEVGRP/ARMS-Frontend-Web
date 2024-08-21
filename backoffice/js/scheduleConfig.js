@@ -273,11 +273,10 @@ function drawExcel(targetId) {
 
     // 컬럼 설정
     var columnList = [
-        { type: "text", title: "구분", wRatio: 0.16},
-        { type: "text", title: "키 (ID)", wRatio: 0.21},
-        { type: "text", title: "KR (한국어)", wRatio: 0.21},
-        { type: "text", title: "EN (영어)", wRatio: 0.21},
-        { type: "text", title: "JP (일본어)",  wRatio: 0.20},
+        { type: "text", title: "Start Time", wRatio: 0.3},
+        { type: "text", title: "End Time", wRatio: 0.3},
+        { type: "text", title: "Duration", wRatio: 0.2},
+        { type: "text", title: "Status", wRatio: 0.2}
     ];
 
     SpreadSheetFunctions.setColumns(columnList);

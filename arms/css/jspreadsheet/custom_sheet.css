@@ -105,6 +105,7 @@
 /* DarkTheme 을 위한 설정 */
 /* 툴바 */
 .jexcel_toolbar {
+    overflow: overlay;
     background: rgba(51,51,51,0.9) !important; /* rgba(51,51,51,0.9) */
     border: none !important;
     margin: 0 !important;

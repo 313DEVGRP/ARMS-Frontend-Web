@@ -1,23 +1,20 @@
 [
-  [ "Dashboard",
-    "Dashboard.Header",
-    "대시 보드",
-    "Dashboard",
-    "ダッシュボード",
+  [ "2024/08/01 12:00:00",
+    "2024/08/01 13:00:00",
+    "12h 33m 22s",
+    "success",
     "1"
   ],
-  [ "Dashboard",
-    "Dashboard.Header.detail",
-    "통계 및 개요",
-    "Statistics and more",
-    "統計と概要",
+  [ "2024/08/02 12:00:00",
+    "2024/08/02 13:00:00",
+    "12h 33m 22s",
+    "success",
     "2"
   ],
-  [ "Dashboard",
-    "Dashboard.Section.Header",
-    "통합 현황",
-    "Integration status",
-    "統合状況",
+  [ "2024/08/03 12:00:00",
+    "2024/08/03 13:00:00",
+    "12h 33m 22s",
+    "success",
     "3"
   ]
 ]
