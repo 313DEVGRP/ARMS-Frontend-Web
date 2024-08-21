@@ -101,7 +101,7 @@ function execDocReady() {
                 }
             }, 313 /*milli*/);
 
-            drawExcel("modal_excel");
+            drawExcel("schedule_history_excel");
         })
         .catch(function (error) {
             console.error("플러그인 로드 중 오류 발생");
@@ -293,7 +293,7 @@ function drawExcel(targetId) {
 
     SpreadSheetFunctions.setOptions(customOption);
     let data;
-    $.getJSON('./mock/language_config.json', function(jsonData) {
+    $.getJSON('./mock/scheduleConfig_excel.json', function(jsonData) {
         data = jsonData.map(arr => arr.slice(0,-1));
 
         $($targetId).spreadsheet($.extend({}, {
