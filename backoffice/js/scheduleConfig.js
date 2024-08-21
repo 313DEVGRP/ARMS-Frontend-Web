@@ -40,16 +40,13 @@ function execDocReady() {
             "../reference/jquery-plugins/datetimepicker-2.5.20/build/jquery.datetimepicker.full.min.js",
             "../reference/lightblue4/docs/lib/widgster/widgster.js",
             "../reference/lightblue4/docs/lib/slimScroll/jquery.slimscroll.min.js",
-            "../reference/lightblue4/docs/lib/jquery.sparkline/index.js",
-            "../reference/lightblue4/docs/js/charts.js",
             "../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jsuites.js",
             "../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/index.js",
             "../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jsuites.css",
             "../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jspreadsheet.css",
             "../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jspreadsheet.datatables.css",
             "../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jspreadsheet.theme.css",
-            "/arms/js/common/jspreadsheet/spreadsheet.js",
-            "/arms/css/jspreadsheet/custom_sheet.css"
+            "/arms/js/common/jspreadsheet/spreadsheet.js"
         ],
 
         [
@@ -103,6 +100,8 @@ function execDocReady() {
                     console.log("서비스 데이터 테이블 로드가 완료되지 않아서 초기화 재시도 중...");
                 }
             }, 313 /*milli*/);
+
+            drawExcel("modal_excel");
         })
         .catch(function (error) {
             console.error("플러그인 로드 중 오류 발생");
@@ -257,3 +256,109 @@ function dataTableDrawCallback(tableInfo) {
 //	resourceDataTable.columns.adjust();
     console.log(tableInfo);
 }
+
+
+/////////////////////////////////////////////////
+// 엑셀 그리기
+/////////////////////////////////////////////////
+function drawExcel(targetId) {
+    console.log("generalConfig :: drawExcel");
+    let $targetId = "#"+targetId;
+
+    if($($targetId)[0].jexcel) {
+        $($targetId)[0].jexcel.destroy();
+    }
+
+    var excel_width = $($targetId).width() - 50;
+
+    // 컬럼 설정
+    var columnList = [
+        { type: "text", title: "구분", wRatio: 0.16},
+        { type: "text", title: "키 (ID)", wRatio: 0.21},
+        { type: "text", title: "KR (한국어)", wRatio: 0.21},
+        { type: "text", title: "EN (영어)", wRatio: 0.21},
+        { type: "text", title: "JP (일본어)",  wRatio: 0.20},
+    ];
+
+    SpreadSheetFunctions.setColumns(columnList);
+    SpreadSheetFunctions.setColumnWidth(excel_width);
+
+    var customOption = {
+        search: true,
+        updateTable: function(instance, cell, col, row, val, id) {
+            cell.style.textAlign = "left";
+            cell.style.whiteSpace = "normal";
+        }
+    };
+
+    SpreadSheetFunctions.setOptions(customOption);
+    let data;
+    $.getJSON('./mock/language_config.json', function(jsonData) {
+        data = jsonData.map(arr => arr.slice(0,-1));
+
+        $($targetId).spreadsheet($.extend({}, {
+            columns: SpreadSheetFunctions.getColumns(),
+            data: data
+        }, SpreadSheetFunctions.getOptions()));
+        SpreadSheetFunctions.setExcelData(data);
+        $("#modal_excel .jexcel_content").css("width","100%");
+        $("#modal_excel .jexcel_content").css("max-height","420px");
+    }).fail(function(jqxhr, textStatus, error) {
+        console.error("Error loading JSON file: " + textStatus + ", " + error);
+    });
+
+}
+
+var SpreadSheetFunctions = (function () {
+
+    let $tabFunction_data;   // 엑셀 데이터
+    let $tabFunction_columns;// 엑셀 컬럼
+    let $tabFunction_options;// 엑셀 (커스텀)옵션 :: 정의 안할 경우 default
+
+    var setExcelData = function(data) {
+        $tabFunction_data = data;
+    };
+    var getExcelData = function () {
+        return $tabFunction_data;
+    };
+    var setColumns = function(columns) {
+        console.log("setColumns start");
+        $tabFunction_columns = columns;
+        console.log("setColumns fin");
+    };
+    var getColumns = function () {
+        return $tabFunction_columns;
+    };
+    var setOptions = function(options) {
+        $tabFunction_options = options;
+    };
+    var getOptions = function() {
+        return $tabFunction_options ? $tabFunction_options : null;
+    };
+    var setColumnWidth = function (width) {
+        console.log("setColumnWidth start");
+        if ($tabFunction_columns) {
+            $tabFunction_columns = $tabFunction_columns.map(column => ({
+                ...column, width: width * column.wRatio
+            }));
+        }
+        console.log("setColumnWidth end");
+    };
+
+    function handleResize(id,width, height) {
+        if (id ==="modal_excel" && height !== 0) {
+            if ($tabFunction_data) {
+                drawExcel("modal_excel");
+            } else {
+                console.log("엑셀 데이터 없음");
+            }
+        }
+    }
+
+    return {
+        setExcelData, getExcelData,
+        setColumns, getColumns,
+        setOptions, getOptions,
+        setColumnWidth,
+    };
+})();

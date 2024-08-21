@@ -194,67 +194,60 @@
                     </button>
                 </div>
             </blockquote>
-            <div class="clearfix widget-content">
-                <div style="float: left">
-                    <div style="float: left"
-                         class="btn-group">
-                        <button
-                                class="btn btn-default btn-sm dropdown-toggle"
-                                data-toggle="dropdown">
-                            &nbsp; Export &nbsp;
-                            <i class="fa fa-caret-down"></i>
-                        </button>
-                        <ul class="dropdown-menu"
-                            style="background: rgba(51, 51, 51, 0.9) !important">
-                            <li>
-                                <a id="copychecker"
-                                   style="color: white">
-                                    Copy
-                                </a>
-                            </li>
-                            <li>
-                                <a id="csvchecker"
-                                   style="color: white">
-                                    CSV
-                                </a>
-                            </li>
-                            <li>
-                                <a id="excelchecker"
-                                   style="color: white">
-                                    Excel
-                                </a>
-                            </li>
-                            <li>
-                                <a id="printchecker"
-                                   style="color: white">
-                                    Print
-                                </a>
-                            </li>
-                            <li>
-                                <a id="pdfchecker"
-                                   style="color: white">
-                                    PDF
-                                </a>
-                            </li>
-                        </ul>
+            <div id="spreadsheet_wrapper" class="wrapper-box w100">
+                <h5 class="tab-header font13 flexAndRow" style="color:#f8f8f8; flex:0 0 3%; padding-bottom: 3px; align-items: center; margin-bottom: 0px">
+                    <div class="tab-image-container" style="margin: 5px 3px 5px 0">
+                        <img src="./img/spreadsheet/spreadsheet-2127832_1920.png" width="40px">
                     </div>
-                </div>
-
-                <div style="float: right">
-                    <button class="btn btn-primary btn-block btn-sm"
-                            data-target="#modal_product_add"
-                            data-toggle="modal"
-                            id="btn_modal_product_add"
-                            type="button">
-                        스케쥴러 관리
-                    </button>
-                </div>
-
-            </div>
-            <div class="box box-primary"
-                 style=" background: rgba(51, 51, 51, 0.225); margin-bottom: 5px !important;">
-                <div class="box-body">
-                    젠킨스 스타일
+                    <div class="tab-title-container w100 flexAndColumn">
+                        <div id="tab-doc-title-bar" style="line-height: 20px; font-size: 13px; margin: 8px 0 8px 8px">List View (Excel)</div>
+                        <div id="tab-doc-bar" class="flexAndRow btn-group hidden">
+                            <li class="btn-group">
+                                <button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" style="background: transparent; border:none; margin:0 2px;">파일</button>
+                                <ul class="dropdown-menu"
+                                    style="background: rgba(51, 51, 51, 0.9) !important; top:105% !important;">
+                                    <li><a href="#" style="color: white;">개발 진행 중입니다.</a></li>
+                                </ul>
+                            </li>
+                            <li class="btn-group">
+                                <button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" style="background: transparent; border:none; margin:0 2px;">수정</button>
+                                <ul class="dropdown-menu"
+                                    style="background: rgba(51, 51, 51, 0.9) !important; top:105% !important;">
+                                    <li><a href="#" style="color: white;">개발 진행 중입니다.</a></li>
+                                </ul>
+                            </li>
+                            <li class="btn-group">
+                                <button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" style="background: transparent; border:none; margin:0 2px;">보기</button>
+                                <ul class="dropdown-menu"
+                                    style="background: rgba(51, 51, 51, 0.9) !important; top:105% !important;">
+                                    <li><a href="#" style="color: white;">개발 진행 중입니다.</a></li>
+                                </ul>
+                            </li>
+                            <li class="btn-group">
+                                <button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" style="background: transparent; border:none; margin:0 2px;">수식</button>
+                                <ul class="dropdown-menu"
+                                    style="background: rgba(51, 51, 51, 0.9) !important; top:105% !important;">
+                                    <li><a href="#" style="color: white;">개발 진행 중입니다.</a></li>
+                                </ul>
+                            </li>
+                            <li class="btn-group">
+                                <button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" style="background: transparent; border:none; margin:0 2px;">데이터</button>
+                                <ul class="dropdown-menu"
+                                    style="background: rgba(51, 51, 51, 0.9) !important; top:105% !important;">
+                                    <li><a href="#" style="color: white;">개발 진행 중입니다.</a></li>
+                                </ul>
+                            </li>
+                            <li class="btn-group">
+                                <button type="button" class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" style="background: transparent; border:none; margin:0 2px;">도움말</button>
+                                <ul class="dropdown-menu"
+                                    style="background: rgba(51, 51, 51, 0.9) !important; top:105% !important;">
+                                    <li><a href="#" style="color: white;">개발 진행 중입니다.</a></li>
+                                </ul>
+                            </li>
+                        </div>
+                    </div>
+                </h5>
+                <div id="modal_excel" style="min-height: 456px; width: 100%; border: 0.5px solid rgb(51 51 51 / 60%);">
                 </div>
             </div>
         </div>
@@ -392,3 +385,43 @@
     </section>
 </div>
 <!-- 스케쥴러 잡 선택시 설정 정보 표시 끝 -->
+<style>
+    .wh100 {
+        height: 100%;
+        width: 100%;
+    }
+    .w100 { width: 100%;  }
+    .h100 {	height: 100%;	}
+
+    .flexAndColumn {
+        display: flex;
+        flex-direction: column;
+    }
+    .flexAndRow {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .no-padding { padding: 0; }
+
+    .flex1 { flex: 1;}
+    .flex5p  { flex:0 0 5%; }
+    .flex10p {	flex:0 0 10%;	}
+
+    .fullscreen-footer {
+        background-color: transparent;padding: 5px;text-align: right;border-top: 0px;flex: 0 0 5%;
+        display: flex;flex-direction: row-reverse;align-content: center;align-items: flex-end;
+    }
+
+    .wrapper-box {
+        border-radius: 3px;
+        padding: 5px;
+        margin-bottom: 10px;
+        background: rgba(51, 51, 51, .3);
+        color: #f8f8f8;
+    }
+
+    .search-box {
+        display: none !important;
+    }
+</style>
