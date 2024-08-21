@@ -107,7 +107,7 @@ function drawExcel(targetId) {
         { type: "text", title: "키 (ID)", wRatio: 0.21},
         { type: "text", title: "KR (한국어)", wRatio: 0.21},
         { type: "text", title: "EN (영어)", wRatio: 0.21},
-        { type: "text", title: "JP (일본어)",  wRatio: 0.20},
+        { type: "text", title: "JP (일본어)",  wRatio: 0.21}
     ];
 
     SpreadSheetFunctions.setColumns(columnList);
@@ -168,7 +168,7 @@ var SpreadSheetFunctions = (function () {
         console.log("setColumnWidth start");
         if ($tabFunction_columns) {
             $tabFunction_columns = $tabFunction_columns.map(column => ({
-                ...column, width: width * column.wRatio
+                ...column, width: (width * column.wRatio) -1
             }));
         }
         console.log("setColumnWidth end");
