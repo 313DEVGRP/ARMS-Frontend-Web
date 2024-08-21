@@ -9,7 +9,6 @@ var isChecked = []; // 지라 프로젝트 연결 목록 체크
 var jiraCheckId = []; // 여러 개의 c_id를 저장할 배열
 var dataTableRef;
 var dbName = "drawDB";
-var dbVersion = 50;
 var storeName = "armsDiagrams";
 var reqColumnList = [
 	{ data: "c_id",	   title: "<span class='toggle-column'>c_id</span>",   visible: false, defaultContent: "-"},
@@ -2219,7 +2218,7 @@ function drawdb() {
 }
 
 function deleteByIndexedDB(searchKey) {
-	var request = indexedDB.open(dbName, dbVersion);
+	var request = indexedDB.open(dbName);
 
 	request.onerror = function(event) {
 		console.error("IndexedDB 열기 실패:", event.target.error);
@@ -2247,7 +2246,7 @@ function deleteByIndexedDB(searchKey) {
 
 function selectByIndexedDB(searchKey) {
 	return new Promise((resolve, reject) => {
-		var request = indexedDB.open(dbName, dbVersion);
+		var request = indexedDB.open(dbName);
 
 		request.onerror = function(event) {
 			console.error("IndexedDB 열기 실패:", event.target.error);
