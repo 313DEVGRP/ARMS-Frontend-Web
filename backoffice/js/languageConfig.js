@@ -103,11 +103,11 @@ function drawExcel(targetId) {
 
     // 컬럼 설정
     var columnList = [
-        { type: "text", title: "설명", wRatio: 0.16},
-        { type: "text", title: "리눅스", wRatio: 0.21},
-        { type: "text", title: "윈도우", wRatio: 0.21},
-        { type: "text", title: "윈도우 2008 R2 & SP2", wRatio: 0.21},
-        { type: "text", title: "유닉스",  wRatio: 0.20},
+        { type: "text", title: "구분", wRatio: 0.16},
+        { type: "text", title: "키 (ID)", wRatio: 0.21},
+        { type: "text", title: "KR (한국어)", wRatio: 0.21},
+        { type: "text", title: "EN (영어)", wRatio: 0.21},
+        { type: "text", title: "JP (일본어)",  wRatio: 0.20},
     ];
 
     SpreadSheetFunctions.setColumns(columnList);
@@ -123,7 +123,7 @@ function drawExcel(targetId) {
 
     SpreadSheetFunctions.setOptions(customOption);
     let data;
-    $.getJSON('./mock/engine_command.json', function(jsonData) {
+    $.getJSON('./mock/language_config.json', function(jsonData) {
         data = jsonData.map(arr => arr.slice(0,-1));
 
         $($targetId).spreadsheet($.extend({}, {

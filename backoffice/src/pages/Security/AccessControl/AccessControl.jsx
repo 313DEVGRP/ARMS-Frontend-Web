@@ -7,10 +7,9 @@ import { Form } from 'react-bootstrap';
 import PageHeader from '@/components/PageHeader';
 import Widget from '@/components/Widget';
 import Table from '@/components/Table';
+
 import { users } from '@/pages/Security/User/mock';
-import { roles } from '@/pages/Security/Role/mock';
 import { columns as userColumns } from '@/pages/Security/User/Tabs/List';
-import { columns as roleColumns } from '@/pages/Security/Role/Tabs/List';
 
 const columnHelper = createColumnHelper();
 
@@ -116,22 +115,6 @@ function AccessControl() {
               columnHelper.group({
                 id: uuidv4(),
                 columns: userColumns,
-              }),
-              ...acessColumns,
-            ]}
-          />
-        </Widget.Body>
-      </Widget>
-
-      <Widget>
-        <Widget.Header title="Role" />
-        <Widget.Body description="HyperMig의 Role별 권한을 확인하고 수정합니다." helpTo="#">
-          <Table
-            data={roles}
-            columns={[
-              columnHelper.group({
-                id: uuidv4(),
-                columns: roleColumns,
               }),
               ...acessColumns,
             ]}

@@ -523,11 +523,11 @@ img {
 }
 
 .widget-content {
-	margin: 10px 0 15px;
+	margin: 0px 0px 10px 0px !important;
 }
 
 .widget-content > div {
-	margin-top: 10px;
+	/*margin-top: 10px;*/
 }
 
 .control-group p {

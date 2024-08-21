@@ -1,0 +1,23 @@
+[
+  [ "Dashboard",
+    "Dashboard.Header",
+    "대시 보드",
+    "Dashboard",
+    "ダッシュボード",
+    "1"
+  ],
+  [ "Dashboard",
+    "Dashboard.Header.detail",
+    "통계 및 개요",
+    "Statistics and more",
+    "統計と概要",
+    "2"
+  ],
+  [ "Dashboard",
+    "Dashboard.Section.Header",
+    "통합 현황",
+    "Integration status",
+    "統合状況",
+    "3"
+  ]
+]
