@@ -55,26 +55,145 @@ function execDocReady() {
             "../reference/jquery-plugins/dataTables-1.10.16/extensions/Buttons/js/dataTables.buttons.min.js",
             "../reference/jquery-plugins/dataTables-1.10.16/extensions/Buttons/js/buttons.html5.js",
             "../reference/jquery-plugins/dataTables-1.10.16/extensions/Buttons/js/buttons.print.js",
-            "../reference/jquery-plugins/dataTables-1.10.16/extensions/Buttons/js/jszip.min.js",
-            "../reference/jquery-plugins/dataTables-1.10.16/extensions/Buttons/js/pdfmake.min.js",
-            "../reference/jquery-plugins/dataTables-1.10.16/extensions/Buttons/js/vfs_fonts.js",
-            // timezone-picker
-            "../reference/jquery-plugins/kevalbhatt-timezone-picker-2.0.0/dist/timezone-picker.min.js",
-            "../reference/jquery-plugins/kevalbhatt-timezone-picker-2.0.0/dist/styles/timezone-picker.css"
+            "../reference/jquery-plugins/dataTables-1.10.16/extensions/Buttons/js/jszip.min.js"
         ]
         // 추가적인 플러그인 그룹들을 이곳에 추가하면 됩니다.
     ];
 
     loadPluginGroupsParallelAndSequential(pluginGroups)
         .then(function () {
-            console.log("모든 플러그인 로드 완료");
+            console.log('모든 플러그인 로드 완료');
+
+            //vfs_fonts 파일이 커서 defer 처리 함.
+            setTimeout(function () {
+                var script = document.createElement("script");
+                script.src = "../reference/jquery-plugins/dataTables-1.10.16/extensions/Buttons/js/vfs_fonts.js";
+                script.defer = true; // defer 속성 설정
+                document.head.appendChild(script);
+            }, 5000); // 5초 후에 실행됩니다.
+
+            //pdfmake 파일이 커서 defer 처리 함.
+            setTimeout(function () {
+                var script = document.createElement("script");
+                script.src = "../reference/jquery-plugins/dataTables-1.10.16/extensions/Buttons/js/pdfmake.min.js";
+                script.defer = true; // defer 속성 설정
+                document.head.appendChild(script);
+            }, 5000); // 5초 후에 실행됩니다.
 
             // 사이드 메뉴 색상 설정
             $(".widget").widgster();
             setSideMenu("sidebar_menu_config", "sidebar_menu_config_schedule");
+
+            // 데이터 테이블 로드 함수
+            var waitDataTable = setInterval(function () {
+                try {
+                    if (!$.fn.DataTable.isDataTable("#schedule_list_table")) {
+                        dataTableLoad();
+                        clearInterval(waitDataTable);
+                    }
+                } catch (err) {
+                    console.log("서비스 데이터 테이블 로드가 완료되지 않아서 초기화 재시도 중...");
+                }
+            }, 313 /*milli*/);
         })
         .catch(function (error) {
             console.error("플러그인 로드 중 오류 발생");
             console.log(error);
         });
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////
+// --- 데이터 테이블 설정 --- //
+////////////////////////////////////////////////////////////////////////////////////////
+function dataTableLoad() {
+    // 데이터 테이블 컬럼 및 열그룹 구성
+    var columnList = [
+        { name: "c_id", title: "제품(서비스) 아이디", data: "c_id", visible: false },
+        {
+            name: "c_title",
+            title: "제품(서비스) 이름",
+            data: "c_title",
+            render: function (data, type, row, meta) {
+                if (type === "display") {
+                    return '<label style="color: #a4c6ff">' + data + "</label>";
+                }
+                return data;
+            },
+            className: "dt-body-left",
+            visible: true
+        }
+    ];
+    var rowsGroupList = [];
+    var columnDefList = [];
+    var selectList = {};
+    var orderList = [[0, "asc"]];
+    var buttonList = [
+        "copy",
+        "excel",
+        "print",
+        {
+            extend: "csv",
+            text: "Export csv",
+            charset: "utf-8",
+            extension: ".csv",
+            fieldSeparator: ",",
+            fieldBoundary: "",
+            bom: true
+        },
+        {
+            extend: "pdfHtml5",
+            orientation: "landscape",
+            pageSize: "LEGAL"
+        }
+    ];
+
+    var jquerySelector = "#schedule_list_table";
+    var ajaxUrl = "./mock/scheduleConfig_datatable.json";
+    var jsonRoot = "response";
+    var isServerSide = false;
+
+    dataTableRef = dataTable_build(
+        jquerySelector,
+        ajaxUrl,
+        jsonRoot,
+        columnList,
+        rowsGroupList,
+        columnDefList,
+        selectList,
+        orderList,
+        buttonList,
+        isServerSide
+    );
+
+    $("#copychecker").on("click", function () {
+        dataTableRef.button(".buttons-copy").trigger();
+    });
+    $("#printchecker").on("click", function () {
+        dataTableRef.button(".buttons-print").trigger();
+    });
+    $("#csvchecker").on("click", function () {
+        dataTableRef.button(".buttons-csv").trigger();
+    });
+    $("#excelchecker").on("click", function () {
+        dataTableRef.button(".buttons-excel").trigger();
+    });
+    $("#pdfchecker").on("click", function () {
+        dataTableRef.button(".buttons-pdf").trigger();
+    });
+}
+
+// 데이터 테이블 구성 이후 꼭 구현해야 할 메소드 : 열 클릭시 이벤트
+function dataTableClick(tempDataTable, selectedData) {
+    console.log(selectedData);
+}
+
+// 데이터 테이블 데이터 렌더링 이후 콜백 함수.
+function dataTableCallBack(settings, json) {
+    console.log("check");
+}
+
+function dataTableDrawCallback(tableInfo) {
+//	resourceDataTable.columns.adjust();
+    console.log(tableInfo);
 }
