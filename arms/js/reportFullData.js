@@ -330,11 +330,10 @@ function makeProjectMultiSelectBox () {
 				optionalParams.pdServiceVersionIds = selectedVersionIds;
 			}
 
-			if (!isAllProjectsSelected()) {
-				optionalParams.almProjectIds = selectedAlmProjectIds;
-			}
-
 			fetchAssignees(selectedPdServiceId, optionalParams);
+
+			optionalParams.almProjectIds = selectedAlmProjectIds;
+
 			fetchExcelData(selectedPdServiceId, optionalParams);
 
 			$("#multiple-alm-project").siblings(".ms-parent").css("z-index", 1000);
@@ -408,6 +407,9 @@ function fetchJiraProjects(pdServiceId, versionIds = null) {
 				.multipleSelect("checkAll");
 
 			fetchAssignees(selectedPdServiceId, optionalParams);
+
+			optionalParams.almProjectIds = selectedAlmProjectIds;
+
 			fetchExcelData(selectedPdServiceId, optionalParams);
 
 		},
@@ -523,11 +525,10 @@ function dateTimePicker() {
 					optionalParams.pdServiceVersionIds = selectedVersionIds;
 				}
 
-				if (!isAllProjectsSelected()) {
-					optionalParams.almProjectIds = selectedAlmProjectIds;
-				}
-
 				fetchAssignees(selectedPdServiceId, optionalParams);
+
+				optionalParams.almProjectIds = selectedAlmProjectIds;
+
 				fetchExcelData(selectedPdServiceId, optionalParams);
 			}
 		}
@@ -557,11 +558,10 @@ function dateTimePicker() {
 					optionalParams.pdServiceVersionIds = selectedVersionIds;
 				}
 
-				if (!isAllProjectsSelected()) {
-					optionalParams.almProjectIds = selectedAlmProjectIds;
-				}
-
 				fetchAssignees(selectedPdServiceId, optionalParams);
+
+				optionalParams.almProjectIds = selectedAlmProjectIds;
+
 				fetchExcelData(selectedPdServiceId, optionalParams);
 			}
 		}
@@ -642,9 +642,7 @@ var initTable = function() {
 			optionalParams.pdServiceVersionIds = selectedVersionIds;
 		}
 
-		if (!isAllProjectsSelected()) {
-			optionalParams.almProjectIds = selectedAlmProjectIds;
-		}
+		optionalParams.almProjectIds = selectedAlmProjectIds;
 
 		setTimeout(() => {
 			let selectedIds = resourceTable.getSelectedIds();
