@@ -296,43 +296,6 @@
 								<div id="allSampleContent" class="p-4 w-full">
 									<div id="sample">
 										<div id="myDiagramDiv" style="border: solid 1px black; width: 100%; height: 500px"></div>
-<!--										<br />
-										<button class="btn btn-info"
-												style="float: right;"
-												id="mapping_save_button" onclick="gojs.save()">Save</button>
-										<br /><br />
-										<textarea id="mySavedModel" style="width: 100%; height: 300px; background: none!important;">
-									    </textarea>-->
-<!--										<textarea id="mySavedModel" style="width: 100%; height: 300px; background: none!important;">
-											{
-												"class": "GraphLinksModel",
-												"nodeDataArray": [
-													{"key":"카테고리 열림","text":"카테고리 열림","category":"Loading","loc":"0 40"},
-													{"key":"카테고리 진행중","text":"카테고리 진행중","category":"Loading","loc":"0 80"},
-													{"key":"카테고리 해결됨","text":"카테고리 해결됨","category":"Loading","loc":"0 120"},
-													{"key":"카테고리 닫힘","text":"카테고리 닫힘","category":"Loading","loc":"0 160"},
-													{"key":"A-RMS OPEN","text":"A-RMS OPEN","category":"NoAdd", "loc":"183 40"},
-													{"key":"A-RMS PROGRESS","text":"A-RMS PROGRESS","category":"NoAdd","loc":"183 80"},
-													{"key":"A-RMS RESOLVED","text":"A-RMS RESOLVED","category":"NoAdd","loc":"183 120"},
-													{"key":"A-RMS CLOSED","text":"A-RMS CLOSED","category":"NoAdd","loc":"183 160"},
-													{"key":"ALM 열림","text":"ALM 열림","category":"End","loc":"366 40"},
-													{"key":"ALM 진행중","text":"ALM 진행중","category":"End","loc":"366 80"},
-													{"key":"ALM 해결됨","text":"ALM 해결됨","category":"End","loc":"366 120"},
-													{"key":"ALM 닫힘","text":"ALM 닫힘","category":"End","loc":"366 160"},
-													{"key":-2,"category":"Recycle","loc":"600 300"}
-												],
-												"linkDataArray": [
-													{"from":"카테고리 열림","to":"A-RMS OPEN"},
-													{"from":"카테고리 진행중","to":"A-RMS PROGRESS"},
-													{"from":"카테고리 해결됨","to":"A-RMS RESOLVED"},
-													{"from":"카테고리 닫힘","to":"A-RMS CLOSED"},
-													{"from":"A-RMS OPEN","to":"ALM 열림"},
-													{"from":"A-RMS PROGRESS","to":"ALM 진행중"},
-													{"from":"A-RMS RESOLVED","to":"ALM 해결됨"},
-													{"from":"A-RMS CLOSED","to":"ALM 닫힘"}
-												]
-											}
-									    </textarea>-->
 									</div>
 								</div>
 							</div>
@@ -349,7 +312,6 @@
 		class="modal fade"
 		role="dialog"
 		aria-labelledby="myModalLabel"
-		aria-hidden="true"
 		style="display: none; border-radius: 10px;">
 		<div    class="modal-dialog"
 				style="width: 80%; height: 80%">
@@ -387,13 +349,15 @@
 					</div>
 					<div    class="modal-body"
 							style="padding: 5px; border-top: 1px solid rgba(51, 51, 51, 0.3); padding-top: 5px">
-							<form   class="form-horizontal"
+						<form
+								class="form-horizontal"
 								method="post">
 								<input  type="hidden"
 										id="popup_view_state_c_id"
 										name="popup_view_state_c_id" />
 							<fieldset>
 								<div    class="control-group"
+										id="state_title_div"
 										for="popup_view_state_name">
 									<label class="control-label font13">상태 이름 :</label>
 									<div    class="controls form-group input-group"
@@ -409,13 +373,12 @@
 												data-original-title="상태의 이름을 입력해주세요."
 												required="required"
 												placeholder="Requirement State Name" />
-<!--										<span class="input-group-addon font11">INFO : 상태 이름</span>-->
 									</div>
 								</div>
-								<div    class="control-group">
-									<label
-											class="control-label font13"
-											for="popup_view_state_category">상태 카테고리 :</label>
+								<div
+										class="control-group"
+										id="state_category_div">
+									<label class="control-label font13">상태 카테고리 :</label>
 									<div    class="controls form-group input-group"
 											style="margin-left: 180px">
 										<span class="input-group-addon">
@@ -425,44 +388,13 @@
 											<div
 												id="popup_view_state_category_div"
 												data-toggle="buttons">
-												<label class="btn btn-disabled edit-red">
-													<input
-															type="radio"
-															name="popup_view_state_category_options"
-															value="10" />
-													<i class="fa fa-folder-o text-danger"></i>
-													열림
-												</label>
-												<label class="btn btn-disabled edit-orange">
-													<input
-															type="radio"
-															name="popup_view_state_category_options"
-															value="11" />
-													<i class="fa fa-fire"  style="color: #E49400;"></i>
-													진행중
-												</label>
-												<label class="btn btn-disabled edit-green" >
-													<input
-															type="radio"
-															name="popup_view_state_category_options"
-															value="12" />
-													<i class="fa fa-fire-extinguisher text-success"></i>
-													해결됨
-												</label>
-												<label class="btn btn-disabled edit-blue" >
-													<input
-															type="radio"
-															name="popup_view_state_category_options"
-															value="13" />
-													<i class="fa fa-folder text-primary"></i>
-													닫힘
-												</label>
 											</div>
-											<span class=" font11" id="redmine_info" style="display:none;">INFO : 레드마인 서버는 관리자 계정으로 등록해야합니다.</span>
 										</div>
 									</div>
 								</div>
-								<div 	class="control-group">
+								<div
+										class="control-group"
+										id="state_contents_div">
 									<label  class="control-label"
 											style="color: #f8f8f8">
 										상태 설명 :
@@ -477,21 +409,29 @@
 										</div>
 									</div>
 								</div>
+								<div class="control-group hidden" id="change_state_div" style="display: flex; margin-top:10px;">
+									<label class="control-label font13">삭제할 상태 이름 :</label>
+									<input
+											type="text"
+											id="popup_view_change_state_name"
+											name="popup_view_change_state_name"
+											class="form-control parsley-validated font13 darkBack"
+											data-placement="top"
+											data-original-title="상태의 이름을 입력해주세요."
+											placeholder="Requirement State Name"
+											style="width: 30%;">
+									<label class="control-label font13" style="width: 50px!important;"><i class="fa fa-long-arrow-right"></i></label>
+									<label class="control-label font13">변경할 상태 :</label>
+									<div
+											id="popup_view_change_state_div"
+											data-toggle="buttons"
+											style="width: 40%;"></div>
+								</div>
 							</fieldset>
 						</form>
 					</div>
 					<div    class="modal-footer"
 							style="background-color: transparent; padding: 5px; text-align: right; border-top: 0px">
-							<button
-									type="button"
-									style="float: left;"
-									id="delete_req_state"
-									class="btn btn-danger btn-sm ladda-delete-pdservice ladda-button"
-									data-dismiss="modal">
-									<span class="ladda-label">
-										상태 삭제
-									</span><span class="ladda-spinner"></span>
-							</button>
 							<button
 									type="button"
 									id="close_modal_popup"
@@ -510,6 +450,13 @@
 									id="update_req_state"
 									class="btn btn-success">
 								상태 정보 변경
+							</button>
+							<button
+									type="button"
+									id="delete_req_state"
+									class="btn btn-danger"
+									data-dismiss="modal">
+									상태 삭제
 							</button>
 					</div>
 				</div>

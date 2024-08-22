@@ -8,6 +8,24 @@
 		this.selectedData;
 		this.onDataTableClick;
 		this.onInit;
+		this.idColumnIndex;
+		this.selectedIds = [];
+	};
+
+	Table.prototype.updateSelectedIds = function(element, isSelected) {
+		if (this.idColumnIndex === undefined) {
+			return;
+		}
+		var idColumnName = this.columns[this.idColumnIndex].data;
+		var id = this.table.row(element).data()[idColumnName];
+
+		if (isSelected) {
+			if (!this.selectedIds.includes(id) && id !== null) {
+				this.selectedIds.push(id);
+			}
+		} else {
+			this.selectedIds = this.selectedIds.filter(item => item !== id);
+		}
 	};
 
 	Table.prototype.onToggleCheckAll = function (element) {
@@ -26,6 +44,17 @@
 		$.each(tr, function () {
 			$(this).find('input[type="checkbox"]').prop("checked", isChecked);
 		});
+
+		var allData = this.table.rows().data().toArray();
+		if (isChecked) {
+			this.selectedIds = allData.map(row => row[this.columns[this.idColumnIndex].data]);
+		} else {
+			this.selectedIds = [];
+		}
+
+		if ($.isFunction(this.onAfterUpdate)) {
+			this.onAfterUpdate();
+		}
 	};
 
 	Table.prototype.onToggleCheckbox = function (element) {
@@ -34,6 +63,11 @@
 		var isChecked = tr.hasClass("selected");
 
 		checkbox.prop("checked", isChecked);
+		this.updateSelectedIds(element, isChecked);
+
+		if ($.isFunction(this.onAfterUpdate)) {
+			this.onAfterUpdate();
+		}
 	};
 
 	Table.prototype.onRowClick = function (element, multi) {
@@ -46,7 +80,7 @@
 			if ($.isFunction(this.onDeselect)) {
 				this.onDeselect(this.selectedData, element);
 			}
-
+			// this.updateSelectedIds(element, false);
 			this.selectedData = null;
 		} else {
 			if (!multi) {
@@ -57,6 +91,7 @@
 			if ($.isFunction(this.onDataTableClick)) {
 				this.onDataTableClick(this.selectedData, element);
 			}
+			// this.updateSelectedIds(element, true);
 		}
 	};
 
@@ -135,6 +170,10 @@
 			}
 		};
 
+		if (params.idColumnIndex !== undefined) {
+			this.idColumnIndex = params.idColumnIndex;
+		}
+
 		var tableBuildParams = $.extend({}, defaults, params);
 
 		tableBuildParams.initComplete = function () {
@@ -212,6 +251,7 @@
 
 	Table.prototype.clear = function () {
 		this.table.clear();
+		this.selectedIds = [];
 	};
 
 	Table.prototype.addRows = function (rows) {
@@ -219,6 +259,7 @@
 	};
 
 	Table.prototype.reDraw = function (rows) {
+		this.selectedIds = [];
 		this.selectedData = null;
 		this.clear();
 		this.addRows(rows);
@@ -246,6 +287,10 @@
 
 	Table.prototype.getDatas = function () {
 		return this.table.rows().data().toArray();
+	};
+
+	Table.prototype.getSelectedIds = function () {
+		return this.selectedIds;
 	};
 
 	$.fn.Table = Table;

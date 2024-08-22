@@ -6,6 +6,7 @@
 		$.getJavascript("../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/index.js"),
 		$.getStylesheet("../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jsuites.css"),
 		$.getStylesheet("../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jspreadsheet.css"),
+		$.getStylesheet("../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jspreadsheet.datatables.css"),
 		$.getStylesheet("../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jspreadsheet.theme.css"),
 		$.getStylesheet("./css/jspreadsheet/custom_sheet.css")
 	).done(function () {
@@ -109,7 +110,7 @@
 					option
 				);
 
-				$this.data("mad.spreadsheet", (spreadsheet = $this.jspreadsheet(options)));
+				$this.data("arms.spreadsheet", (spreadsheet = $this.jspreadsheet(options)));
 			}
 
 			return spreadsheet;
