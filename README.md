@@ -43,3 +43,8 @@ Set-ExecutionPolicy RemoteSigned  -> Y
 ```shell
 npm install -g --save-dev --force grunt-cli grunt grunt-contrib-concat grunt-serve grunt-contrib-less grunt-contrib-watch grunt-contrib-uglify grunt-includes grunt-image grunt-contrib-jshint grunt-jscs grunt-contrib-clean grunt-contrib-csslint grunt-bootlint grunt-notify grunt-text-replace grunt-contrib-connect grunt-connect-proxy serve-static grunt-contrib-compass --save-exact prettier
 ```
+
+MAC 에서 nodejs 가 버전이 높은 경우는 아래 명령어 실행
+```shell
+npm install -g --save-dev --force grunt-cli grunt grunt-contrib-concat grunt-serve grunt-contrib-less grunt-contrib-watch grunt-contrib-uglify grunt-includes grunt-contrib-jshint grunt-jscs grunt-contrib-clean grunt-contrib-csslint grunt-bootlint grunt-notify grunt-text-replace grunt-contrib-connect grunt-connect-proxy serve-static grunt-contrib-compass --save-exact prettier
+```
