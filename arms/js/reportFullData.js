@@ -304,12 +304,16 @@ function makeVersionMultiSelectBox() {
 		}
 	});
 }
+
+////////////////////////////////////////
+// ALM 프로젝트 select 이벤트 핸들링
+////////////////////////////////////////
 function makeProjectMultiSelectBox () {
 	// ALM 프로젝트 선택 시 셀렉트 박스 이니시에이터
 	$("#multiple-alm-project").multipleSelect({
 		filter: true,
 		onClose: function() {
-			var projectIds = $("#multiple-alm-project").val();
+			let projectIds = $("#multiple-alm-project").val();
 			selectedAlmProjectIds = projectIds.join(",");
 
 			if (selectedAlmProjectIds === null || selectedAlmProjectIds == "") {
@@ -317,18 +321,21 @@ function makeProjectMultiSelectBox () {
 				return;
 			}
 
-			fetchAssignees(selectedPdServiceId, {
-				pdServiceVersionIds: selectedVersionIds,
-				almProjectIds: selectedAlmProjectIds,
+			let optionalParams = {
 				startDate: $('#date_timepicker_start').val(),
 				endDate: $('#date_timepicker_end').val()
-			});
-			fetchExcelData(selectedPdServiceId, {
-				pdServiceVersionIds: selectedVersionIds,
-				almProjectIds: selectedAlmProjectIds,
-				startDate: $('#date_timepicker_start').val(),
-				endDate: $('#date_timepicker_end').val()
-			});
+			};
+
+			if (!isAllVersionsSelected()) {
+				optionalParams.pdServiceVersionIds = selectedVersionIds;
+			}
+
+			if (!isAllProjectsSelected()) {
+				optionalParams.almProjectIds = selectedAlmProjectIds;
+			}
+
+			fetchAssignees(selectedPdServiceId, optionalParams);
+			fetchExcelData(selectedPdServiceId, optionalParams);
 
 			$("#multiple-alm-project").siblings(".ms-parent").css("z-index", 1000);
 		},
@@ -339,13 +346,44 @@ function makeProjectMultiSelectBox () {
 }
 
 ////////////////////////////////////////
+// 검색 조건을 선택하여 API 호출 시, 제품 버전이 모두 선택되어 있는지 체크하는 함수
+// 모두 선택 된 경우, query param 으로 보낼 필요가 없기 때문
+////////////////////////////////////////
+function isAllVersionsSelected() {
+	if (!selectedVersionIds) {
+		return false;
+	}
+	return $("#multiple-version option").length === selectedVersionIds.split(",").length;
+}
+
+////////////////////////////////////////
+// 검색 조건을 선택하여 API 호출 시, ALM 프로젝트가 모두 선택되어 있는지 체크하는 함수
+// 모두 선택 된 경우, query param 으로 보낼 필요가 없기 때문
+////////////////////////////////////////
+function isAllProjectsSelected() {
+	if (!selectedAlmProjectIds) {
+		return false;
+	}
+	return $("#multiple-alm-project option").length === selectedAlmProjectIds.split(",").length;
+}
+
+////////////////////////////////////////
 // 선택 된 제품, 제품 버전 ID 값을 서버에 전달하여 관련 ALM 프로젝트 목록 조회
 ////////////////////////////////////////
 function fetchJiraProjects(pdServiceId, versionIds = null) {
 	let url = "/auth-user/api/arms/jiraProjectPure/getJiraProjects.do?pdServiceId=" + pdServiceId;
 
+	let optionalParams = {
+		startDate: $('#date_timepicker_start').val(),
+		endDate: $('#date_timepicker_end').val()
+	};
+
 	if (versionIds) {
 		url += "&pdServiceVersionIds=" + versionIds;
+	}
+
+	if (!isAllVersionsSelected()) {
+		optionalParams.pdServiceVersionIds = versionIds;
 	}
 
 	$("#multiple-alm-project option").remove();
@@ -358,9 +396,9 @@ function fetchJiraProjects(pdServiceId, versionIds = null) {
 			console.log("[Jira Projects] Data:", data);
 			let projectIds = [];
 			for (var k in data.response) {
-				var obj = data.response[k];
+				let obj = data.response[k];
 				projectIds.push(obj.c_id);
-				var newOption = new Option(obj.c_title, obj.c_id, true, false);
+				let newOption = new Option(obj.c_title, obj.c_id, true, false);
 				$("#multiple-alm-project").append(newOption);
 			}
 			selectedAlmProjectIds = projectIds.join(",");
@@ -369,18 +407,8 @@ function fetchJiraProjects(pdServiceId, versionIds = null) {
 				.multipleSelect("refresh")
 				.multipleSelect("checkAll");
 
-			fetchAssignees(selectedPdServiceId, {
-				pdServiceVersionIds: selectedVersionIds,
-				almProjectIds: selectedAlmProjectIds,
-				startDate: $('#date_timepicker_start').val(),
-				endDate: $('#date_timepicker_end').val()
-			});
-			fetchExcelData(selectedPdServiceId, {
-				pdServiceVersionIds: selectedVersionIds,
-				almProjectIds: selectedAlmProjectIds,
-				startDate: $('#date_timepicker_start').val(),
-				endDate: $('#date_timepicker_end').val()
-			});
+			fetchAssignees(selectedPdServiceId, optionalParams);
+			fetchExcelData(selectedPdServiceId, optionalParams);
 
 		},
 		error: function(xhr, status, error) {
@@ -482,21 +510,25 @@ function dateTimePicker() {
 			});
 		},
 		onChangeDateTime: function(dp, $input) {
-			var newDate = $input.val();
-			if (previousEndDate !== newDate) {
-				previousEndDate = newDate;
-				fetchAssignees(selectedPdServiceId, {
-					pdServiceVersionIds: selectedVersionIds,
-					almProjectIds: selectedAlmProjectIds,
-					startDate: $('#date_timepicker_start').val(),
-					endDate: $('#date_timepicker_end').val()
-				});
-				fetchExcelData(selectedPdServiceId, {
-					pdServiceVersionIds: selectedVersionIds,
-					almProjectIds: selectedAlmProjectIds,
-					startDate: $('#date_timepicker_start').val(),
-					endDate: $('#date_timepicker_end').val()
-				});
+			let newStartDate = $input.val();
+			if (previousEndDate !== newStartDate) {
+				previousEndDate = newStartDate;
+
+				let optionalParams = {
+					startDate: newStartDate,
+					endDate: $("#date_timepicker_end").val()
+				};
+
+				if (!isAllVersionsSelected()) {
+					optionalParams.pdServiceVersionIds = selectedVersionIds;
+				}
+
+				if (!isAllProjectsSelected()) {
+					optionalParams.almProjectIds = selectedAlmProjectIds;
+				}
+
+				fetchAssignees(selectedPdServiceId, optionalParams);
+				fetchExcelData(selectedPdServiceId, optionalParams);
 			}
 		}
 	});
@@ -512,21 +544,25 @@ function dateTimePicker() {
 			});
 		},
 		onChangeDateTime: function(dp, $input) {
-			var newDate = $input.val();
-			if (previousStartDate !== newDate) {
-				previousStartDate = newDate;
-				fetchAssignees(selectedPdServiceId, {
-					pdServiceVersionIds: selectedVersionIds,
-					almProjectIds: selectedAlmProjectIds,
-					startDate: $('#date_timepicker_start').val(),
-					endDate: $('#date_timepicker_end').val()
-				});
-				fetchExcelData(selectedPdServiceId, {
-					pdServiceVersionIds: selectedVersionIds,
-					almProjectIds: selectedAlmProjectIds,
-					startDate: $('#date_timepicker_start').val(),
-					endDate: $('#date_timepicker_end').val()
-				});
+			let newEndDate = $input.val();
+			if (previousStartDate !== newEndDate) {
+				previousStartDate = newEndDate;
+
+				let optionalParams = {
+					startDate: $("#date_timepicker_start").val(),
+					endDate: newEndDate
+				};
+
+				if (!isAllVersionsSelected()) {
+					optionalParams.pdServiceVersionIds = selectedVersionIds;
+				}
+
+				if (!isAllProjectsSelected()) {
+					optionalParams.almProjectIds = selectedAlmProjectIds;
+				}
+
+				fetchAssignees(selectedPdServiceId, optionalParams);
+				fetchExcelData(selectedPdServiceId, optionalParams);
 			}
 		}
 	});
@@ -596,14 +632,27 @@ var initTable = function() {
 		idColumnIndex: 1
 	});
 
+
 	resourceTable.onAfterUpdate = function() {
-		fetchExcelData(selectedPdServiceId, {
-			emailAddress: resourceTable.getSelectedIds(),
-			pdServiceVersionIds: selectedVersionIds,
-			almProjectIds: selectedAlmProjectIds,
-			startDate: $('#date_timepicker_start').val(),
-			endDate: $('#date_timepicker_end').val()
-		});
+		let optionalParams = {
+			startDate: $("#date_timepicker_start").val(),
+			endDate: $("#date_timepicker_end").val()
+		};
+		if (!isAllVersionsSelected()) {
+			optionalParams.pdServiceVersionIds = selectedVersionIds;
+		}
+
+		if (!isAllProjectsSelected()) {
+			optionalParams.almProjectIds = selectedAlmProjectIds;
+		}
+
+		setTimeout(() => {
+			let selectedIds = resourceTable.getSelectedIds();
+			if (!resourceTable.isAllOrZeroRowsSelected() && selectedIds.length > 0) {
+				optionalParams.emailAddress = selectedIds;
+			}
+			fetchExcelData(selectedPdServiceId, optionalParams);
+		}, 0);
 	};
 
 	return {

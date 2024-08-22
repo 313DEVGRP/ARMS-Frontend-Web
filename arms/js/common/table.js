@@ -35,22 +35,26 @@
 		let isChecked = $(element).prop("checked");
 		console.log(isChecked);
 
+		let allData = this.table.rows().data().toArray();
+		if (isChecked) {
+			this.selectedIds = allData
+				.map(row => row[this.columns[this.idColumnIndex].data])
+				.filter(email => email && email.trim() !== "");
+		} else {
+			this.selectedIds = [];
+		}
+
 		if (isChecked) {
 			this.table.rows().select();
 		} else {
 			this.table.rows().deselect();
 		}
+		let checkboxes = this.table.$('input[type="checkbox"]');
+		checkboxes.prop("checked", isChecked);
 
-		$.each(tr, function () {
-			$(this).find('input[type="checkbox"]').prop("checked", isChecked);
-		});
-
-		let allData = this.table.rows().data().toArray();
-		if (isChecked) {
-			this.selectedIds = allData.map(row => row[this.columns[this.idColumnIndex].data]);
-		} else {
-			this.selectedIds = [];
-		}
+		// $.each(tr, function () {
+		// 	$(this).find('input[type="checkbox"]').prop("checked", isChecked);
+		// });
 
 		if ($.isFunction(this.onAfterUpdate)) {
 			this.onAfterUpdate();
