@@ -16,8 +16,8 @@
 		if (this.idColumnIndex === undefined) {
 			return;
 		}
-		var idColumnName = this.columns[this.idColumnIndex].data;
-		var id = this.table.row(element).data()[idColumnName];
+		let idColumnName = this.columns[this.idColumnIndex].data;
+		let id = this.table.row(element).data()[idColumnName];
 
 		if (isSelected) {
 			if (!this.selectedIds.includes(id) && id !== null) {
@@ -31,8 +31,8 @@
 	Table.prototype.onToggleCheckAll = function (element) {
 		if (!element) return;
 
-		var tr = this.table.rows().nodes();
-		var isChecked = $(element).prop("checked");
+		let tr = this.table.rows().nodes();
+		let isChecked = $(element).prop("checked");
 		console.log(isChecked);
 
 		if (isChecked) {
@@ -45,7 +45,7 @@
 			$(this).find('input[type="checkbox"]').prop("checked", isChecked);
 		});
 
-		var allData = this.table.rows().data().toArray();
+		let allData = this.table.rows().data().toArray();
 		if (isChecked) {
 			this.selectedIds = allData.map(row => row[this.columns[this.idColumnIndex].data]);
 		} else {
@@ -56,6 +56,16 @@
 			this.onAfterUpdate();
 		}
 	};
+
+	Table.prototype.isAllOrZeroRowsSelected = function () {
+
+		var totalRows = this.table.rows().count();
+
+		var selectedRows = this.table.rows({ selected: true }).count();
+
+		return totalRows === selectedRows || selectedRows === 0;
+	};
+
 
 	Table.prototype.onToggleCheckbox = function (element) {
 		var tr = $(element);
