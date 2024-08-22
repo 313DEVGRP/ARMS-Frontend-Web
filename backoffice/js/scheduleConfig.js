@@ -21,7 +21,11 @@ function execDocReady() {
             "../reference/light-blue/lib/jquery.iframe-transport.js",
             "../reference/light-blue/lib/jquery.fileupload.js",
             "../reference/light-blue/lib/jquery.fileupload-fp.js",
-            "../reference/light-blue/lib/jquery.fileupload-ui.js"
+            "../reference/light-blue/lib/jquery.fileupload-ui.js",
+            "../reference/jquery-plugins/unityping-0.1.0/dist/jquery.unityping.min.js",
+            "../reference/jquery-plugins/cron-editor-master/css/jquery-ui_arms.css",
+            "../reference/jquery-plugins/cron-editor-master/js/jquery-ui.js",
+            "../reference/jquery-plugins/cron-editor-master/js/jquery.croneditor_arms.js"
         ],
 
         [
@@ -102,12 +106,49 @@ function execDocReady() {
             }, 313 /*milli*/);
 
             drawExcel("schedule_history_excel");
+            // turn the div into a cron editor
+            cronInit();
+
         })
         .catch(function (error) {
             console.error("플러그인 로드 중 오류 발생");
             console.log(error);
         });
 }
+
+
+////////////////////////////////////////////////////////////////////////////////////////
+// --- 크론 컨트롤 --- //
+////////////////////////////////////////////////////////////////////////////////////////
+function cronInit() {
+    var croneditor = cronCreator("0 * * * * *");
+    croneditor.initByCronArr();
+    croneditor.drawCronByCronArr();
+    croneditor.drawEachMinutes();
+    croneditor.drawEachHours();
+    croneditor.drawEachDays();
+    croneditor.drawEachMonths();
+    croneditor.drawEachWeek();
+    croneditor.drawCronByCronArr();
+}
+
+function cronCreator(value) {
+    // 페이지 에러로 인한 주석 처리 : to.민규님
+    let cronValue = value;
+    $("#popup_cron_expression").val(value);
+
+    let cronArr = value.split(" ");
+
+    let croneditor = $(".cronDiv").croneditor({
+        cronArr: cronArr,
+        drawCron: function () {
+            let newCron = cronArr.join(" ");
+            $("#popup_cron_expression").val(newCron);
+        }
+    });
+    return croneditor;
+}
+
 
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -261,16 +302,7 @@ function dataTableDrawCallback(tableInfo) {
 /////////////////////////////////////////////////
 // 엑셀 그리기
 /////////////////////////////////////////////////
-function drawExcel(targetId) {
-    console.log("generalConfig :: drawExcel");
-    let $targetId = "#"+targetId;
-
-    if($($targetId)[0].jexcel) {
-        $($targetId)[0].jexcel.destroy();
-    }
-
-    var excel_width = $($targetId).width() - 50;
-
+function drawExcel(target) {
     // 컬럼 설정
     var columnList = [
         { type: "text", title: "Start Time", wRatio: 0.3},
@@ -278,86 +310,186 @@ function drawExcel(targetId) {
         { type: "text", title: "Duration", wRatio: 0.2},
         { type: "text", title: "Status", wRatio: 0.2}
     ];
-
-    SpreadSheetFunctions.setColumns(columnList);
-    SpreadSheetFunctions.setColumnWidth(excel_width);
-
+    // 옵션 설정
     var customOption = {
         search: true,
+        allowInsertRow: false,
+        allowInsertColumn: false,
         updateTable: function(instance, cell, col, row, val, id) {
             cell.style.textAlign = "left";
             cell.style.whiteSpace = "normal";
         }
     };
 
-    SpreadSheetFunctions.setOptions(customOption);
-    let data;
-    $.getJSON('./mock/scheduleConfig_excel.json', function(jsonData) {
-        data = jsonData.map(arr => arr.slice(0,-1));
+    SpreadsheetFunctions.setTargetId(target);
+    SpreadsheetFunctions.setDefaultTargetRect();
 
-        $($targetId).spreadsheet($.extend({}, {
-            columns: SpreadSheetFunctions.getColumns(),
-            data: data
-        }, SpreadSheetFunctions.getOptions()));
-        SpreadSheetFunctions.setExcelData(data);
-        $("#modal_excel .jexcel_content").css("width","100%");
-        $("#modal_excel .jexcel_content").css("max-height","420px");
-    }).fail(function(jqxhr, textStatus, error) {
-        console.error("Error loading JSON file: " + textStatus + ", " + error);
-    });
+    SpreadsheetFunctions.setColumns(columnList);
+    SpreadsheetFunctions.setColumnWidth(SpreadsheetFunctions.getTargetRect("width"));
+    SpreadsheetFunctions.setOptions(customOption);
+    SpreadsheetFunctions.startObserver();
 
+    $.getJSON('./mock/scheduleConfig_excel.json')
+      .done(function(jsonData) {
+          let fetchedExcelData = jsonData.map(arr => arr.slice(0, -1)); // map() 은 동기함수
+          SpreadsheetFunctions.setExcelData(fetchedExcelData);
+          SpreadsheetFunctions.drawExcel(SpreadsheetFunctions.getTargetId());
+      })
+      .fail(function(jqxhr, textStatus, error) {
+          console.error("Error loading JSON file: " + textStatus + ", " + error);
+      });
 }
 
-var SpreadSheetFunctions = (function () {
+var SpreadsheetFunctions = (function () {
+    let targetId = { "v" : "", "jq" : ""};
+    let targetRect = {"width" : 0, "height" : 0};
+    let excelData;    // 엑셀 데이터
+    let excelColumns;  // 엑셀 컬럼
+    let customOptions;// 엑셀 커스텀 옵션들 :: 정의 안할 경우 default
 
-    let $tabFunction_data;   // 엑셀 데이터
-    let $tabFunction_columns;// 엑셀 컬럼
-    let $tabFunction_options;// 엑셀 (커스텀)옵션 :: 정의 안할 경우 default
+
+    var setDefaultTargetRect = function () {
+        let defaultWidth = $(getTargetId("jq")).width();
+        let defaultHeight = $(getTargetId("jq")).height();
+        setTargetRect(defaultWidth, defaultHeight);
+    };
+    var setTargetRect = function(width, height) {
+        targetRect.width = width;
+        targetRect.height = height;
+    };
+
+    var getTargetRect = function (type) {
+        if (type === "width") {
+            return targetRect.width;
+        } else if (type  === "height") {
+            return targetRect.height;
+        } else {
+            return targetRect;
+        }
+    };
+
+    var setTargetId = function (target) {
+        targetId.v = target;
+        targetId.jq = "#"+target;
+    };
+
+    var getTargetId = function (type) {
+        if (type === "jq") {
+            return targetId.jq;
+        } else {
+            return targetId.v;
+        }
+    };
 
     var setExcelData = function(data) {
-        $tabFunction_data = data;
+        excelData = data;
     };
     var getExcelData = function () {
-        return $tabFunction_data;
+        return excelData;
     };
     var setColumns = function(columns) {
-        console.log("setColumns start");
-        $tabFunction_columns = columns;
-        console.log("setColumns fin");
+        excelColumns = columns;
     };
     var getColumns = function () {
-        return $tabFunction_columns;
-    };
-    var setOptions = function(options) {
-        $tabFunction_options = options;
-    };
-    var getOptions = function() {
-        return $tabFunction_options ? $tabFunction_options : null;
-    };
-    var setColumnWidth = function (width) {
-        console.log("setColumnWidth start");
-        if ($tabFunction_columns) {
-            $tabFunction_columns = $tabFunction_columns.map(column => ({
-                ...column, width: width * column.wRatio
-            }));
-        }
-        console.log("setColumnWidth end");
+        return excelColumns;
     };
 
-    function handleResize(id,width, height) {
-        if (id ==="modal_excel" && height !== 0) {
-            if ($tabFunction_data) {
-                drawExcel("modal_excel");
-            } else {
-                console.log("엑셀 데이터 없음");
+    var setColumnWidth = function (width) {
+        if (excelColumns) {
+            excelColumns = excelColumns.map(column => ({
+                ...column, width: (width * column.wRatio) -1
+            }));
+        }
+    };
+
+    function setColumnWidthAsync(width) {
+        return new Promise((resolve) => {
+            if (excelColumns) {
+                excelColumns = excelColumns.map(column => ({
+                    ...column, width: (width * column.wRatio) - 1
+                }));
             }
+            resolve(); // 컬럼 너비 설정이 완료된 후 resolve 호출
+        });
+    }
+
+    var setOptions = function(options) {
+        customOptions = options;
+    };
+    var getOptions = function() {
+        return customOptions ? customOptions : null;
+    };
+
+
+    var resizeObserver = new ResizeObserver(function(entries) {
+        for (let entry of entries) {
+            setTargetRect(entry.contentRect.width, entry.contentRect.height);
+            handleResize(entry.target.id, getTargetRect("width"), getTargetRect("height"));
+        }
+    });
+
+    // 모달요소 크기 변화 관찰(Observer)
+    function startObserver() {
+        resizeObserver.observe($(getTargetId("jq"))[0]);
+    }
+
+    function handleResize(id, width, height) {
+        if (id === getTargetId() && height !== 0) {
+            if (excelData) {
+                drawResizedExcel(getTargetId());
+            } else {
+                console.log("Spreadsheet.handleResize :: 엑셀 데이터 없음");
+            }
+
+        } else {
+            console.log("Spreadsheet.handleResize :: id 불일치 또는 height 가 0 입니다.");
         }
     }
 
+    function drawResizedExcel(target) {
+        let $targetId = "#"+target;
+
+        if($($targetId).length > 0 && $($targetId)[0].jexcel) {
+            $($targetId)[0].jexcel.destroy();
+        }
+
+        setColumnWidthAsync(getTargetRect("width") - 50).then(() => {
+            $($targetId).spreadsheet($.extend({}, {
+                columns: getColumns(),
+                data: getExcelData()
+            }, getOptions()));
+
+            let jexcel_content_height = getTargetRect("height") - 40 - 30 - 35 - 34;
+            $($targetId + " .jexcel_content").css("max-height", jexcel_content_height);
+            $($targetId + " .jexcel_content").css("width", "100%");
+        });
+    }
+
+    function drawExcel(target) {
+        let $targetId = "#"+target;
+
+        if($($targetId).length > 0 && $($targetId)[0].jexcel) {
+            $($targetId)[0].jexcel.destroy();
+        }
+
+        $($targetId).spreadsheet($.extend({}, {
+            columns: getColumns(),
+            data: getExcelData()
+        }, getOptions()));
+
+        let jexcel_content_height = getTargetRect("height") - 40 - 30 - 35 - 34;
+        $($targetId + " .jexcel_content").css("max-height", jexcel_content_height);
+        $($targetId + " .jexcel_content").css("width", "100%");
+
+    }
+
     return {
-        setExcelData, getExcelData,
-        setColumns, getColumns,
-        setOptions, getOptions,
-        setColumnWidth,
+        setTargetId,   getTargetId,
+        setTargetRect, getTargetRect, setDefaultTargetRect,
+        setExcelData,  getExcelData,
+        setColumns,    getColumns,   setColumnWidth,
+        setOptions,    getOptions,
+
+        startObserver, drawExcel
     };
 })();

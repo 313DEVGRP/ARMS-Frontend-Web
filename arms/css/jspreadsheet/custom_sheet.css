@@ -239,3 +239,7 @@ table.jexcel .highlight {
     border-color: #a4c6ff;
     box-shadow: 0 0 10px rgba(164, 198, 255, 0.8);
 }
+
+.jexcel_content:focus-visible {
+    outline: none;
+}

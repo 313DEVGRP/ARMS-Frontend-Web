@@ -33,37 +33,16 @@ const reqKanbanTg = new tourguide.TourGuideClient({           // 상세 정보 �
 function execDocReady() {
     let pluginGroups = [
         [
-            "../reference/light-blue/lib/vendor/jquery.ui.widget.js",
-            "../reference/light-blue/lib/vendor/http_blueimp.github.io_JavaScript-Templates_js_tmpl.js",
-            "../reference/light-blue/lib/vendor/http_blueimp.github.io_JavaScript-Load-Image_js_load-image.js",
-            "../reference/light-blue/lib/vendor/http_blueimp.github.io_JavaScript-Canvas-to-Blob_js_canvas-to-blob.js",
-            "../reference/light-blue/lib/jquery.iframe-transport.js",
-            "../reference/light-blue/lib/jquery.fileupload.js",
-            "../reference/light-blue/lib/jquery.fileupload-fp.js",
-            "../reference/light-blue/lib/jquery.fileupload-ui.js"
-        ],
-
-        [
+            "../reference/jquery-plugins/select2-4.0.2/dist/css/select2_lightblue4.css",
+            "../reference/jquery-plugins/select2-4.0.2/dist/js/select2.min.js",
             "../reference/lightblue4/docs/lib/slimScroll/jquery.slimscroll.min.js",
-            "../reference/jquery-plugins/unityping-0.1.0/dist/jquery.unityping.min.js",
-            "../reference/light-blue/lib/bootstrap-datepicker.js",
-            "../reference/jquery-plugins/datetimepicker-2.5.20/build/jquery.datetimepicker.min.css",
-            "../reference/jquery-plugins/datetimepicker-2.5.20/build/jquery.datetimepicker.full.min.js",
             "../reference/lightblue4/docs/lib/widgster/widgster.js",
             "../reference/jquery-plugins/timerStyles.js"
         ],
-
         [
             "../reference/jquery-plugins/jstree-v.pre1.0/_lib/jquery.cookie.js",
             "../reference/jquery-plugins/jstree-v.pre1.0/_lib/jquery.hotkeys.js",
             "../reference/jquery-plugins/jstree-v.pre1.0/jquery.jstree.js",
-            "../reference/jquery-plugins/select2-4.0.2/dist/css/select2_lightblue4.css",
-            "../reference/jquery-plugins/lou-multi-select-0.9.12/css/multiselect-lightblue4.css",
-            "../reference/jquery-plugins/multiple-select-1.5.2/dist/multiple-select-bluelight.css",
-            "../reference/jquery-plugins/select2-4.0.2/dist/js/select2.min.js",
-            "../reference/jquery-plugins/lou-multi-select-0.9.12/js/jquery.quicksearch.js",
-            "../reference/jquery-plugins/lou-multi-select-0.9.12/js/jquery.multi-select.js",
-            "../reference/jquery-plugins/multiple-select-1.5.2/dist/multiple-select.min.js"
         ],
         [
             "../reference/jquery-plugins/dataTables-1.10.16/media/css/jquery.dataTables_lightblue4.css",
@@ -73,14 +52,11 @@ function execDocReady() {
             "../reference/jquery-plugins/dataTables-1.10.16/extensions/Responsive/js/dataTables.responsive.min.js",
             "../reference/jquery-plugins/dataTables-1.10.16/extensions/Select/js/dataTables.select.min.js",
             "../reference/jquery-plugins/dataTables-1.10.16/extensions/RowGroup/js/dataTables.rowsGroup.min.js",
-            "../reference/jquery-plugins/dataTables-1.10.16/extensions/Buttons/js/dataTables.buttons.min.js",
-            "../reference/jquery-plugins/dataTables-1.10.16/extensions/Buttons/js/buttons.html5.js",
-            "../reference/jquery-plugins/dataTables-1.10.16/extensions/Buttons/js/buttons.print.js",
-            "../reference/jquery-plugins/dataTables-1.10.16/extensions/Buttons/js/jszip.min.js",
+        ],
+        [
             "../reference/gojs/go-debug.js",
             "../arms/js/mapping/gojs_setup.js"
         ]
-        // 추가적인 플러그인 그룹들을 이곳에 추가하면 됩니다.
     ];
 
     loadPluginGroupsParallelAndSequential(pluginGroups)
@@ -724,7 +700,7 @@ $("#text").on("input", function () {
 ///////////////////////////////////
 // 팝업 띄울 때, UI 일부 수정되도록
 ///////////////////////////////////
-function popup_modal(popup_type, state_id) {
+function popup_modal(popup_type, state_id, state_name) {
     $('#my_modal1').modal('show');
 
     const container = $('#popup_view_state_category_div');
@@ -775,6 +751,10 @@ function popup_modal(popup_type, state_id) {
     $("#delete_req_state").addClass("hidden");
     $("#update_req_state").addClass("hidden");
     $("#save_req_state").addClass("hidden");
+    $("#change_state_div").addClass("hidden");
+    $("#state_title_div").removeClass("hidden");
+    $("#state_category_div").removeClass("hidden");
+    $("#state_contents_div").removeClass("hidden");
 
     if (popup_type === "save_popup") {
         $("#my_modal1_title").text("ARMS 상태 등록 팝업");
@@ -788,7 +768,6 @@ function popup_modal(popup_type, state_id) {
         $("#my_modal1_description").text("A-RMS 요구사항의 상태를 수정합니다.");
 
         $("#update_req_state").removeClass("hidden");
-        $("#delete_req_state").removeClass("hidden");
 
         $.ajax({
             url: "/auth-user/api/arms/reqState/getNode.do?c_id=" + state_id,
@@ -810,6 +789,52 @@ function popup_modal(popup_type, state_id) {
                 }
             }
         });
+    }
+    else if (popup_type === "delete_popup") {
+        $("#my_modal1_title").text("ARMS 상태 삭제 팝업");
+        $("#my_modal1_description").text("A-RMS 요구사항의 상태를 삭제하고 요구사항의 상태를 바꿀 상태를 선택합니다.");
+
+        $("#state_title_div").addClass("hidden");
+        $("#state_category_div").addClass("hidden");
+        $("#state_contents_div").addClass("hidden");
+        $("#delete_req_state").removeClass("hidden");
+        $("#change_state_div").removeClass("hidden");
+
+        $("#popup_view_state_c_id").val(state_id);
+        $("#popup_view_change_state_name").val(state_name);
+
+        $("#popup_view_change_state_div").empty();
+        get_arms_req_state_list()
+            .then((state_list) => {
+                let option_html = `<option value=""></option>`;
+
+                for (var k in state_list) {
+                    var state = state_list[k];
+                    if (state_id !== state.c_id){
+                        option_html += `<option value="${state.c_id}">${state.c_title}</option>`;
+                    }
+                }
+
+                $("#popup_view_change_state_div").append(`<select
+									class="select-block-level chzn-select darkBack"
+									id="select-change-state"
+									tabIndex="-1">
+									${option_html}
+								</select>`);
+
+                $(".chzn-select").each(function () {
+                    // $(this).select2($(this).data());
+                    $(this).select2({
+                        ...$(this).data(),
+                        minimumResultsForSearch: -1 // 검색 기능 제거
+                    });
+                });
+            })
+            .catch((error) => {
+                console.error('Error fetching data:', error);
+            });
+
+        // req_state_setting("popup_view_change_state_div", false, state_id);
     }
 }
 
@@ -894,16 +919,23 @@ function update_req_state_btn_click() {
 
 function delete_req_state_btn_click() {
     $("#delete_req_state").off().click(function() {
-        let state_name = $("#popup_view_state_name").val().trim();
 
-        let isDelete = confirm(state_name + " 상태를 삭제하시겠습니까?");
-        if (!isDelete) {
-            return;
+        let state_id_before_change = $("#popup_view_state_c_id").val();
+        let state_id_to_change = $('#select-change-state').val(); // 변경할 선택된 상태 아이디
+        if (!state_id_to_change) {
+            alert("변경할 상태 선택이 필요합니다.");
+            return false;
         }
 
-        let state_c_id = $("#popup_view_state_c_id").val();
+        let state_name = $("#popup_view_change_state_name").val().trim();
+        let change_state_name = $("#select-change-state option:selected").text().trim();
 
-        remove_arms_state(state_c_id, state_name)
+        let isDelete = confirm(state_name + " 상태를 삭제 하고 " + change_state_name + " 상태로 변환하시겠습니까?");
+        if (!isDelete) {
+            return false;
+        }
+
+        remove_arms_state(state_id_before_change, state_name)
             .then((result) => {
                 console.log(result);
                 $("#close_modal_popup").trigger("click");
@@ -911,7 +943,6 @@ function delete_req_state_btn_click() {
                 init_mapping_diagram();
             })
             .catch((error) => {
-                // 오류가 발생한 경우 처리합니다.
                 console.error('Error fetching data:', error);
             });
     });

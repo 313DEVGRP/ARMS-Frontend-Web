@@ -680,21 +680,21 @@ var gojs = (function () {
                     const state_name = selectedNode.data.text;
                     const state_c_id = selectedNode.data.c_id;
 
-                    if (!confirm( state_name + " 상태를 삭제하시겠습니까?")) {
+                    popup_modal('delete_popup', state_c_id, state_name);
+                    return false;
+                    /*if (!confirm( state_name + " 상태를 삭제하시겠습니까?")) {
                         return false;
                     }
                     else {
                         remove_arms_state(state_c_id, state_name)
                             .then((result) => {
-                                // API 호출 결과를 처리합니다.
                                 console.log(result);
                             })
                             .catch((error) => {
-                                // 오류가 발생한 경우 처리합니다.
                                 console.error('Error fetching data:', error);
                                 return false;
                             });
-                    }
+                    }*/
                 }
             }
 
