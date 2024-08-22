@@ -330,9 +330,9 @@ function makeProjectMultiSelectBox () {
 				optionalParams.pdServiceVersionIds = selectedVersionIds;
 			}
 
-			fetchAssignees(selectedPdServiceId, optionalParams);
-
 			optionalParams.almProjectIds = selectedAlmProjectIds;
+
+			fetchAssignees(selectedPdServiceId, optionalParams);
 
 			fetchExcelData(selectedPdServiceId, optionalParams);
 
@@ -406,9 +406,9 @@ function fetchJiraProjects(pdServiceId, versionIds = null) {
 				.multipleSelect("refresh")
 				.multipleSelect("checkAll");
 
-			fetchAssignees(selectedPdServiceId, optionalParams);
-
 			optionalParams.almProjectIds = selectedAlmProjectIds;
+
+			fetchAssignees(selectedPdServiceId, optionalParams);
 
 			fetchExcelData(selectedPdServiceId, optionalParams);
 
@@ -525,9 +525,9 @@ function dateTimePicker() {
 					optionalParams.pdServiceVersionIds = selectedVersionIds;
 				}
 
-				fetchAssignees(selectedPdServiceId, optionalParams);
-
 				optionalParams.almProjectIds = selectedAlmProjectIds;
+
+				fetchAssignees(selectedPdServiceId, optionalParams);
 
 				fetchExcelData(selectedPdServiceId, optionalParams);
 			}
@@ -558,9 +558,9 @@ function dateTimePicker() {
 					optionalParams.pdServiceVersionIds = selectedVersionIds;
 				}
 
-				fetchAssignees(selectedPdServiceId, optionalParams);
-
 				optionalParams.almProjectIds = selectedAlmProjectIds;
+
+				fetchAssignees(selectedPdServiceId, optionalParams);
 
 				fetchExcelData(selectedPdServiceId, optionalParams);
 			}
