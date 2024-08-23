@@ -760,6 +760,16 @@
                     </div>
                     <!------------------------------------------------>
                 </div>
+
+                <div class="col-md-6">
+                    <div class="darkBack">
+                        <textarea id="input" rows="3" name="text" class="form-control darkBack"></textarea>
+                        <pre>
+                            <code id="output" class="nginx">
+                            </code>
+                        </pre>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -800,6 +810,36 @@
         margin-bottom: 10px;
         background: rgba(51, 51, 51, .3);
         color: #f8f8f8;
+    }
+
+    /* 하이라이트 */
+    .hljs-ln-numbers {
+        text-align: center;
+        color: #ccc;
+        vertical-align: top;
+        padding-right: 5px;
+        padding: 1px 5px 1px 5px !important;
+
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+    .hljs-ln-code {
+        padding: 0px 0px 0px 10px !important;
+        padding-left: 10px;
+        border-bottom: 0px !important;
+    }
+
+    .hljs-ln-numbers {
+        border-bottom: 0px !important;
+    }
+
+    code {
+        white-space: pre-wrap;
+        overflow: auto;
     }
 
 </style>
