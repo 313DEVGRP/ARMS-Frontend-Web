@@ -94,6 +94,33 @@ var gojs = (function () {
                                 },
                             },
                             new go.Binding('text').makeTwoWay()
+                        ),
+                        $(go.Shape, "Rectangle",  // 스페이서 역할을 할 투명한 도형 추가
+                            {
+                                stroke: null,
+                                fill: "transparent",
+                                stretch: go.GraphObject.Horizontal, // 패널의 나머지 공간을 채워서 밀어냄
+                                width: 1, height: 1
+                            }
+                        ),
+                        $(go.Shape,
+                            {
+                                figure: "XLine",
+                                width: 8,
+                                height: 8,
+                                stroke: "rgba(255, 255, 255, 0.45)",
+                                strokeWidth: 2,  // 두께
+                                margin: new go.Margin(0, 0, 0, 0),
+                                cursor: "pointer",
+                                alignment: go.Spot.Right,
+                                click: function(e, obj) {
+                                    // 상태 삭제 확인 팝업 호출
+                                    const node = obj.part;
+                                    const state_name = node.data.text;
+                                    const state_c_id = node.data.c_id;
+                                    popup_modal('delete_popup', state_c_id, state_name);
+                                }
+                            }
                         )
 /*                        $(go.TextBlock,
                             {
