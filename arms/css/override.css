@@ -2187,3 +2187,14 @@ input,
 textarea {
 	caret-color: auto;
 }
+
+/* icon styles */
+.side-nav li i[class*=fa] {
+	width: 16px;
+	margin-right: 8px;
+	float: left;
+	line-height: 18px;
+	font-size: 14px;
+	opacity: .7;
+	text-align: right;
+}
