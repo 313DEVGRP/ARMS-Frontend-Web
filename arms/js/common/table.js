@@ -16,8 +16,8 @@
 		if (this.idColumnIndex === undefined) {
 			return;
 		}
-		var idColumnName = this.columns[this.idColumnIndex].data;
-		var id = this.table.row(element).data()[idColumnName];
+		let idColumnName = this.columns[this.idColumnIndex].data;
+		let id = this.table.row(element).data()[idColumnName];
 
 		if (isSelected) {
 			if (!this.selectedIds.includes(id) && id !== null) {
@@ -31,31 +31,45 @@
 	Table.prototype.onToggleCheckAll = function (element) {
 		if (!element) return;
 
-		var tr = this.table.rows().nodes();
-		var isChecked = $(element).prop("checked");
+		let tr = this.table.rows().nodes();
+		let isChecked = $(element).prop("checked");
 		console.log(isChecked);
+
+		let allData = this.table.rows().data().toArray();
+		if (isChecked) {
+			this.selectedIds = allData
+				.map(row => row[this.columns[this.idColumnIndex].data])
+				.filter(email => email && email.trim() !== "");
+		} else {
+			this.selectedIds = [];
+		}
 
 		if (isChecked) {
 			this.table.rows().select();
 		} else {
 			this.table.rows().deselect();
 		}
+		let checkboxes = this.table.$('input[type="checkbox"]');
+		checkboxes.prop("checked", isChecked);
 
-		$.each(tr, function () {
-			$(this).find('input[type="checkbox"]').prop("checked", isChecked);
-		});
-
-		var allData = this.table.rows().data().toArray();
-		if (isChecked) {
-			this.selectedIds = allData.map(row => row[this.columns[this.idColumnIndex].data]);
-		} else {
-			this.selectedIds = [];
-		}
+		// $.each(tr, function () {
+		// 	$(this).find('input[type="checkbox"]').prop("checked", isChecked);
+		// });
 
 		if ($.isFunction(this.onAfterUpdate)) {
 			this.onAfterUpdate();
 		}
 	};
+
+	Table.prototype.isAllOrZeroRowsSelected = function () {
+
+		var totalRows = this.table.rows().count();
+
+		var selectedRows = this.table.rows({ selected: true }).count();
+
+		return totalRows === selectedRows || selectedRows === 0;
+	};
+
 
 	Table.prototype.onToggleCheckbox = function (element) {
 		var tr = $(element);
