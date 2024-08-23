@@ -1,0 +1,75 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 98%;
+    --foreground: 330 8% 5%;
+
+    --card: 0 0% 98%;
+    --card-foreground: 330 8% 5%;
+
+    --popover: 0 0% 98%;
+    --popover-foreground: 330 8% 5%;
+
+    --primary: 334 100% 32%;
+    --primary-foreground: 0 0% 98%;
+
+    --secondary: 330 7% 94%;
+    --secondary-foreground: 330 8% 5%;
+
+    --muted: 330 7% 94%;
+    --muted-foreground: 334 6% 45%;
+
+    --accent: 330 7% 94%;
+    --accent-foreground: 330 8% 5%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 320 6% 90%;
+    --input: 336 6% 83%;
+    --ring: 335 24% 75%;
+
+    --radius: 0.5rem;
+  }
+  
+  .dark {
+    --background: 180 4% 5%;
+    --foreground: 0 0% 98%;
+
+    --card: 240 3% 6%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 240 3% 6%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 228 48% 46%;
+    --primary-foreground: 0 0% 98%;
+
+    --secondary: 240 2% 12%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 240 2% 18%;
+    --muted-foreground: 228 2% 49%;
+
+    --accent: 229 18% 12%;
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 240 2% 12%;
+    --input: 240 2% 18%;
+    --ring: 228 48% 40%;
+  }
+}
+.loading{
+  animation: spin 3s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
