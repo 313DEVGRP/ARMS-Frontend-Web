@@ -35,7 +35,7 @@
 
 .jexcel_content{
     padding-right: 0 !important;
-    font-size: 12px;
+    font-size: 13px;
     line-height: 20px !important; /* 행간 설정 */
 }
 
@@ -126,7 +126,7 @@ table.jexcel thead tr td{
 
     color: var(--dark_jexcel_row_col_header_color) !important;
     font-weight: 300 !important;
-    font-size: 12px !important;
+    font-size: 13px !important;
 
     background: rgba(51,51,51,0.95); !important;
 

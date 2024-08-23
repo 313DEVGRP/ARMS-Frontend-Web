@@ -491,7 +491,7 @@ var SpreadsheetFunctions = (function () {
                 data: getExcelData()
             }, getOptions()));
 
-            let jexcel_content_height = getTargetRect("height") - 40 - 30 - 35 - 34;
+            let jexcel_content_height = getTargetRect("height") - 40 - 30 - 25;
             $($targetId + " .jexcel_content").css("max-height", jexcel_content_height);
             $($targetId + " .jexcel_content").css("width", "100%");
         });
@@ -509,7 +509,7 @@ var SpreadsheetFunctions = (function () {
             data: getExcelData()
         }, getOptions()));
 
-        let jexcel_content_height = getTargetRect("height") - 40 - 30 - 35 - 34;
+        let jexcel_content_height = getTargetRect("height") - 40 - 30 - 25;
         $($targetId + " .jexcel_content").css("max-height", jexcel_content_height);
         $($targetId + " .jexcel_content").css("width", "100%");
 
