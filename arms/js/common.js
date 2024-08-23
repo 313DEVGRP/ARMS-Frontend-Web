@@ -15,6 +15,7 @@ let userRealmRoles;
 let permissions;
 let userEmail;
 let scrollPos = 0;
+let stateCategory;
 
 ////////////////////////////////////////////////////////////////////////////////////////
 //Document Ready
@@ -608,6 +609,8 @@ function jsTreeBuild(jQueryElementID, serviceNameForURL) {
 	console.log("common :: jsTreeBuild : ( hostname ) → " + $(location).attr("hostname"));
 	console.log("common :: jsTreeBuild : ( port ) → " + $(location).attr("port"));
 
+    getStateCategory();
+
 	$(jQueryElementID)
 		.bind("before.jstree", function (e, data) {
 			$("#alog").append(data.func + "<br />");
@@ -743,7 +746,7 @@ function jsTreeBuild(jQueryElementID, serviceNameForURL) {
 					        let type = item.attr.rel;
 					        if(type !== "folder"){
                                 if (item.reqStateEntity && item.reqStateEntity.c_title) {
-                                    let state = item.reqStateEntity.c_title;
+                                    let state = item.reqStateEntity.reqStateCategoryEntity.c_id;
                                     item.data = mappingStateIcon(state) +" "+item.data;
                                 }
 					        }
@@ -993,17 +996,29 @@ function jsTreeBuild(jQueryElementID, serviceNameForURL) {
 	});
 
     function mappingStateIcon(key) {
-        if (key === "열림") {
-            return '<i class="fa fa-folder-o text-danger status-icon"></i>';
-        } else if (key === "진행중") {
-            return '<i class="fa fa-fire text-danger status-icon" style="color: #E49400;"></i>';
-        } else if (key === "해결됨") {
-            return '<i class="fa fa-fire-extinguisher text-success status-icon"></i>';
-        } else if (key === "닫힘") {
-            return '<i class="fa fa-folder text-primary status-icon"></i>';
+        let stateIcon = stateCategory.find(item => item.c_id === key);
+        if (stateIcon) {
+            return stateIcon.c_category_icon.replace('class="', 'class="status-icon ');
+        } else {
+            return '';
         }
-        return ''; // 기본적으로 빈 문자열 반환
     }
+}
+
+function getStateCategory(){
+    $.ajax({
+        url:"/auth-user/api/arms/reqStateCategory/getNodesWithoutRoot.do",
+        type:"GET",
+        dataType:"json",
+        progress: true,
+        statusCode:{
+            200: function(data){
+                console.log("[ common :: getStateCategory] :: ARMS에 등록된 상태 카테고리 정보");
+                stateCategory = data.result;
+                console.log(stateCategory);
+            }
+        }
+    });
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
