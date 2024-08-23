@@ -15,7 +15,6 @@ let userRealmRoles;
 let permissions;
 let userEmail;
 let scrollPos = 0;
-let stateCategory;
 
 ////////////////////////////////////////////////////////////////////////////////////////
 //Document Ready
@@ -609,8 +608,6 @@ function jsTreeBuild(jQueryElementID, serviceNameForURL) {
 	console.log("common :: jsTreeBuild : ( hostname ) → " + $(location).attr("hostname"));
 	console.log("common :: jsTreeBuild : ( port ) → " + $(location).attr("port"));
 
-    getStateCategory();
-
 	$(jQueryElementID)
 		.bind("before.jstree", function (e, data) {
 			$("#alog").append(data.func + "<br />");
@@ -746,8 +743,14 @@ function jsTreeBuild(jQueryElementID, serviceNameForURL) {
 					        let type = item.attr.rel;
 					        if(type !== "folder"){
                                 if (item.reqStateEntity && item.reqStateEntity.c_title) {
-                                    let state = item.reqStateEntity.reqStateCategoryEntity.c_id;
-                                    item.data = mappingStateIcon(state) +" "+item.data;
+                                    let stateIconInfo = item.reqStateEntity.reqStateCategoryEntity.c_category_icon;
+                                    let stateIcon
+                                    if(stateIconInfo){
+                                         stateIcon= stateIconInfo.replace('class="', 'class="status-icon ');
+                                    }else{
+                                        stateIcon=''
+                                    }
+                                    item.data = stateIcon +" "+item.data;
                                 }
 					        }
                         });
@@ -995,30 +998,6 @@ function jsTreeBuild(jQueryElementID, serviceNameForURL) {
 		$(jQueryElementID).jstree("search", document.getElementById("text").value);
 	});
 
-    function mappingStateIcon(key) {
-        let stateIcon = stateCategory.find(item => item.c_id === key);
-        if (stateIcon) {
-            return stateIcon.c_category_icon.replace('class="', 'class="status-icon ');
-        } else {
-            return '';
-        }
-    }
-}
-
-function getStateCategory(){
-    $.ajax({
-        url:"/auth-user/api/arms/reqStateCategory/getNodesWithoutRoot.do",
-        type:"GET",
-        dataType:"json",
-        progress: true,
-        statusCode:{
-            200: function(data){
-                console.log("[ common :: getStateCategory] :: ARMS에 등록된 상태 카테고리 정보");
-                stateCategory = data.result;
-                console.log(stateCategory);
-            }
-        }
-    });
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
