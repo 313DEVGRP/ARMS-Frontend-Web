@@ -85,20 +85,6 @@ function execDocReady() {
             make_alm_server_select_box();
             gojs.init();
 
-            // 전역 변수 - 상태 카테고리 설정
-            get_arms_state_category_list()
-                .then((category_list) => {
-                    for (var k in category_list) {
-                        var obj = category_list[k];
-                        req_state_category_list[obj.c_id] = obj;
-                    }
-                    console.log(req_state_category_list);
-                })
-                .catch((error) => {
-                    // 오류가 발생한 경우 처리합니다.
-                    console.error('Error fetching data:', error);
-                });
-
             save_req_state_btn_click();
             update_req_state_btn_click();
             delete_req_state_btn_click();
@@ -201,101 +187,44 @@ function make_alm_server_select_box() {
 
     // --- select2 ( 제품(서비스) 검색 및 선택 ) 이벤트 --- //
     $("#selected_alm_server").on("select2:select", function(e) {
-        $("#cloud_project_tree").hide();
-        $("#select-project-div").hide();
-        $("#select-issuetype-div").hide();
-        $("#select-project").text("선택되지 않음");
-        $("#select-issuetype").text("선택되지 않음");
-        selected_alm_server_id = $("#selected_alm_server").val();
-        selected_alm_server_name = $("#selected_alm_server").select2("data")[0].text;
-        $("#select-alm-server").text(selected_alm_server_name);
 
-        let alm_server_data = alm_server_list[selected_alm_server_id];
-        let alm_server_type = alm_server_data.c_jira_server_type;
-        /*var $flowchart = $('#state_flow_chart');
-        $flowchart.flowchart('setData', {});*/
+        // 전역 변수 - 상태 카테고리 설정
+        get_arms_state_category_list()
+            .then((category_list) => {
+                for (var k in category_list) {
+                    var obj = category_list[k];
+                    req_state_category_list[obj.c_id] = obj;
+                }
+                console.log(req_state_category_list);
 
-        if (alm_server_type === "클라우드") {
-            $("#cloud_project_tree").show();
-            $("#select-project-div").show();
-            $("#select-issuetype-div").show();
-            build_alm_server_jstree(selected_alm_server_id);
-            let data = {};
-            gojs.load(data);
-        }
-        else {
-            mapping_data_load(selected_alm_server_id, alm_server_type);
+                $("#cloud_project_tree").hide();
+                $("#select-project-div").hide();
+                $("#select-issuetype-div").hide();
+                $("#select-project").text("선택되지 않음");
+                $("#select-issuetype").text("선택되지 않음");
+                selected_alm_server_id = $("#selected_alm_server").val();
+                selected_alm_server_name = $("#selected_alm_server").select2("data")[0].text;
+                $("#select-alm-server").text(selected_alm_server_name);
 
-            // FLOW CHART - ALM 서버 이슈상태 조회
-            /*get_alm_status_list(selected_alm_server_id)
-                .then((result) => {
-                    console.log(result);
-                    let alm_status_list = result;
+                let alm_server_data = alm_server_list[selected_alm_server_id];
+                let alm_server_type = alm_server_data.c_jira_server_type;
 
-                    var data = {
-                        operators: {},
-                        links: {}
-                    };
-
-                    console.log(alm_status_list);
-                    console.log(arms_state_list);
-                    let inputData = arms_state_list;
-                    let outputData = alm_status_list;
-
-                    let width = $flowchart.width();
-
-                    var topPosition = 20;
-                    var leftPositionInput = 20;
-                    var leftPositionOutput = width-200;
-
-                    console.log(width);
-                    inputData.forEach(function(input, index) {
-                        var operatorId = 'operator' + (index + 1);
-                        data.operators[operatorId] = {
-                            top: topPosition + index * 80,
-                            left: leftPositionInput,
-                            properties: {
-                                title: "A-RMS - " +input.c_title,
-                                class: 'input-operator',
-                                inputs: {},
-                                outputs: {
-                                    output_1: {
-                                        label: input.c_title,
-                                    }
-                                }
-                            }
-                        };
-                    });
-                    outputData.forEach(function(output, index) {
-                        var operatorId = 'operator' + (inputData.length + index + 1);
-                        data.operators[operatorId] = {
-                            top: topPosition + index * 80,
-                            left: leftPositionOutput,
-                            properties: {
-                                title: "ALM - " + output.c_issue_status_name,
-                                class: 'output-operator',
-                                inputs: {
-                                    input_1: {
-                                        label: output.c_issue_status_name,
-                                    }
-                                },
-                                outputs: {}
-                            }
-                        };
-                    });
-
-                    console.log(data);
-                    updateFlowchartData(data);
-                    // mapping_flow_chart(alm_status_list, arms_state_list);
-                    //////////////////////////////////////////////////////////
-                    //////////////////////////////////////////////////////////
-                    jSuccess("ALM 서버 상태 조회가 완료 되었습니다.");
-                })
-                .catch((error) => {
-                    // 오류가 발생한 경우 처리합니다.
-                    console.error('Error fetching data:', error);
-                });*/
-        }
+                if (alm_server_type === "클라우드") {
+                    $("#cloud_project_tree").show();
+                    $("#select-project-div").show();
+                    $("#select-issuetype-div").show();
+                    build_alm_server_jstree(selected_alm_server_id);
+                    let data = {};
+                    gojs.load(data);
+                }
+                else {
+                    mapping_data_load(selected_alm_server_id, alm_server_type);
+                }
+            })
+            .catch((error) => {
+                // 오류가 발생한 경우 처리합니다.
+                console.error('Error fetching data:', error);
+            });
     });
 } // end make_alm_server_select_box()
 
@@ -833,8 +762,6 @@ function popup_modal(popup_type, state_id, state_name) {
             .catch((error) => {
                 console.error('Error fetching data:', error);
             });
-
-        // req_state_setting("popup_view_change_state_div", false, state_id);
     }
 }
 
@@ -995,7 +922,6 @@ function update_arms_state(state_c_id, state_category_mapping_id, state_name, st
             statusCode: {
                 200: function (result) {
                     resolve(result);
-                    // jSuccess("상태가 수정되었습니다.");
                 }
             },
             error: function (e) {
@@ -1047,7 +973,6 @@ function update_alm_status(issue_status_c_id, req_state_c_id) {
             statusCode: {
                 200: function (result) {
                     resolve(result);
-                    // jSuccess("ALM 상태가 수정되었습니다.");
                 }
             },
             error: function (e) {

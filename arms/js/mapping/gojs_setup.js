@@ -52,14 +52,13 @@ var gojs = (function () {
                 'Spot',
                 { selectionAdorned: false, textEditable: false, locationObjectName: 'BODY' },
                 new go.Binding('location', 'loc', go.Point.parse).makeTwoWay(go.Point.stringify),
-                {
-                    doubleClick: (e, node) => {
-                        // 더블 클릭 시 실행할 메소드 호출
-                        console.log(node.data.c_id);
-                        popup_modal('update_popup', node.data.c_id);
-                    }
-                },
-                // the main body consists of a Rectangle surrounding the text
+                // {
+                //     doubleClick: (e, node) => {
+                //         // 더블 클릭 시 실행할 메소드 호출
+                //         console.log(node.data.c_id);
+                //         popup_modal('update_popup', node.data.c_id);
+                //     }
+                // },
                 $(go.Panel,
                     'Auto',
                     { name: 'BODY' },
@@ -103,25 +102,25 @@ var gojs = (function () {
                                 width: 1, height: 1
                             }
                         ),
-                        $(go.Shape,
-                            {
-                                figure: "XLine",
-                                width: 8,
-                                height: 8,
-                                stroke: "rgba(255, 255, 255, 0.45)",
-                                strokeWidth: 2,  // 두께
-                                margin: new go.Margin(0, 0, 0, 0),
-                                cursor: "pointer",
-                                alignment: go.Spot.Right,
-                                click: function(e, obj) {
-                                    // 상태 삭제 확인 팝업 호출
-                                    const node = obj.part;
-                                    const state_name = node.data.text;
-                                    const state_c_id = node.data.c_id;
-                                    popup_modal('delete_popup', state_c_id, state_name);
-                                }
-                            }
-                        )
+                        // $(go.Shape,
+                        //     {
+                        //         figure: "XLine",
+                        //         width: 8,
+                        //         height: 8,
+                        //         stroke: "rgba(255, 255, 255, 0.45)",
+                        //         strokeWidth: 2,  // 두께
+                        //         margin: new go.Margin(0, 0, 0, 0),
+                        //         cursor: "pointer",
+                        //         alignment: go.Spot.Right,
+                        //         click: function(e, obj) {
+                        //             // 상태 삭제 확인 팝업 호출
+                        //             const node = obj.part;
+                        //             const state_name = node.data.text;
+                        //             const state_c_id = node.data.c_id;
+                        //             popup_modal('delete_popup', state_c_id, state_name);
+                        //         }
+                        //     }
+                        // )
 /*                        $(go.TextBlock,
                             {
                                 stroke: 'white',
@@ -154,20 +153,63 @@ var gojs = (function () {
                 )
             );
 
-        // 우측 마우스 버튼 제거
-        /*myDiagram.nodeTemplate.contextMenu = $('ContextMenu',
-            $('ContextMenuButton',
-                $(go.TextBlock, 'Rename'),
-                { click: (e, obj) => e.diagram.commandHandler.editTextBlock() },
-                new go.Binding('visible', '', (o) => o.diagram && o.diagram.commandHandler.canEditTextBlock()).ofObject()
-            ),
-            // add one for Editing...
-            $('ContextMenuButton',
-                $(go.TextBlock, 'Delete'),
-                { click: (e, obj) => e.diagram.commandHandler.deleteSelection() },
-                new go.Binding('visible', '', (o) => o.diagram && o.diagram.commandHandler.canDeleteSelection()).ofObject()
-            )
-        );*/
+        myDiagram.nodeTemplate.contextMenu =
+            $("ContextMenu",
+                $(go.Panel, "Vertical",
+                    {
+                        padding: 1,
+                        defaultStretch: go.GraphObject.Horizontal,
+                        // 기본 테두리와 모서리 반경
+                        defaultAlignment: go.Spot.Left,
+                        cursor: "pointer",
+                        margin: 2
+                    },
+                    $("ContextMenuButton",
+                        $(go.TextBlock, "수정",
+                            {
+                                font: "bold 14px sans-serif",  // 폰트 스타일
+                                stroke: "black",  // 글자 색상
+                                margin: new go.Margin(5, 10, 5, 10),  // 텍스트 블록의 여백
+                            }
+                        ),
+                        {
+                            click: renameNode,
+                        }
+                    ),
+                    $("ContextMenuButton",
+                        $(go.TextBlock, "삭제",
+                            {
+                                font: "bold 14px sans-serif",  // 폰트 스타일
+                                stroke: "black",  // 글자 색상
+                                margin: new go.Margin(5, 10, 5, 10),  // 텍스트 블록의 여백
+                            }
+                        ),
+                        {
+                            click: deleteNode,
+                        }
+                    )
+                )
+            );
+
+        function renameNode(e, obj) {
+            const node = obj.part.adornedPart;
+            if (node) {
+                console.log(node.data.c_id);
+                let state_c_id = node.data.c_id;
+                popup_modal("update_popup", state_c_id);
+            }
+        }
+
+        function deleteNode(e, obj) {
+            const node = obj.part.adornedPart;
+            if (node) {
+                let state_c_id = node.data.c_id;
+                let state_name = node.data.text;
+                console.log(state_name);
+
+                popup_modal("delete_popup", state_c_id, state_name);
+            }
+        }
 
         // ARMS 카테고리 노드 설정
         myDiagram.nodeTemplateMap.add(
@@ -206,7 +248,7 @@ var gojs = (function () {
                             new go.Binding('text').makeTwoWay()
                         )*/
                         $(go.TextBlock,
-                            // 카테고리 별 아이콘 설정
+                            // 카테고리 별 아이콘 설정(하드코딩)
                             {
                                 font: "12px FontAwesome, sans-serif",  // 아이콘에 FontAwesome 사용
                                 margin: new go.Margin(0, 8, 0, 8),  // 아이콘과 텍스트 사이의 간격 설정
@@ -214,33 +256,33 @@ var gojs = (function () {
                             new go.Binding("text", "", function(data) {
                                 let icon = "";
                                 if (data.c_id === "3") {
-                                    icon = "";  // 특정 아이콘
+                                    icon = "";
                                 }
                                 else if (data.c_id === "4") {
-                                    icon = "";  // 다른 아이콘
+                                    icon = "";
                                 }
                                 else if (data.c_id === "5") {
-                                    icon = "";  // 다른 아이콘
+                                    icon = "";
                                 }
                                 else if (data.c_id === "6") {
-                                    icon = "";  // 다른 아이콘
+                                    icon = "";
                                 }
                                 return "   " + icon;
                             }),
                             // 카테고리 별 색상 설정
                             new go.Binding("stroke", "", function(data) {
-                                let color = "black";  // 기본 색상
+                                let color = "white";
                                 if (data.c_id === "3") {
-                                    color = "#DB2A34";  // 특정 아이콘
+                                    color = "#DB2A34";
                                 }
                                 else if (data.c_id === "4") {
-                                    color = "#E49400";  // 다른 아이콘
+                                    color = "#E49400";
                                 }
                                 else if (data.c_id === "5") {
-                                    color = "#2D8515";  // 다른 아이콘
+                                    color = "#2D8515";
                                 }
                                 else if (data.c_id === "6") {
-                                    color = "#2477FF";  // 다른 아이콘
+                                    color = "#2477FF";
                                 }
                                 return color;
                             })
