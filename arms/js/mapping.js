@@ -935,7 +935,7 @@ function delete_req_state_btn_click() {
             return false;
         }
 
-        remove_arms_state(state_id_before_change, state_name)
+        remove_arms_state(state_id_before_change, state_name, state_id_to_change)
             .then((result) => {
                 console.log(result);
                 $("#close_modal_popup").trigger("click");
@@ -1006,15 +1006,16 @@ function update_arms_state(state_c_id, state_category_mapping_id, state_name, st
     });
 }
 
-function remove_arms_state(state_c_id, state_name) {
+function remove_arms_state(state_c_id, state_name, state_id_to_change) {
     return new Promise((resolve, reject) => {
 
         let data = {
             c_id : state_c_id,
+            stateIdToChange : state_id_to_change
         };
 
         $.ajax({
-            url: "/auth-user/api/arms/reqState/removeNode.do",
+            url: "/auth-user/api/arms/reqState/removeNodeAndChangeState.do",
             type: "DELETE",
             data: data,
             statusCode: {
