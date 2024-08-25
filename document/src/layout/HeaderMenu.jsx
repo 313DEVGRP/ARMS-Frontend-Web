@@ -24,11 +24,11 @@ export const SubMenu = () => {
     <>
      {subMenuItems.map((item, index) =>
         item.subMenus && item.subMenus.length > 0 ? ( // 메뉴 Data에 서브메뉴가 있을 시 아코디언 컴포넌트로 출력
-          <Accordion key={index} type="single" collapsible className=" flex flex-col gap-1 ">
+          <Accordion key={index} type="single" collapsible className="flex flex-col gap-1 ">
             <AccordionItem value={`item-${index}`}>
               <AccordionTrigger className="!justify-start gap-3 rounded-lg px-3 py-2 text-black dark:text-white transition-all hover:text-primary hover:bg-muted">
                 <item.Icon className="h-4 w-4" />
-                {item.title}
+                {item.title}  
               </AccordionTrigger>
               <div className="pl-8">
               {/* 아코디언 서브 메뉴 출력 */}
