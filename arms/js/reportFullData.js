@@ -674,12 +674,16 @@ function drawExcel(target, data) {
 		{ readOnly: true, type: "calendar", name: "createDate", title: "ALM 이슈 생성일", wRatio: 0.1 }, //9
 		{ readOnly: true, type: "calendar", name: "updatedDate", title: "ALM 이슈 수정일", wRatio: 0.1 }, //10
 		{ readOnly: true, type: "calendar", name: "resolutionDate", title: "ALM 이슈 해결일", wRatio: 0.1 }, //11 해결된 날짜 또는 닫힌 날짜
-		// { readOnly: true, type: "hidden", name: "pdServiceVersions", title: "버전키", wRatio: 0.1 }, //12
+		{ readOnly: true, type: "hidden", name: "pdServiceVersions", title: "버전키", wRatio: 0.1 }, //12
 		{ readOnly: true, type: "hidden", name: "pdServiceId", title: "제품서비스키", wRatio: 0.1 }, //13
 		{ readOnly: true, type: "hidden", name: "assigneeEmail", title: "담당자메일", wRatio: 0.1 }, //14
 		{ readOnly: true, type: "hidden", name: "upperKey", title: "upperKey", wRatio: 0.1 }, //15
 		{ readOnly: true, type: "hidden", name: "issueID", title: "issueID", wRatio: 0.1 }, //17
-		{ readOnly: true, type: "hidden", name: "creqlink", wRatio: 0.1 } //18
+		{ readOnly: true, type: "hidden", name: "parentReqKey", title: "parentReqKey", wRatio: 0.1 }, //17
+		{ readOnly: true, type: "hidden", name: "etc", title: "etc", wRatio: 0.1 }, //17
+		{ readOnly: true, type: "hidden", name: "isReq", title: "isReq", wRatio: 0.1 }, //17
+		{ readOnly: true, type: "hidden", name: "creqLink", wRatio: 0.1 }, //18
+		{ readOnly: true, type: "hidden", name: "deletedDate", wRatio: 0.1 } //18
 	];
 
 
