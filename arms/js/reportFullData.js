@@ -11,7 +11,6 @@ var selectedIndex; // 데이터테이블 선택한 인덱스
 var selectedPage; // 데이터테이블 선택한 인덱스
 
 var table;
-var mockData = {assignees : "", excelMock: ""};//
 ////////////////////////////////////////////////////////////////////////////////////////
 //Document Ready
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -113,41 +112,6 @@ function execDocReady() {
 			$('.top-menu-div').matchHeight({
 				target: $('.top-menu-div-default')
 			});
-
-			mockData.excelMock = [
-					{
-					"제품(서비스) 키": "25",
-					"제품(서비스) 명": "ALM RMS",
-					"버전 키": "77",
-					"버전 명": "24년8월",
-					"작업자 명": "YHS",
-					"C_REQ_LINK": "3",
-					"요구사항 구분": "요구사항",
-					"ALM 이슈 제목": "요구사항 이슈입니다. 해결해주세요",
-					"ALM 이슈 상태": "진행 중(in-progress)",
-					"ALM 이슈 우선순위": "높음",
-					"ALM 이슈 생성일": "2024/08/01",
-					"ALM 이슈 수정일": "2024/08/05",
-					"ALM 이슈 해결일": "",
-					"ALM 이슈 삭제여부": ""
-				},
-				{
-					"제품(서비스) 키": "25",
-					"제품(서비스) 명": "ALM RMS",
-					"버전 키": "76",
-					"버전 명": "24년7월",
-					"작업자 명": "HSH",
-					"C_REQ_LINK": "6",
-					"요구사항 구분": "요구사항",
-					"ALM 이슈 제목": "요구사항 이슈입니다. 해결해주세요",
-					"ALM 이슈 상태": "해결됨(resolved)",
-					"ALM 이슈 우선순위": "높음",
-					"ALM 이슈 생성일": "2024/07/21",
-					"ALM 이슈 수정일": "2024/08/01",
-					"ALM 이슈 해결일": "2024/08/05",
-					"ALM 이슈 삭제여부": ""
-				}
-			];
 
 			// 테이블 초기화
 			table = initTable();
@@ -594,9 +558,6 @@ function setEdgeDateRange(versionData) {
 		maxDate: minMaxDate.max,
 		value: minMaxDate.max
 	});
-
-	// $('#date_timepicker_start').datetimepicker('setOptions', { value: minMaxDate.min });
-	// $('#date_timepicker_end').datetimepicker('setOptions', { value: minMaxDate.max });
 }
 
 ////////////////////////////////////////
