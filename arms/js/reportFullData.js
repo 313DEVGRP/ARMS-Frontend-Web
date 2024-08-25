@@ -467,7 +467,7 @@ function fetchExcelData(pdServiceId, optionalParams = {}) {
 			console.log("[ reportFullData :: fetchExcelData ] :: excelData => start ");
 			console.log(data.response);
 			console.log("[ reportFullData :: fetchExcelData ] :: excelData <== end ");
-			//drawExcel("spreadsheet", data.response);
+			drawExcel("spreadsheet", data.response);
 		},
 		error: function(xhr, status, error) {
 			console.error(error);
@@ -579,7 +579,7 @@ function setEdgeDateRange(versionData) {
 	const oneMonthAgo = new Date(minMaxDate.max);
 	oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
 
-	if (oneMonthAgo < minMaxDate.min) {
+	if (oneMonthAgo > minMaxDate.min) {
 		oneMonthAgo.setTime(minMaxDate.min.getTime());
 	}
 
@@ -656,94 +656,30 @@ function dataTableDrawCallback(tableInfo) {
 	console.log(tableInfo);
 }
 
-/////////////////////////////////////////////////////
-// 엑셀 그리기
-/////////////////////////////////////////////////////
-function drawExcel(targetId, data) {
-	console.log("fullDataSheet :: drawExcel");
-	console.log(data);
-	let $targetId = "#" + targetId;
-
-	if ($($targetId)[0].jexcel) {
-		console.log($($targetId)[0].jexcel);
-		$($targetId)[0].jexcel.destroy();
-	}
-	console.log("width=> " + $($targetId).width());
-	var excelWidth = $($targetId).width() - 50;
-
-	var columnList = [
-		{ readOnly: true, type: "text", title: "제품(서비스) 키", wRatio: 0.1 }, //0
-		{ readOnly: true, type: "text", title: "제품(서비스) 명", wRatio: 0.1 },
-		{ readOnly: true, type: "text", title: "버전 키", wRatio: 0.05 },
-		{ readOnly: true, type: "text", title: "버전 명", wRatio: 0.1 },
-		{ readOnly: true, type: "text", title: "작업자", wRatio: 0.1 }, //4
-		{ readOnly: true, type: "text", title: "C_REQ_LINK", wRatio: 0.08 },
-		{ readOnly: true, type: "text", title: "요구사항 구분", wRatio: 0.1 }, // 요구사항 이슈, 연결이슈, 하위이슈
-		{ readOnly: true, type: "text", title: "ALM 이슈 제목", wRatio: 0.2 },
-		{ readOnly: true, type: "text", title: "ALM 이슈 상태", wRatio: 0.1 },
-		{ readOnly: true, type: "text", title: "ALM 이슈 우선순위", wRatio: 0.1 }, //9
-		{ readOnly: true, type: "calendar", title: "ALM 이슈 생성일", wRatio: 0.1 },
-		{ readOnly: true, type: "calendar", title: "ALM 이슈 수정일", wRatio: 0.1 },
-		{ readOnly: true, type: "calendar", title: "ALM 이슈 해결일", wRatio: 0.1 },
-		{ readOnly: true, type: "text", title: "ALM 이슈 삭제여부", wRatio: 0.1 }
-	];
-
-
-	// 1. 제품(서비스) 이름
-	// 2. 제품(서비스) 버전 ( 시작 날짜~ 종료 날짜 표시 )
-	// 3. 연결된 ALM Project 이름
-	// 4. 암스가 생성한 요구사항 제목
-	// 5. 암스가 생성한 요구사항 상태 ( 암스의 상태 / 고객사 맵핑 상태 )
-	// 6. 요구사항 이슈의 담당자
-	// 7. ALM 에 생성된 요구사항 이슈의 상태 ( ALM 상태 )
-	// 6. 요구사항 이슈의 하위 이슈 개수 / 연결 이슈 개수
-	// 7. 요구사항 이슈의 생성된 날짜
-	// 8. 요구사항 이슈의 최근 업데이트 날짜
-	// 9. 요구사항 이슈의 해결된 날짜 / 닫힘이 된 날짜
-
-	var columnList_수정_key제외 = [
-		{ readOnly: true, type: "text", title: "제품(서비스)", wRatio: 0.1 },				//0
-		{ readOnly: true, type: "text", title: "버전(일정)", wRatio: 0.1 }, 					//1 버전(시작일 ~ 종료일)
-		{ readOnly: true, type: "text", title: "ALM Project", wRatio: 0.1 }, 				//2 ALM Project
-		{ readOnly: true, type: "text", title: "요구사항 구분", wRatio: 0.1 }, 			//3 요구사항 이슈, 연결이슈, 하위이슈
-		{ readOnly: true, type: "text", title: "A-RMS 요구사항", wRatio: 0.1 },  		//4 암스가 생성한 요구사항
-		{ readOnly: true, type: "text", title: "A-RMS 요구사항 상태", wRatio: 0.1 }, //5 암스 요구사항 상태
-		{ readOnly: true, type: "text", title: "ALM 이슈 제목", wRatio: 0.2 },				//6
-		{ readOnly: true, type: "text", title: "ALM 이슈 상태", wRatio: 0.1 }, 			//7
-		{ readOnly: true, type: "text", title: "ALM 이슈 담당자", wRatio: 0.1 }, 		//8
-		{ readOnly: true, type: "calendar", title: "ALM 이슈 생성일", wRatio: 0.1 }, //9
-		{ readOnly: true, type: "calendar", title: "ALM 이슈 수정일", wRatio: 0.1 }, //10
-		{ readOnly: true, type: "calendar", title: "ALM 이슈 해결일", wRatio: 0.1 }, //11 해결된 날짜 또는 닫힌 날짜
-	];
-
-	var columnList_수정_키포함 = [
-		{ readOnly: true, type: "text", title: "제품(서비스) 키", wRatio: 0.1 }, 		//0
-		{ readOnly: true, type: "text", title: "제품(서비스)", wRatio: 0.1 },				//1
-		{ readOnly: true, type: "text", title: "버전 키", wRatio: 0.1 },				  		//2
-		{ readOnly: true, type: "text", title: "버전(일정)", wRatio: 0.1 }, 					//3 버전(시작일 ~ 종료일)
-		{ readOnly: true, type: "text", title: "ALM Project 키", wRatio: 0.1 }, 			//4 ALM Project
-		{ readOnly: true, type: "text", title: "ALM Project", wRatio: 0.1 }, 				//5 ALM Project
-		{ readOnly: true, type: "text", title: "요구사항 구분", wRatio: 0.1 }, 			//6 요구사항 이슈, 연결이슈, 하위이슈
-		{ readOnly: true, type: "text", title: "C_REQ_LINK", wRatio: 0.1 }, 				  //7
-		{ readOnly: true, type: "text", title: "A-RMS 요구사항", wRatio: 0.1 },  	  //8 암스가 생성한 요구사항
-		{ readOnly: true, type: "text", title: "A-RMS 요구사항 상태", wRatio: 0.1 }, //9 암스 요구사항 상태
-		{ readOnly: true, type: "text", title: "ALM 이슈 제목", wRatio: 0.2 },				//10
-		{ readOnly: true, type: "text", title: "ALM 이슈 상태", wRatio: 0.1 }, 	 		//11
-		{ readOnly: true, type: "text", title: "ALM 이슈 담당자", wRatio: 0.1 }, 		//12
-		{ readOnly: true, type: "calendar", title: "ALM 이슈 생성일", wRatio: 0.1 }, //13
-		{ readOnly: true, type: "calendar", title: "ALM 이슈 수정일", wRatio: 0.1 }, //14
-		{ readOnly: true, type: "calendar", title: "ALM 이슈 해결일", wRatio: 0.1 }, //15 해결된 날짜 또는 닫힌 날짜
-	];
-}
-
 /////////////////////////////////////////////////
 // 엑셀 그리기
 /////////////////////////////////////////////////
 function drawExcel(target, data) {
 	var columnList = [
-		{ type: "text", title: "이름", wRatio: 0.25, readOnly: true },
-		{ type: "text", title: "키",   wRatio: 0.25, readOnly: true },
-		{ type: "text", title: "연봉", wRatio: 0.5 }
+		{ readOnly: true, type: "text", name:"pdServiceName", title: "제품(서비스)", wRatio: 0.1 },				//0
+		{ readOnly: true, type: "text", name:"pdServiceVersionNames", title: "버전(일정)", wRatio: 0.1 }, 					//1 버전(시작일 ~ 종료일)
+		{ readOnly: true, type: "text", name:"almProjectName", title: "ALM Project", wRatio: 0.1 }, 				//2 ALM Project
+		{ readOnly: true, type: "text", name:"isReqName", title: "요구사항 구분", wRatio: 0.1 }, 			//3 요구사항 이슈, 연결이슈, 하위이슈
+		{ readOnly: true, type: "text", name:"reqTitle", title: "A-RMS 요구사항", wRatio: 0.1 },  		//4 암스가 생성한 요구사항
+		{ readOnly: true, type: "text", name:"reqState", title: "A-RMS 요구사항 상태", wRatio: 0.1 }, //5 암스 요구사항 상태
+		{ readOnly: true, type: "text", name: "key", title: "ALM 이슈 키", wRatio: 0.1 }, //16
+		{ readOnly: true, type: "text", name:"issueTitle", title: "ALM 이슈 제목", wRatio: 0.2 },				//6
+		{ readOnly: true, type: "text", name:"issueStatus", title: "ALM 이슈 상태", wRatio: 0.1 }, 			//7
+		{ readOnly: true, type: "text", name:"assigneeName", title: "ALM 이슈 담당자", wRatio: 0.1 }, 		//8
+		{ readOnly: true, type: "calendar", name: "createDate", title: "ALM 이슈 생성일", wRatio: 0.1 }, //9
+		{ readOnly: true, type: "calendar", name: "updatedDate", title: "ALM 이슈 수정일", wRatio: 0.1 }, //10
+		{ readOnly: true, type: "calendar", name: "resolutionDate", title: "ALM 이슈 해결일", wRatio: 0.1 }, //11 해결된 날짜 또는 닫힌 날짜
+		// { readOnly: true, type: "hidden", name: "pdServiceVersions", title: "버전키", wRatio: 0.1 }, //12
+		{ readOnly: true, type: "hidden", name: "pdServiceId", title: "제품서비스키", wRatio: 0.1 }, //13
+		{ readOnly: true, type: "hidden", name: "assigneeEmail", title: "담당자메일", wRatio: 0.1 }, //14
+		{ readOnly: true, type: "hidden", name: "upperKey", title: "upperKey", wRatio: 0.1 }, //15
+		{ readOnly: true, type: "hidden", name: "issueID", title: "issueID", wRatio: 0.1 }, //17
+		{ readOnly: true, type: "hidden", name: "creqlink", wRatio: 0.1 } //18
 	];
 
 
