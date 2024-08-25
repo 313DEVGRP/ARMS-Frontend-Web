@@ -832,7 +832,29 @@ var gojs = (function () {
         });
 
         myDiagram.linkTemplate = $(go.Link,
-            { selectionAdorned: false, fromPortId: 'from', toPortId: 'to', relinkableTo: true },
+            {
+                selectionAdorned: false,
+                fromPortId: 'from',
+                toPortId: 'to',
+                relinkableTo: true,
+                contextMenu:  // 우클릭 메뉴 추가
+                    $(go.Adornment, "Vertical",
+                        $("ContextMenuButton",
+                            $(go.TextBlock, "삭제",
+                                {
+                                    font: "bold 14px sans-serif",  // 폰트 스타일
+                                    stroke: "black",  // 글자 색상
+                                    margin: new go.Margin(5, 10, 5, 10),  // 텍스트 블록의 여백
+                                }
+                            ),
+                            {
+                                click: function(e, obj) {
+                                    e.diagram.commandHandler.deleteSelection();
+                                }
+                            }
+                        )
+                    )
+            },
             $(go.Shape,
                 { stroke: 'lightgray', strokeWidth: 3 },
                 {
