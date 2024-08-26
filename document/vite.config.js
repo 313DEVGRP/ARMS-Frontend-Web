@@ -32,4 +32,13 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        entryFileNames: 'mmc/document/dist/assets/[name]-[hash].js',
+        chunkFileNames: 'mmc/document/dist/assets/[name]-[hash].js',
+        assetFileNames: 'mmc/document/dist/assets/[name]-[hash][extname]',
+      },
+    },
+  },
 })
