@@ -1,12 +1,17 @@
+#기록 ( 아래는 Server 에서 환경 설정 하기 )
+#중요한 점은 순서를 node 업그레이드 -> npm 업그레이드
+#curl -sL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+#sudo apt install nodejs
+#npm install -g npm@latest
+#apt install build-essential
+
 # 타입스크립트 뺀 기본 설치 방법
 
 ## 기본 설치
 ```
 npm install yarn
 yarn install
-yarn create vite
 yarn add react-router-dom
-yarn add prop-types
 yarn add -D tailwindcss postcss autoprefixer
 yarn tailwind init -p
 yarn add lucide-react

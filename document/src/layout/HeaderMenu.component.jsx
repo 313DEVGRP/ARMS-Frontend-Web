@@ -10,7 +10,6 @@ import {
   } from "@/components/shadcn/ui/dropdown-menu"
 import { Button } from "@/components/shadcn/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/shadcn/ui/sheet"
-import ModeToggle from '@/components/shadcn/mode-toggle' // 테마 토글 버튼 Theme Button
 import { SubMenu } from './HeaderMenu'
 
 const HeaderMenuComponents = () => {
@@ -34,7 +33,7 @@ const HeaderMenuComponents = () => {
                 to=""
                 className="flex items-center gap-2 text-lg font-semibold"
               >
-               <span className="mb-6">313 DEV GRP</span>
+               <span className="mb-6 bg-logo">313 DEV GRP</span>
               </Link>
             {/* Dynamic 서브 메뉴 */}
              <SubMenu />
@@ -73,8 +72,6 @@ const HeaderMenuComponents = () => {
           </DropdownMenuContent>
         </DropdownMenu>
         {/* 상단 세팅 아이콘 메뉴 End -- Top account dropdown menu end -- */}
-        {/* 테마 토글 아이콘 -- Dark / Light Theme Toggle Button -- */}
-        <ModeToggle />
       </header>
     </>
     )
