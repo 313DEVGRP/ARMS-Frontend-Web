@@ -88,7 +88,7 @@ function execDocReady() {
             setSideMenu("sidebar_menu_system", "sidebar_menu_system_billing");
 
             BillingPlanObserver.setTarget("billing-plan-div","class");
-            // BillingPlanObserver.startObserver();
+            BillingPlanObserver.startObserverAndEvents();
 
             // 모달이 열릴 때 body 스크롤 허용
             $(document).on('shown.bs.modal', function () {
@@ -117,17 +117,21 @@ var BillingPlanObserver = (function () {
 
     var getTarget = function () {
         return targetElement;
-    }
+    };
 
     let observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-            if (!entry.isIntersecting) {
-                console.log("화면에서 가려졌습니다.");
+            // 현재 스크롤 위치
+            const currentScroll = window.scrollY;
+            // target 요소의 위치
+            const targetTop = entry.boundingClientRect.top + currentScroll;
+
+            // target 요소가 가려지고 && 스크롤이 target 요소보다 아래에 있을 때
+            if (!entry.isIntersecting && currentScroll > targetTop) {
                 $("#stickyBilling").addClass("in");
                 $("#stickyBilling").css("display","block");
-                $("#stickyBilling").css("margin-right","2.5641%");
+                $("#stickyBilling").css("padding","0 2.5641%");
             } else {
-                console.log("화면에서 보입니다.");
                 $("#stickyBilling").removeClass("in");
                 $("#stickyBilling").css("display","none");
             }
@@ -142,5 +146,19 @@ var BillingPlanObserver = (function () {
             keyboard: true   // 키보드로 모달 닫기 가능
         });
     }
-    return { setTarget , startObserver };
+
+    function startResizeEvent() {
+        window.addEventListener("resize", () => {
+            if(observer) {
+                observer.disconnect();
+            }
+            startObserver();
+        });
+    }
+
+    function startObserverAndEvents() {
+        startObserver();
+        startResizeEvent();
+    }
+    return { setTarget , startObserverAndEvents };
 })();
