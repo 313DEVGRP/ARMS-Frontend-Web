@@ -18,7 +18,7 @@ export const Guide = () => {
 
 function App() {
   return (
-    <ThemeProvider defaultTheme="light"> 
+    <ThemeProvider defaultTheme="dark"> 
      <SubMenuContextProvider>
           <Routes>
            <Route path='/' element={<Layout />}>

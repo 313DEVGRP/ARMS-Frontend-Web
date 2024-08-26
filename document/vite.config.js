@@ -11,6 +11,10 @@ export default defineConfig({
   plugins: [react()],
  // base: import.meta.env.VITE_ASSET_URL,
   server: {
+    fs: {
+      // 1레벨 프로젝트 루트까지 파일 접속 허용
+      allow: ['..'],
+    },
     proxy: {
       '/api': {
         target: 'http://313.co.kr/php/gnuboard5/bbs/board.php?bo_table=manual',

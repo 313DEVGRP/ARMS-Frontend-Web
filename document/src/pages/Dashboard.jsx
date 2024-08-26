@@ -13,17 +13,13 @@ function Dashboard() {
         const htmlString = res.data
         setHtmlContent(parse(htmlString, {
           replace: (domNode) => {
+            // 이미지 경로 변환
             if (domNode.name === "img") {
-              return <img src={domNode.attribs.src} 
-                          style={{ width: 300 }}
-                          onError={e => console.log(e)} />
-                          // onError={e => e.baseURI = 'http://313.co.kr'} />;
-            }
-            if (domNode.name === "div" && domNode.className === "loader") {
-              return <div />;
-            }
-            if (domNode.id === 'topicon') {
-              return <div />
+              const baseUrl = 'http://313.co.kr/php';
+              const getImgSrc = domNode.attribs.src;
+              const repalceImgSrc = getImgSrc.split('/php');
+              const imgSrc = baseUrl+repalceImgSrc[1];
+              return <img src={imgSrc} alt={domNode.attribs.alt} style={{maxWidth : 100+'%'}} />;
             }
           },
         }))
