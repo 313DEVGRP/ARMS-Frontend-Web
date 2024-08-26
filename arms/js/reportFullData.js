@@ -11,7 +11,6 @@ var selectedIndex; // 데이터테이블 선택한 인덱스
 var selectedPage; // 데이터테이블 선택한 인덱스
 
 var table;
-var mockData = {assignees : "", excelMock: ""};//
 ////////////////////////////////////////////////////////////////////////////////////////
 //Document Ready
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -113,65 +112,6 @@ function execDocReady() {
 			$('.top-menu-div').matchHeight({
 				target: $('.top-menu-div-default')
 			});
-			mockData.assignees = [{
-				"assignee_accountId": "616fc9fa327da40069b4ed4f",
-				"assignee_emailAddress": "JY.J@abcde.com",
-				"assignee_displayName": "JJY"
-			},
-				{
-					"assignee_accountId": "712020:ecc44245-6be8-4962-9a66-888bdb4f8e3a",
-					"assignee_emailAddress": "HS.Y@abcde.com",
-					"assignee_displayName": "YHS"
-				},
-				{
-					"assignee_accountId": "616f6f04860f78006bbafe38",
-					"assignee_emailAddress": "SH.H@abcde.com",
-					"assignee_displayName": "HSH"
-				},
-				{
-					"assignee_accountId": "63b2a039159df2c252e826e9",
-					"assignee_emailAddress": "DM.L@abcde.com",
-					"assignee_displayName": "LDM"
-				},
-				{
-					"assignee_accountId": "621ee5a449c90000701efe06",
-					"assignee_emailAddress": "MG.L@abcde.com",
-					"assignee_displayName": "LMG"
-				}];
-			mockData.excelMock = [
-					{
-					"제품(서비스) 키": "25",
-					"제품(서비스) 명": "ALM RMS",
-					"버전 키": "77",
-					"버전 명": "24년8월",
-					"작업자 명": "YHS",
-					"C_REQ_LINK": "3",
-					"요구사항 구분": "요구사항",
-					"ALM 이슈 제목": "요구사항 이슈입니다. 해결해주세요",
-					"ALM 이슈 상태": "진행 중(in-progress)",
-					"ALM 이슈 우선순위": "높음",
-					"ALM 이슈 생성일": "2024/08/01",
-					"ALM 이슈 수정일": "2024/08/05",
-					"ALM 이슈 해결일": "",
-					"ALM 이슈 삭제여부": ""
-				},
-				{
-					"제품(서비스) 키": "25",
-					"제품(서비스) 명": "ALM RMS",
-					"버전 키": "76",
-					"버전 명": "24년7월",
-					"작업자 명": "HSH",
-					"C_REQ_LINK": "6",
-					"요구사항 구분": "요구사항",
-					"ALM 이슈 제목": "요구사항 이슈입니다. 해결해주세요",
-					"ALM 이슈 상태": "해결됨(resolved)",
-					"ALM 이슈 우선순위": "높음",
-					"ALM 이슈 생성일": "2024/07/21",
-					"ALM 이슈 수정일": "2024/08/01",
-					"ALM 이슈 해결일": "2024/08/05",
-					"ALM 이슈 삭제여부": ""
-				}
-			];
 
 			// 테이블 초기화
 			table = initTable();
@@ -304,12 +244,16 @@ function makeVersionMultiSelectBox() {
 		}
 	});
 }
+
+////////////////////////////////////////
+// ALM 프로젝트 select 이벤트 핸들링
+////////////////////////////////////////
 function makeProjectMultiSelectBox () {
 	// ALM 프로젝트 선택 시 셀렉트 박스 이니시에이터
 	$("#multiple-alm-project").multipleSelect({
 		filter: true,
 		onClose: function() {
-			var projectIds = $("#multiple-alm-project").val();
+			let projectIds = $("#multiple-alm-project").val();
 			selectedAlmProjectIds = projectIds.join(",");
 
 			if (selectedAlmProjectIds === null || selectedAlmProjectIds == "") {
@@ -317,18 +261,20 @@ function makeProjectMultiSelectBox () {
 				return;
 			}
 
-			fetchAssignees(selectedPdServiceId, {
-				pdServiceVersionIds: selectedVersionIds,
-				almProjectIds: selectedAlmProjectIds,
+			let optionalParams = {
 				startDate: $('#date_timepicker_start').val(),
 				endDate: $('#date_timepicker_end').val()
-			});
-			fetchExcelData(selectedPdServiceId, {
-				pdServiceVersionIds: selectedVersionIds,
-				almProjectIds: selectedAlmProjectIds,
-				startDate: $('#date_timepicker_start').val(),
-				endDate: $('#date_timepicker_end').val()
-			});
+			};
+
+			if (!isAllVersionsSelected()) {
+				optionalParams.pdServiceVersionIds = selectedVersionIds;
+			}
+
+			optionalParams.almProjectIds = selectedAlmProjectIds;
+
+			fetchAssignees(selectedPdServiceId, optionalParams);
+
+			fetchExcelData(selectedPdServiceId, optionalParams);
 
 			$("#multiple-alm-project").siblings(".ms-parent").css("z-index", 1000);
 		},
@@ -339,13 +285,44 @@ function makeProjectMultiSelectBox () {
 }
 
 ////////////////////////////////////////
+// 검색 조건을 선택하여 API 호출 시, 제품 버전이 모두 선택되어 있는지 체크하는 함수
+// 모두 선택 된 경우, query param 으로 보낼 필요가 없기 때문
+////////////////////////////////////////
+function isAllVersionsSelected() {
+	if (!selectedVersionIds) {
+		return false;
+	}
+	return $("#multiple-version option").length === selectedVersionIds.split(",").length;
+}
+
+////////////////////////////////////////
+// 검색 조건을 선택하여 API 호출 시, ALM 프로젝트가 모두 선택되어 있는지 체크하는 함수
+// 모두 선택 된 경우, query param 으로 보낼 필요가 없기 때문
+////////////////////////////////////////
+function isAllProjectsSelected() {
+	if (!selectedAlmProjectIds) {
+		return false;
+	}
+	return $("#multiple-alm-project option").length === selectedAlmProjectIds.split(",").length;
+}
+
+////////////////////////////////////////
 // 선택 된 제품, 제품 버전 ID 값을 서버에 전달하여 관련 ALM 프로젝트 목록 조회
 ////////////////////////////////////////
 function fetchJiraProjects(pdServiceId, versionIds = null) {
 	let url = "/auth-user/api/arms/jiraProjectPure/getJiraProjects.do?pdServiceId=" + pdServiceId;
 
+	let optionalParams = {
+		startDate: $('#date_timepicker_start').val(),
+		endDate: $('#date_timepicker_end').val()
+	};
+
 	if (versionIds) {
 		url += "&pdServiceVersionIds=" + versionIds;
+	}
+
+	if (!isAllVersionsSelected()) {
+		optionalParams.pdServiceVersionIds = versionIds;
 	}
 
 	$("#multiple-alm-project option").remove();
@@ -358,9 +335,9 @@ function fetchJiraProjects(pdServiceId, versionIds = null) {
 			console.log("[Jira Projects] Data:", data);
 			let projectIds = [];
 			for (var k in data.response) {
-				var obj = data.response[k];
+				let obj = data.response[k];
 				projectIds.push(obj.c_id);
-				var newOption = new Option(obj.c_title, obj.c_id, true, false);
+				let newOption = new Option(obj.c_title, obj.c_id, true, false);
 				$("#multiple-alm-project").append(newOption);
 			}
 			selectedAlmProjectIds = projectIds.join(",");
@@ -369,18 +346,11 @@ function fetchJiraProjects(pdServiceId, versionIds = null) {
 				.multipleSelect("refresh")
 				.multipleSelect("checkAll");
 
-			fetchAssignees(selectedPdServiceId, {
-				pdServiceVersionIds: selectedVersionIds,
-				almProjectIds: selectedAlmProjectIds,
-				startDate: $('#date_timepicker_start').val(),
-				endDate: $('#date_timepicker_end').val()
-			});
-			fetchExcelData(selectedPdServiceId, {
-				pdServiceVersionIds: selectedVersionIds,
-				almProjectIds: selectedAlmProjectIds,
-				startDate: $('#date_timepicker_start').val(),
-				endDate: $('#date_timepicker_end').val()
-			});
+			optionalParams.almProjectIds = selectedAlmProjectIds;
+
+			fetchAssignees(selectedPdServiceId, optionalParams);
+
+			fetchExcelData(selectedPdServiceId, optionalParams);
 
 		},
 		error: function(xhr, status, error) {
@@ -436,8 +406,10 @@ function fetchExcelData(pdServiceId, optionalParams = {}) {
 	}
 
 	let urlBuilder = new UrlBuilder()
-		.setBaseUrl('/auth-user/api/arms/report/full-data/excel-data')
-		.addQueryParam('pdServiceId', pdServiceId);
+		.setBaseUrl(`/auth-user/api/arms/report/full-data/T_ARMS_REQADD_${pdServiceId}/excel-data`)
+		.addQueryParam('pdServiceId', pdServiceId)
+		.addQueryParam('page', 0)
+		.addQueryParam('size', 1000);
 
 	const { pdServiceVersionIds = null, almProjectIds = null, startDate = null, endDate = null, emailAddress = null } = optionalParams;
 
@@ -450,14 +422,16 @@ function fetchExcelData(pdServiceId, optionalParams = {}) {
 	});
 
 	const url = urlBuilder.build();
-
+	console.log("[ reportFullData :: fetchExcelData ] ::requestURL => ", url);
 	$.ajax({
 		url: url,
 		type: "GET",
 		dataType: "json",
 		success: function(data) {
+			console.log("[ reportFullData :: fetchExcelData ] :: excelData => start ");
 			console.log(data.response);
-			drawExcel("spreadsheet", mockData.excelMock);
+			console.log("[ reportFullData :: fetchExcelData ] :: excelData <== end ");
+			drawExcel("spreadsheet", data.response);
 		},
 		error: function(xhr, status, error) {
 			console.error(error);
@@ -482,21 +456,24 @@ function dateTimePicker() {
 			});
 		},
 		onChangeDateTime: function(dp, $input) {
-			var newDate = $input.val();
-			if (previousEndDate !== newDate) {
-				previousEndDate = newDate;
-				fetchAssignees(selectedPdServiceId, {
-					pdServiceVersionIds: selectedVersionIds,
-					almProjectIds: selectedAlmProjectIds,
-					startDate: $('#date_timepicker_start').val(),
-					endDate: $('#date_timepicker_end').val()
-				});
-				fetchExcelData(selectedPdServiceId, {
-					pdServiceVersionIds: selectedVersionIds,
-					almProjectIds: selectedAlmProjectIds,
-					startDate: $('#date_timepicker_start').val(),
-					endDate: $('#date_timepicker_end').val()
-				});
+			let newStartDate = $input.val();
+			if (previousEndDate !== newStartDate) {
+				previousEndDate = newStartDate;
+
+				let optionalParams = {
+					startDate: newStartDate,
+					endDate: $("#date_timepicker_end").val()
+				};
+
+				if (!isAllVersionsSelected()) {
+					optionalParams.pdServiceVersionIds = selectedVersionIds;
+				}
+
+				optionalParams.almProjectIds = selectedAlmProjectIds;
+
+				fetchAssignees(selectedPdServiceId, optionalParams);
+
+				fetchExcelData(selectedPdServiceId, optionalParams);
 			}
 		}
 	});
@@ -512,21 +489,24 @@ function dateTimePicker() {
 			});
 		},
 		onChangeDateTime: function(dp, $input) {
-			var newDate = $input.val();
-			if (previousStartDate !== newDate) {
-				previousStartDate = newDate;
-				fetchAssignees(selectedPdServiceId, {
-					pdServiceVersionIds: selectedVersionIds,
-					almProjectIds: selectedAlmProjectIds,
-					startDate: $('#date_timepicker_start').val(),
-					endDate: $('#date_timepicker_end').val()
-				});
-				fetchExcelData(selectedPdServiceId, {
-					pdServiceVersionIds: selectedVersionIds,
-					almProjectIds: selectedAlmProjectIds,
-					startDate: $('#date_timepicker_start').val(),
-					endDate: $('#date_timepicker_end').val()
-				});
+			let newEndDate = $input.val();
+			if (previousStartDate !== newEndDate) {
+				previousStartDate = newEndDate;
+
+				let optionalParams = {
+					startDate: $("#date_timepicker_start").val(),
+					endDate: newEndDate
+				};
+
+				if (!isAllVersionsSelected()) {
+					optionalParams.pdServiceVersionIds = selectedVersionIds;
+				}
+
+				optionalParams.almProjectIds = selectedAlmProjectIds;
+
+				fetchAssignees(selectedPdServiceId, optionalParams);
+
+				fetchExcelData(selectedPdServiceId, optionalParams);
 			}
 		}
 	});
@@ -563,7 +543,7 @@ function setEdgeDateRange(versionData) {
 	const oneMonthAgo = new Date(minMaxDate.max);
 	oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
 
-	if (oneMonthAgo < minMaxDate.min) {
+	if (oneMonthAgo > minMaxDate.min) {
 		oneMonthAgo.setTime(minMaxDate.min.getTime());
 	}
 
@@ -578,9 +558,6 @@ function setEdgeDateRange(versionData) {
 		maxDate: minMaxDate.max,
 		value: minMaxDate.max
 	});
-
-	// $('#date_timepicker_start').datetimepicker('setOptions', { value: minMaxDate.min });
-	// $('#date_timepicker_end').datetimepicker('setOptions', { value: minMaxDate.max });
 }
 
 ////////////////////////////////////////
@@ -596,14 +573,25 @@ var initTable = function() {
 		idColumnIndex: 1
 	});
 
+
 	resourceTable.onAfterUpdate = function() {
-		fetchExcelData(selectedPdServiceId, {
-			emailAddress: resourceTable.getSelectedIds(),
-			pdServiceVersionIds: selectedVersionIds,
-			almProjectIds: selectedAlmProjectIds,
-			startDate: $('#date_timepicker_start').val(),
-			endDate: $('#date_timepicker_end').val()
-		});
+		let optionalParams = {
+			startDate: $("#date_timepicker_start").val(),
+			endDate: $("#date_timepicker_end").val()
+		};
+		if (!isAllVersionsSelected()) {
+			optionalParams.pdServiceVersionIds = selectedVersionIds;
+		}
+
+		optionalParams.almProjectIds = selectedAlmProjectIds;
+
+		setTimeout(() => {
+			let selectedIds = resourceTable.getSelectedIds();
+			if (!resourceTable.isAllOrZeroRowsSelected() && selectedIds.length > 0) {
+				optionalParams.emailAddress = selectedIds;
+			}
+			fetchExcelData(selectedPdServiceId, optionalParams);
+		}, 0);
 	};
 
 	return {
@@ -629,172 +617,211 @@ function dataTableDrawCallback(tableInfo) {
 	console.log(tableInfo);
 }
 
-/////////////////////////////////////////////////////
+/////////////////////////////////////////////////
 // 엑셀 그리기
-/////////////////////////////////////////////////////
-function drawExcel(targetId, data) {
-	console.log("fullDataSheet :: drawExcel");
-	console.log(data);
-	let $targetId = "#" + targetId;
-
-	if($($targetId)[0].jexcel) {
-		console.log($($targetId)[0].jexcel);
-		$($targetId)[0].jexcel.destroy();
-	}
-	console.log("width=> " + $($targetId).width());
-	var excelWidth=$($targetId).width() - 50;
-
+/////////////////////////////////////////////////
+function drawExcel(target, data) {
 	var columnList = [
-		{ readOnly: true, type: "text", title: "제품(서비스) 키", wRatio: 0.1}, //0
-		{ readOnly: true, type: "text", title: "제품(서비스) 명", wRatio: 0.1},
-		{ readOnly: true, type: "text", title: "버전 키", wRatio: 0.05},
-		{ readOnly: true, type: "text", title: "버전 명", wRatio: 0.1},
-		{ readOnly: true, type: "text", title: "작업자", wRatio: 0.1}, //4
-		{ readOnly: true, type: "text", title: "C_REQ_LINK", wRatio: 0.08},
-		{ readOnly: true, type: "text", title: "요구사항 구분", wRatio: 0.1}, // 요구사항 이슈, 연결이슈, 하위이슈
-		{ readOnly: true, type: "text", title: "ALM 이슈 제목", wRatio: 0.2},
-		{ readOnly: true, type: "text", title: "ALM 이슈 상태",	wRatio: 0.1},
-		{ readOnly: true, type: "text", title: "ALM 이슈 우선순위", wRatio: 0.1}, //9
-		{ readOnly: true, type: "calendar", title: "ALM 이슈 생성일", wRatio: 0.1},
-		{ readOnly: true, type: "calendar", title: "ALM 이슈 수정일", wRatio: 0.1},
-		{ readOnly: true, type: "calendar", title: "ALM 이슈 해결일", wRatio: 0.1},
-		{ readOnly: true, type: "text", title: "ALM 이슈 삭제여부", wRatio: 0.1}
+		{ readOnly: true, type: "text", name:"pdServiceName", title: "제품(서비스)", wRatio: 0.1 },				//0
+		{ readOnly: true, type: "text", name:"pdServiceVersionNames", title: "버전(일정)", wRatio: 0.1 }, 					//1 버전(시작일 ~ 종료일)
+		{ readOnly: true, type: "text", name:"almProjectName", title: "ALM Project", wRatio: 0.1 }, 				//2 ALM Project
+		{ readOnly: true, type: "text", name:"isReqName", title: "요구사항 구분", wRatio: 0.1 }, 			//3 요구사항 이슈, 연결이슈, 하위이슈
+		{ readOnly: true, type: "text", name:"reqTitle", title: "A-RMS 요구사항", wRatio: 0.1 },  		//4 암스가 생성한 요구사항
+		{ readOnly: true, type: "text", name:"reqState", title: "A-RMS 요구사항 상태", wRatio: 0.1 }, //5 암스 요구사항 상태
+		{ readOnly: true, type: "text", name: "key", title: "ALM 이슈 키", wRatio: 0.1 }, //16
+		{ readOnly: true, type: "text", name:"issueTitle", title: "ALM 이슈 제목", wRatio: 0.2 },				//6
+		{ readOnly: true, type: "text", name:"issueStatus", title: "ALM 이슈 상태", wRatio: 0.1 }, 			//7
+		{ readOnly: true, type: "text", name:"assigneeName", title: "ALM 이슈 담당자", wRatio: 0.1 }, 		//8
+		{ readOnly: true, type: "calendar", name: "createDate", title: "ALM 이슈 생성일", wRatio: 0.1 }, //9
+		{ readOnly: true, type: "calendar", name: "updatedDate", title: "ALM 이슈 수정일", wRatio: 0.1 }, //10
+		{ readOnly: true, type: "calendar", name: "resolutionDate", title: "ALM 이슈 해결일", wRatio: 0.1 }, //11 해결된 날짜 또는 닫힌 날짜
+		{ readOnly: true, type: "hidden", name: "pdServiceVersions", title: "버전키", wRatio: 0.1 }, //12
+		{ readOnly: true, type: "hidden", name: "pdServiceId", title: "제품서비스키", wRatio: 0.1 }, //13
+		{ readOnly: true, type: "hidden", name: "assigneeEmail", title: "담당자메일", wRatio: 0.1 }, //14
+		{ readOnly: true, type: "hidden", name: "upperKey", title: "upperKey", wRatio: 0.1 }, //15
+		{ readOnly: true, type: "hidden", name: "issueID", title: "issueID", wRatio: 0.1 }, //17
+		{ readOnly: true, type: "hidden", name: "parentReqKey", title: "parentReqKey", wRatio: 0.1 }, //17
+		{ readOnly: true, type: "hidden", name: "etc", title: "etc", wRatio: 0.1 }, //17
+		{ readOnly: true, type: "hidden", name: "isReq", title: "isReq", wRatio: 0.1 }, //17
+		{ readOnly: true, type: "hidden", name: "creqLink", wRatio: 0.1 }, //18
+		{ readOnly: true, type: "hidden", name: "deletedDate", wRatio: 0.1 } //18
 	];
 
 
-	// 1. 제품(서비스) 이름
-	// 2. 제품(서비스) 버전 ( 시작 날짜~ 종료 날짜 표시 )
-	// 3. 연결된 ALM Project 이름
-	// 4. 암스가 생성한 요구사항 제목
-	// 5. 암스가 생성한 요구사항 상태 ( 암스의 상태 / 고객사 맵핑 상태 )
-	// 6. 요구사항 이슈의 담당자
-	// 7. ALM 에 생성된 요구사항 이슈의 상태 ( ALM 상태 )
-	// 6. 요구사항 이슈의 하위 이슈 개수 / 연결 이슈 개수
-	// 7. 요구사항 이슈의 생성된 날짜
-	// 8. 요구사항 이슈의 최근 업데이트 날짜
-	// 9. 요구사항 이슈의 해결된 날짜 / 닫힘이 된 날짜
-
-	var columnList_수정_key제외 = [
-		{ readOnly: true, type: "text", title: "제품(서비스)", wRatio: 0.1},				//0
-		{ readOnly: true, type: "text", title: "버전(일정)", wRatio: 0.1}, 					//1 버전(시작일 ~ 종료일)
-		{ readOnly: true, type: "text", title: "ALM Project", wRatio: 0.1}, 				//2 ALM Project
-		{ readOnly: true, type: "text", title: "요구사항 구분", wRatio: 0.1}, 			//3 요구사항 이슈, 연결이슈, 하위이슈
-		{ readOnly: true, type: "text", title: "A-RMS 요구사항", wRatio: 0.1},  		//4 암스가 생성한 요구사항
-		{ readOnly: true, type: "text", title: "A-RMS 요구사항 상태", wRatio: 0.1}, //5 암스 요구사항 상태
-		{ readOnly: true, type: "text", title: "ALM 이슈 제목", wRatio: 0.2},				//6
-		{ readOnly: true, type: "text", title: "ALM 이슈 상태", wRatio: 0.1}, 			//7
-		{ readOnly: true, type: "text", title: "ALM 이슈 담당자", wRatio: 0.1}, 		//8
-		{ readOnly: true, type: "calendar", title: "ALM 이슈 생성일", wRatio: 0.1}, //9
-		{ readOnly: true, type: "calendar", title: "ALM 이슈 수정일", wRatio: 0.1}, //10
-		{ readOnly: true, type: "calendar", title: "ALM 이슈 해결일", wRatio: 0.1}, //11 해결된 날짜 또는 닫힌 날짜
-	];
-
-	var columnList_수정_키포함 = [
-		{ readOnly: true, type: "text", title: "제품(서비스) 키", wRatio: 0.1}, 		//0
-		{ readOnly: true, type: "text", title: "제품(서비스)", wRatio: 0.1},				//1
-		{ readOnly: true, type: "text", title: "버전 키", wRatio: 0.1},				  		//2
-		{ readOnly: true, type: "text", title: "버전(일정)", wRatio: 0.1}, 					//3 버전(시작일 ~ 종료일)
-		{ readOnly: true, type: "text", title: "ALM Project 키", wRatio: 0.1}, 			//4 ALM Project
-		{ readOnly: true, type: "text", title: "ALM Project", wRatio: 0.1}, 				//5 ALM Project
-		{ readOnly: true, type: "text", title: "요구사항 구분", wRatio: 0.1}, 			//6 요구사항 이슈, 연결이슈, 하위이슈
-		{ readOnly: true, type: "text", title: "C_REQ_LINK", wRatio: 0.1}, 				  //7
-		{ readOnly: true, type: "text", title: "A-RMS 요구사항", wRatio: 0.1},  	  //8 암스가 생성한 요구사항
-		{ readOnly: true, type: "text", title: "A-RMS 요구사항 상태", wRatio: 0.1}, //9 암스 요구사항 상태
-		{ readOnly: true, type: "text", title: "ALM 이슈 제목", wRatio: 0.2},				//10
-		{ readOnly: true, type: "text", title: "ALM 이슈 상태", wRatio: 0.1}, 	 		//11
-		{ readOnly: true, type: "text", title: "ALM 이슈 담당자", wRatio: 0.1}, 		//12
-		{ readOnly: true, type: "calendar", title: "ALM 이슈 생성일", wRatio: 0.1}, //13
-		{ readOnly: true, type: "calendar", title: "ALM 이슈 수정일", wRatio: 0.1}, //14
-		{ readOnly: true, type: "calendar", title: "ALM 이슈 해결일", wRatio: 0.1}, //15 해결된 날짜 또는 닫힌 날짜
-	];
-
-
-	SpreadSheetFunctions.setColumns(columnList);
-	SpreadSheetFunctions.setColumnWidth(excelWidth);
-
-	var customOptions = {
-		pagination:10,
+	var customOption = {
+		pagination: 30,
 		contextMenu: [],
+		search: true,
+		allowInsertRow: false,
+		allowInsertColumn: false,
 		updateTable: function(instace, cell, col, row, val, id) {
 			cell.style.whiteSpace = "normal";
-			if(col === 0 || col === 2 || col ===5) {
-				cell.style.textAlign = "right";
-				cell.style.color = "#a4c6ff";
-			} else if (col === 1 || col === 4 || col === 7) {
-				cell.style.textAlign = "left";
-			}
+			cell.style.textAlign = "left";
+			cell.style.color = "#a4c6ff";
+		}
+	};
+	SpreadsheetFunctions.setTargetId(target);
+	SpreadsheetFunctions.setDefaultTargetRect();
+
+	SpreadsheetFunctions.setColumns(columnList);
+	SpreadsheetFunctions.setColumnWidth(SpreadsheetFunctions.getTargetRect("width"));
+	SpreadsheetFunctions.setOptions(customOption);
+	SpreadsheetFunctions.startObserver();
+	SpreadsheetFunctions.setExcelData(data);
+	SpreadsheetFunctions.drawExcel(SpreadsheetFunctions.getTargetId());
+}
+
+
+var SpreadsheetFunctions = (function () {
+	let targetId = { "v" : "", "jq" : ""};
+	let targetRect = {"width" : 0, "height" : 0};
+	let excelData;    // 엑셀 데이터
+	let excelColumns;  // 엑셀 컬럼
+	let customOptions;// 엑셀 커스텀 옵션들 :: 정의 안할 경우 default
+
+
+	var setDefaultTargetRect = function () {
+		let defaultWidth = $(getTargetId("jq")).width();
+		let defaultHeight = $(getTargetId("jq")).height();
+		setTargetRect(defaultWidth, defaultHeight);
+	};
+	var setTargetRect = function(width, height) {
+		targetRect.width = width;
+		targetRect.height = height;
+	};
+
+	var getTargetRect = function (type) {
+		if (type === "width") {
+			return targetRect.width;
+		} else if (type  === "height") {
+			return targetRect.height;
+		} else {
+			return targetRect;
 		}
 	};
 
-	SpreadSheetFunctions.setExcelData(data);
-	SpreadSheetFunctions.setOptions(customOptions);
-
-	$($targetId).spreadsheet($.extend({}, {
-		columns: SpreadSheetFunctions.getColumns(),
-		data: SpreadSheetFunctions.getExcelData()
-	}, SpreadSheetFunctions.getOptions()));
-}
-
-var SpreadSheetFunctions = ( function () {
-	let $tabFunction_data;   // 엑셀 데이터
-	let $tabFunction_columns;// 엑셀 컬럼
-	let $tabFunction_options;// 엑셀 (커스텀)옵션 :: 정의 안할 경우 default
-	let $sheetInstance;
-	var setESheet = function(obj) {
-		$sheetInstance = obj;
+	var setTargetId = function (target) {
+		targetId.v = target;
+		targetId.jq = "#"+target;
 	};
+
+	var getTargetId = function (type) {
+		if (type === "jq") {
+			return targetId.jq;
+		} else {
+			return targetId.v;
+		}
+	};
+
 	var setExcelData = function(data) {
-		$tabFunction_data = data;
+		excelData = data;
 	};
 	var getExcelData = function () {
-		return $tabFunction_data;
+		return excelData;
 	};
 	var setColumns = function(columns) {
-		console.log("setColumns");
-		$tabFunction_columns = columns;
+		excelColumns = columns;
 	};
 	var getColumns = function () {
-		return $tabFunction_columns;
-	};
-	var setOptions = function(options) {
-		$tabFunction_options = options;
-	};
-	var getOptions = function() {
-		return $tabFunction_options ? $tabFunction_options : null;
+		return excelColumns;
 	};
 
 	var setColumnWidth = function (width) {
-		$tabFunction_columns = $tabFunction_columns.map(column => ({
-			...column, width: width * column.wRatio
-		}));
+		if (excelColumns) {
+			excelColumns = excelColumns.map(column => ({
+				...column, width: (width * column.wRatio) -1
+			}));
+		}
 	};
+
+	function setColumnWidthAsync(width) {
+		return new Promise((resolve) => {
+			if (excelColumns) {
+				excelColumns = excelColumns.map(column => ({
+					...column, width: (width * column.wRatio) - 1
+				}));
+			}
+			resolve(); // 컬럼 너비 설정이 완료된 후 resolve 호출
+		});
+	}
+
+	var setOptions = function(options) {
+		customOptions = options;
+	};
+	var getOptions = function() {
+		return customOptions ? customOptions : null;
+	};
+
 
 	var resizeObserver = new ResizeObserver(function(entries) {
 		for (let entry of entries) {
-			var width = entry.contentRect.width;
-			var height = entry.contentRect.height;
-			handleResize(entry.target.id, width, height);
+			setTargetRect(entry.contentRect.width, entry.contentRect.height);
+			handleResize(entry.target.id, getTargetRect("width"), getTargetRect("height"));
 		}
 	});
 
-	// 모달요소 크기 변화 관찰
-	resizeObserver.observe(document.getElementById('spreadsheet'));
+	// 모달요소 크기 변화 관찰(Observer)
+	function startObserver() {
+		resizeObserver.observe($(getTargetId("jq"))[0]);
+	}
 
-	function handleResize(id,width, height) {
-		console.log("handleResize => ",width,height);
-		if (id ==="spreadsheet" && height !== 0) {
-			if (Object.keys(mockData.assignees).length > 0) {
-				drawExcel("spreadsheet", mockData.excelMock);
+	function handleResize(id, width, height) {
+		if (id === getTargetId() && height !== 0) {
+			if (excelData) {
+				drawResizedExcel(getTargetId());
 			} else {
-				console.log("인력별_연봉정보 데이터가 없습니다.");
+				console.log("Spreadsheet.handleResize :: 엑셀 데이터 없음");
 			}
+
+		} else {
+			console.log("Spreadsheet.handleResize :: id 불일치 또는 height 가 0 입니다.");
 		}
 	}
 
+	function drawResizedExcel(target) {
+		let $targetId = "#"+target;
+
+		if($($targetId).length > 0 && $($targetId)[0].jexcel) {
+			$($targetId)[0].jexcel.destroy();
+		}
+
+		setColumnWidthAsync(getTargetRect("width") - 50).then(() => {
+			$($targetId).spreadsheet($.extend({}, {
+				columns: getColumns(),
+				data: getExcelData()
+			}, getOptions()));
+
+			let jexcel_content_height = getTargetRect("height") - 40 - 30 - 35 - 34;
+			$($targetId + " .jexcel_content").css("max-height", jexcel_content_height);
+			$($targetId + " .jexcel_content").css("width", "100%");
+		});
+	}
+
+	function drawExcel(target) {
+		let $targetId = "#"+target;
+
+		if($($targetId).length > 0 && $($targetId)[0].jexcel) {
+			$($targetId)[0].jexcel.destroy();
+		}
+
+		$($targetId).spreadsheet($.extend({}, {
+			columns: getColumns(),
+			data: getExcelData()
+		}, getOptions()));
+
+		let jexcel_content_height = getTargetRect("height") - 40 - 30 - 35 - 34;
+		$($targetId + " .jexcel_content").css("max-height", jexcel_content_height);
+		$($targetId + " .jexcel_content").css("width", "100%");
+
+	}
+
 	return {
-		setExcelData, getExcelData,
-		setColumns, getColumns,
-		setOptions, getOptions,
-		setColumnWidth
+		setTargetId,   getTargetId,
+		setTargetRect, getTargetRect, setDefaultTargetRect,
+		setExcelData,  getExcelData,
+		setColumns,    getColumns,   setColumnWidth,
+		setOptions,    getOptions,
+
+		startObserver, drawExcel
 	};
 })();

@@ -35,7 +35,11 @@ function execDocReady() {
             "../reference/jquery-plugins/select2-4.0.2/dist/js/select2.min.js",
             "../reference/jquery-plugins/lou-multi-select-0.9.12/js/jquery.quicksearch.js",
             "../reference/jquery-plugins/lou-multi-select-0.9.12/js/jquery.multi-select.js",
-            "../reference/jquery-plugins/multiple-select-1.5.2/dist/multiple-select.min.js"
+            "../reference/jquery-plugins/multiple-select-1.5.2/dist/multiple-select.min.js",
+            //highlight
+            "../reference/jquery-plugins/highlight.js-11.10.0/highlight.js.lib/src/styles/base16/darcula.css",
+            "../reference/jquery-plugins/highlight.js-11.10.0/highlight.js.lib/highlight.min.js",
+            "../reference/jquery-plugins/highlight.js-11.10.0/highlightjs-line-numbers.js/src/highlightjs-line-numbers.js"
         ],
 
         [
@@ -105,9 +109,37 @@ function execDocReady() {
                 }
             }, 313 /*milli*/);
 
+            // Excel
             drawExcel("schedule_history_excel");
-            // turn the div into a cron editor
+
+            // 크론에디터
             cronInit();
+
+            // 하이라이트
+            hljs.highlightAll();
+            hljs.initLineNumbersOnLoad({
+                // singleLine:true,
+                // startFrom: 5,
+            });
+
+            //  Element
+            var inputarea = document.getElementById("input");
+            var outputarea = document.getElementById("output");
+
+            inputarea.addEventListener("input", function (event) {
+                outputarea.innerHTML = inputarea.value;
+                inputarea.style.zIndex = 4;
+                //
+                refreshHighlighting();
+            }, false);
+
+            function refreshHighlighting() {
+                hljs.highlightAll();
+                hljs.initLineNumbersOnLoad({
+                    // singleLine:true,
+                    // startFrom: 5,
+                });
+            }
 
         })
         .catch(function (error) {
@@ -459,7 +491,7 @@ var SpreadsheetFunctions = (function () {
                 data: getExcelData()
             }, getOptions()));
 
-            let jexcel_content_height = getTargetRect("height") - 40 - 30 - 35 - 34;
+            let jexcel_content_height = getTargetRect("height") - 40 - 30 - 25;
             $($targetId + " .jexcel_content").css("max-height", jexcel_content_height);
             $($targetId + " .jexcel_content").css("width", "100%");
         });
@@ -477,7 +509,7 @@ var SpreadsheetFunctions = (function () {
             data: getExcelData()
         }, getOptions()));
 
-        let jexcel_content_height = getTargetRect("height") - 40 - 30 - 35 - 34;
+        let jexcel_content_height = getTargetRect("height") - 40 - 30 - 25;
         $($targetId + " .jexcel_content").css("max-height", jexcel_content_height);
         $($targetId + " .jexcel_content").css("width", "100%");
 

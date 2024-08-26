@@ -304,7 +304,7 @@
                         </div>
                     </div>
                 </h5>
-                <div id="schedule_history_excel" style="min-height: 418px; width: 100%; border: 0.5px solid rgb(51 51 51 / 60%);">
+                <div id="schedule_history_excel" style="min-height: 415px; width: 100%;">
                 </div>
             </div>
         </div>
@@ -312,249 +312,281 @@
 </div>
 <!-- 스케쥴러 잡 선택시 히스토리 표시 끝 -->
 
-<!-- 스케쥴러 잡 선택시 설정 정보 표시 시작 -->
-<div class="col-md-6">
-    <section class="widget">
+<!-- 스케쥴러 잡 리스트 표시 시작 -->
+<div class="col-lg-12">
+    <section class="widget"
+             id="firstSection">
         <header>
-            <h4><i class="fa fa-user"></i> General Configuration Information</h4>
+            <h4>
+				<span class="font13"
+                      style="font-weight: bold">
+					<i class="fa fa-sort-amount-asc"
+                       style="vertical-align: middle; font-size: 14px"></i>
+					제품(서비스) 조회 및 선택
+				</span>
+            </h4>
+            <div class="widget-controls">
+                <a data-widgster="toleft"
+                   title="change width to left"
+                   href="#">
+                    <i class="glyphicon glyphicon-chevron-left"></i>
+                </a>
+                <a data-widgster="expand"
+                   title="Expand"
+                   href="#">
+                    <i class="glyphicon glyphicon-chevron-up"></i>
+                </a>
+                <a data-widgster="collapse"
+                   title="Collapse"
+                   href="#">
+                    <i class="glyphicon glyphicon-chevron-down"></i>
+                </a>
+                <a data-widgster="toright"
+                   title="change width to right"
+                   href="#">
+                    <i class="glyphicon glyphicon-chevron-right"></i>
+                </a>
+                <a data-widgster="restore"
+                   title="Restore"
+                   href="#">
+                    <span class="glyphicon glyphicon-repeat"></span>
+                </a>
+                <a data-widgster="fullscreen"
+                   title="Fullscreen"
+                   href="#">
+                    <i class="glyphicon glyphicon-fullscreen"
+                       style="font-size: 11px"></i>
+                </a>
+            </div>
         </header>
-        <div class="body">
-            <div
-                    class="modal-body"
-                    style="padding: 5px; border-top: 1px solid rgba(51, 51, 51, 0.3); padding-top: 5px">
-                <blockquote
-                        class="font12 gradient_bottom_border"
-                        style="margin: 20px !important">
-                    <strong>엔진 수집 주기가 저장 됩니다.</strong>
-                    <div
-                            id="popup_Cron_Right_Util"
-                            style="float: right; padding: 5px 5px 1px 5px; margin-top: -10px">
-
-                        <button
-                                class="btn btn-warning btn-sm"
-                                id="popup_Btn_Cron_Simulate"
-                                type="button">
-                            예상 실행 시간 확인
+        <div class="widget-body"
+             id="pdServiceFirstSection">
+            <div class="gradient_middle_border"
+                 style="width: 100%; height: 2px"></div>
+            <blockquote class="font13">
+                1. 제품(서비스) 선택
+                <div style="float: right">
+                    <button class="btn btn-transparent btn-xs"
+                            style="margin-top: -3px; color: #acacac; background: rgba(51, 51, 51, 0.2); padding: 1px 9px"
+                            onclick="window.open('/php/gnuboard5/bbs/board.php?bo_table=manual&wr_id=17')">
+                        Help
+                        <i class="fa fa-question"
+                           style="font-size: 14px; vertical-align: middle; color: #acacac"></i>
+                    </button>
+                </div>
+            </blockquote>
+            <div class="clearfix widget-content">
+                <div style="float: left">
+                    <div style="float: left"
+                         class="btn-group">
+                        <button class="btn btn-default btn-sm dropdown-toggle"
+                                data-toggle="dropdown">
+                            &nbsp; Export &nbsp;
+                            <i class="fa fa-caret-down"></i>
                         </button>
-                        <button
-                                class="btn btn-primary btn-sm"
-                                id="popup_Btn_Cron_Save"
-                                type="button">
-                            저장
-                        </button>
+                        <ul class="dropdown-menu"
+                            style="background: rgba(51, 51, 51, 0.9) !important">
+                            <li>
+                                <a id="copychecker"
+                                   style="color: white">
+                                    Copy
+                                </a>
+                            </li>
+                            <li>
+                                <a id="csvchecker"
+                                   style="color: white">
+                                    CSV
+                                </a>
+                            </li>
+                            <li>
+                                <a id="excelchecker"
+                                   style="color: white">
+                                    Excel
+                                </a>
+                            </li>
+                            <li>
+                                <a id="printchecker"
+                                   style="color: white">
+                                    Print
+                                </a>
+                            </li>
+                            <li>
+                                <a id="pdfchecker"
+                                   style="color: white">
+                                    PDF
+                                </a>
+                            </li>
+                        </ul>
                     </div>
-                </blockquote>
-                <!--------------------스케줄러 설정 팝업---------------------->
-                <div class="cronDiv">
-                    <div class="row">
-                        <div
-                                class="col-lg-6"
-                                style="width: 100%">
-                            <form class="form-horizontal">
-                                <fieldset>
-                                    <div
-                                            class="base_Info"
-                                            style="border-radius: 10px">
-                                        <div class="control-group">
-                                            <label
-                                                    for="popup_service_name"
-                                                    class="control-label font12">
-                                                Host Type :
-                                            </label>
-                                            <div
-                                                    class="controls form-group input-group"
-                                                    style="margin-left: 180px">
-												<span class="input-group-addon">
-													<i class="glyphicon glyphicon-gift"></i>
-												</span>
-                                                <div
-                                                        id="popup_service_name"
-                                                        class="btn-group"
-                                                        data-toggle="buttons">
-                                                    <label class="btn btn-default">
-                                                        <input
-                                                                type="radio"
-                                                                name="popup_service_name_select_option"
-                                                                value="target-info-app" />
-                                                        <img
-                                                                src="img/targetInfo/live.png"
-                                                                width="15px"
-                                                                height="15px" />
-                                                        APPLICATION
-                                                    </label>
-                                                    <label class="btn btn-default">
-                                                        <input
-                                                                type="radio"
-                                                                name="popup_service_name_select_option"
-                                                                value="target-info-db" />
-                                                        <img
-                                                                src="img/targetInfo/live.png"
-                                                                width="15px"
-                                                                height="15px" />
-                                                        DATABASE
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
+                </div>
 
-                                        <div class="control-group">
-                                            <label
-                                                    for="popup_cron_expression"
-                                                    class="control-label font12">
-                                                Cron Expression :
-                                            </label>
-                                            <div
-                                                    class="controls form-group input-group"
-                                                    style="margin-left: 180px; margin-bottom: 10px; margin-right: 20px !important">
-												<span class="input-group-addon">
-													<i class="glyphicon glyphicon-gift"></i>
-												</span>
-                                                <input
-                                                        type="text"
-                                                        id="popup_cron_expression"
-                                                        name="popup_cron_expression"
-                                                        class="form-control parsley-validated font13 darkBack ajax-data"
-                                                        required="required" />
-                                            </div>
-                                            <div
-                                                    class="chat-message-body"
-                                                    style="border: 2px solid #e5603b; margin-right: 20px; margin-left: 180px; display: none">
-                                                <div class="sender ajax-data">예상 실행 시간</div>
-                                                <div
-                                                        class="text"
-                                                        style="text-align: left; margin-top: 10px"></div>
-                                            </div>
-                                        </div>
-                                        <div class="control-group">
-                                            <label
-                                                    for="popup_cron_expression"
-                                                    class="control-label font12">
-                                                &nbsp;
-                                            </label>
-                                            <div
-                                                    class="controls form-group input-group"
-                                                    style="margin-left: 180px; margin-bottom: 10px; margin-right: 20px !important"></div>
+                <div style="float: right">
+                    <button class="btn btn-primary btn-block btn-sm"
+                            data-target="#modal_product_add"
+                            data-toggle="modal"
+                            id="btn_modal_product_add"
+                            type="button">
+                        스케쥴러 관리
+                    </button>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <!--------------------스케줄러 설정 팝업---------------------->
+                    <div class="cronDiv darkBack">
+                        <form class="form-horizontal"
+                              style="margin-top: 20px; padding: 0px 10px 0px 10px;">
+                            <fieldset>
+                                <div class="base_Info"
+                                     style="border-radius: 10px">
+
+                                    <div class="control-group">
+                                        <label for="popup_service_name"
+                                               class="control-label">
+                                            Host Type :
+                                        </label>
+                                        <div class="controls form-group input-group"
+                                             style="margin-left: 180px; margin-bottom: 10px; margin-right: 20px !important">
+                                            <span class="input-group-addon">
+                                                <i class="glyphicon glyphicon-gift"></i>
+                                            </span>
+                                            <input type="text"
+                                                   id="schedule_name"
+                                                   name="schedule_name"
+                                                   class="form-control parsley-validated font13 darkBack ajax-data"
+                                                   required="required" />
                                         </div>
                                     </div>
-                                </fieldset>
-                            </form>
-                        </div>
-                    </div>
 
-                    <div
-                            class="row"
-                            style="padding-left: 20px; padding-right: 20px">
-                        <section class="widget">
+                                    <div class="control-group">
+                                        <label for="popup_cron_expression"
+                                               class="control-label">
+                                            Cron Expression :
+                                        </label>
+                                        <div class="controls form-group input-group"
+                                             style="margin-left: 180px; margin-bottom: 10px; margin-right: 20px !important">
+                                            <span class="input-group-addon">
+                                                <i class="glyphicon glyphicon-gift"></i>
+                                            </span>
+                                            <input type="text"
+                                                   id="popup_cron_expression"
+                                                   name="popup_cron_expression"
+                                                   class="form-control parsley-validated font13 darkBack ajax-data"
+                                                   required="required" />
+                                        </div>
+                                        <div class="chat-message-body"
+                                             style="border: 2px solid #e5603b; margin-right: 20px; margin-left: 180px; display: none">
+                                            <div class="sender ajax-data">예상 실행 시간</div>
+                                            <div class="text"
+                                                 style="text-align: left; margin-top: 10px"></div>
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label for="popup_cron_expression"
+                                               class="control-label">
+                                        </label>
+                                        <div class="controls form-group input-group"
+                                             style="margin-left: 180px; margin-bottom: 10px; margin-right: 20px !important"></div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </form>
+                        <section class="widget"
+                                 style="margin-bottom: 0px;">
                             <header>
-                                <ul
-                                        id="main-tab"
-                                        class="tab-pane nav nav-tabs"
-                                        style="display: flex; white-space: nowrap">
+                                <ul id="main-tab"
+                                    class="tab-pane nav nav-tabs"
+                                    style="display: flex; white-space: nowrap">
                                     <li>
-                                        <a
-                                                href="#tabs-second"
-                                                data-toggle="tab">
+                                        <a href="#tabs-second"
+                                           data-toggle="tab">
                                             Second
                                         </a>
                                     </li>
                                     <li class="active">
-                                        <a
-                                                href="#tabs-minute"
-                                                data-toggle="tab">
+                                        <a href="#tabs-minute"
+                                           data-toggle="tab">
                                             분
                                         </a>
                                     </li>
                                     <li>
-                                        <a
-                                                href="#tabs-hour"
-                                                data-toggle="tab">
+                                        <a href="#tabs-hour"
+                                           data-toggle="tab">
                                             시
                                         </a>
                                     </li>
                                     <li>
-                                        <a
-                                                href="#tabs-day"
-                                                data-toggle="tab">
+                                        <a href="#tabs-day"
+                                           data-toggle="tab">
                                             일
                                         </a>
                                     </li>
                                     <li>
-                                        <a
-                                                href="#tabs-month"
-                                                data-toggle="tab">
+                                        <a href="#tabs-month"
+                                           data-toggle="tab">
                                             월
                                         </a>
                                     </li>
                                     <li>
-                                        <a
-                                                href="#tabs-week"
-                                                data-toggle="tab">
+                                        <a href="#tabs-week"
+                                           data-toggle="tab">
                                             주
                                         </a>
                                     </li>
                                 </ul>
                             </header>
-                            <div class="body tab-content">
-                                <div
-                                        id="tabs-second"
-                                        class="tab-pane clearfix"
-                                        style="padding-top: 10px !important">
+                            <div class="widget-body tab-content">
+                                <div id="tabs-second"
+                                     class="tab-pane clearfix"
+                                     style="padding-top: 10px !important">
                                     <ul class="nav nav-tabs">
                                         <li id="button-second-every">
-                                            <a
-                                                    href="#tabs-second-every"
-                                                    data-toggle="tab">
+                                            <a href="#tabs-second-every"
+                                               data-toggle="tab">
                                                 Every second
                                             </a>
                                         </li>
                                         <li id="button-second-n">
-                                            <a
-                                                    href="#tabs-second-n"
-                                                    data-toggle="tab">
-                                                Every n seconds
+                                            <a href="#tabs-second-n"
+                                               data-toggle="tab">
+                                                Every N seconds
                                             </a>
                                         </li>
                                     </ul>
                                     <div class="body tab-content checkbox-content">
-                                        <div
-                                                id="tabs-second-every"
-                                                class="tab-pane clearfix">
+                                        <div id="tabs-second-every"
+                                             class="tab-pane clearfix">
                                             <div>*</div>
                                             <div>Every second.</div>
                                         </div>
-                                        <div
-                                                id="tabs-second-n"
-                                                class="tab-pane clearfix">
+                                        <div id="tabs-second-n"
+                                             class="tab-pane clearfix">
                                             <div class="preview">Every 1 seconds</div>
                                             <div class="slider"></div>
                                         </div>
                                     </div>
                                 </div>
-                                <div
-                                        id="tabs-minute"
-                                        class="tab-pane active clearfix"
-                                        style="padding-top: 10px !important">
+                                <div id="tabs-minute"
+                                     class="tab-pane active clearfix"
+                                     style="padding-top: 10px !important">
                                     <ul class="nav nav-tabs">
-                                        <li
-                                                id="button-minute-every"
-                                                data-toggle="tab">
+                                        <li id="button-minute-every"
+                                            data-toggle="tab">
                                             <a href="#tabs-minute-every">매 분</a>
                                         </li>
-                                        <li
-                                                id="button-minute-n"
-                                                data-toggle="tab">
+                                        <li id="button-minute-n"
+                                            data-toggle="tab">
                                             <a href="#tabs-minute-n">N 분 간격</a>
                                         </li>
-                                        <li
-                                                id="button-minute-each"
-                                                data-toggle="tab">
+                                        <li id="button-minute-each"
+                                            data-toggle="tab">
                                             <a href="#tabs-minute-each">선택 분</a>
                                         </li>
                                     </ul>
                                     <div class="body tab-content checkbox-content">
-                                        <div
-                                                id="tabs-minute-every"
-                                                class="tab-pane clearfix">
+                                        <div id="tabs-minute-every"
+                                             class="tab-pane clearfix">
                                             <div>*</div>
                                             <div>매 분 실행</div>
                                         </div>
@@ -562,40 +594,35 @@
                                             <div class="preview">1 분 간격</div>
                                             <div class="slider"></div>
                                         </div>
-                                        <div
-                                                id="tabs-minute-each"
-                                                class="tab-pane clearfix">
+                                        <div id="tabs-minute-each"
+                                             class="tab-pane clearfix">
                                             <div>분 선택</div>
                                             <br />
-                                            <div class="tabs-minute-format"></div>
+                                            <div class="tabs-minute-format"
+                                                 style="text-align: center;"></div>
                                         </div>
                                     </div>
                                 </div>
-                                <div
-                                        id="tabs-hour"
-                                        class="tab-pane clearfix"
-                                        style="padding-top: 10px !important">
+                                <div id="tabs-hour"
+                                     class="tab-pane clearfix"
+                                     style="padding-top: 10px !important">
                                     <ul class="nav nav-tabs">
-                                        <li
-                                                id="button-hour-every"
-                                                data-toggle="tab">
+                                        <li id="button-hour-every"
+                                            data-toggle="tab">
                                             <a href="#tabs-hour-every">매 시</a>
                                         </li>
-                                        <li
-                                                id="button-hour-n"
-                                                data-toggle="tab">
+                                        <li id="button-hour-n"
+                                            data-toggle="tab">
                                             <a href="#tabs-hour-n">N 시간 간격</a>
                                         </li>
-                                        <li
-                                                id="button-hour-each"
-                                                data-toggle="tab">
+                                        <li id="button-hour-each"
+                                            data-toggle="tab">
                                             <a href="#tabs-hour-each">선택 시</a>
                                         </li>
                                     </ul>
                                     <div class="body tab-content checkbox-content">
-                                        <div
-                                                id="tabs-hour-every"
-                                                class="tab-pane active clearfix">
+                                        <div id="tabs-hour-every"
+                                             class="tab-pane active clearfix">
                                             <div>*</div>
                                             <div>매 시 실행</div>
                                         </div>
@@ -603,121 +630,142 @@
                                             <div class="preview">1 시간 간격</div>
                                             <div class="slider"></div>
                                         </div>
-                                        <div
-                                                id="tabs-hour-each"
-                                                class="tab-pane clearfix">
+                                        <div id="tabs-hour-each"
+                                             class="tab-pane clearfix">
                                             <div>시 선택</div>
                                             <br />
-                                            <div class="tabs-hour-format"></div>
+                                            <div class="tabs-hour-format"
+                                                 style="text-align: center;"></div>
                                         </div>
                                     </div>
                                 </div>
-                                <div
-                                        id="tabs-day"
-                                        class="tab-pane clearfix"
-                                        style="padding-top: 10px !important">
+                                <div id="tabs-day"
+                                     class="tab-pane clearfix"
+                                     style="padding-top: 10px !important">
                                     <ul class="nav nav-tabs">
-                                        <li
-                                                id="button-day-every"
-                                                data-toggle="tab">
+                                        <li id="button-day-every"
+                                            data-toggle="tab">
                                             <a href="#tabs-day-every">매일</a>
                                         </li>
-                                        <li
-                                                id="button-day-each"
-                                                data-toggle="tab">
+                                        <li id="button-day-each"
+                                            data-toggle="tab">
                                             <a href="#tabs-day-each">선택 일</a>
                                         </li>
                                     </ul>
                                     <div class="body tab-content checkbox-content">
-                                        <div
-                                                id="tabs-day-every"
-                                                class="tab-pane active clearfix">
+                                        <div id="tabs-day-every"
+                                             class="tab-pane active clearfix">
                                             <div>*</div>
                                             <div>매일 실행</div>
                                         </div>
-                                        <div
-                                                id="tabs-day-each"
-                                                class="tab-pane clearfix">
+                                        <div id="tabs-day-each"
+                                             class="tab-pane clearfix">
                                             <div>선택 일</div>
                                             <br />
-                                            <div class="tabs-day-format"></div>
+                                            <div class="tabs-day-format"
+                                                 style="text-align: center;"></div>
                                         </div>
                                     </div>
                                 </div>
-                                <div
-                                        id="tabs-month"
-                                        class="tab-pane clearfix"
-                                        style="padding-top: 10px !important">
+                                <div id="tabs-month"
+                                     class="tab-pane clearfix"
+                                     style="padding-top: 10px !important">
                                     <ul class="nav nav-tabs">
-                                        <li
-                                                id="button-month-every"
-                                                data-toggle="tab">
+                                        <li id="button-month-every"
+                                            data-toggle="tab">
                                             <a href="#tabs-month-every">매 월</a>
                                         </li>
-                                        <li
-                                                id="button-month-each"
-                                                data-toggle="tab">
+                                        <li id="button-month-each"
+                                            data-toggle="tab">
                                             <a href="#tabs-month-each">선택 월</a>
                                         </li>
                                     </ul>
                                     <div class="body tab-content checkbox-content">
-                                        <div
-                                                id="tabs-month-every"
-                                                class="tab-pane active clearfix">
+                                        <div id="tabs-month-every"
+                                             class="tab-pane active clearfix">
                                             <div>*</div>
                                             <div>매 월</div>
                                         </div>
-                                        <div
-                                                id="tabs-month-each"
-                                                class="tab-pane active clearfix">
+                                        <div id="tabs-month-each"
+                                             class="tab-pane active clearfix">
                                             <div>선택 월</div>
                                             <br />
-                                            <div class="tabs-month-format"></div>
+                                            <div class="tabs-month-format"
+                                                 style="text-align: center;"></div>
                                         </div>
                                     </div>
                                 </div>
-                                <div
-                                        id="tabs-week"
-                                        class="tab-pane clearfix"
-                                        style="padding-top: 10px !important">
+                                <div id="tabs-week"
+                                     class="tab-pane clearfix"
+                                     style="padding-top: 10px !important">
                                     <ul class="nav nav-tabs">
-                                        <li
-                                                id="button-week-every"
-                                                data-toggle="tab">
+                                        <li id="button-week-every"
+                                            data-toggle="tab">
                                             <a href="#tabs-week-every">매 주</a>
                                         </li>
-                                        <li
-                                                id="button-week-each"
-                                                data-toggle="tab">
+                                        <li id="button-week-each"
+                                            data-toggle="tab">
                                             <a href="#tabs-week-each">선택 요일</a>
                                         </li>
                                     </ul>
                                     <div class="body tab-content checkbox-content">
-                                        <div
-                                                id="tabs-week-every"
-                                                class="tab-pane active clearfix">
+                                        <div id="tabs-week-every"
+                                             class="tab-pane active clearfix">
                                             <div>*</div>
                                             <div>매 주</div>
                                         </div>
-                                        <div
-                                                id="tabs-week-each"
-                                                class="tab-pane active clearfix">
+                                        <div id="tabs-week-each"
+                                             class="tab-pane active clearfix">
                                             <div>선택 요일</div>
                                             <br />
-                                            <div class="tabs-week-format"></div>
+                                            <div class="tabs-week-format"
+                                                 style="text-align: center;"></div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </section>
                     </div>
+                    <!------------------------------------------------>
                 </div>
-                <!------------------------------------------------>
+
+                <div class="col-md-6">
+                    <div class="darkBack">
+                        <div class="control-group"
+                             style="margin-top: 20px; padding: 0px 10px 0px 10px;">
+                            <label for="popup_service_name"
+                                   class="control-label"
+                                   style="width: 100px;">
+                                스케쥴러 명령어 :
+                            </label>
+                            <div class="controls form-group input-group"
+                                 style="margin-left: 110px;margin-bottom: 22px;">
+                                <span class="input-group-addon">
+                                    <i class="glyphicon glyphicon-gift"></i>
+                                </span>
+                                <textarea id="input"
+                                          rows="3"
+                                          class="form-control darkBack"
+                                          style="background: rgb(51 51 51 / 61%) !important;"></textarea>
+                            </div>
+                        </div>
+
+                        <pre style="margin: 0px;">
+                            <div class="font13"
+                                 style="font-family: Nanum Gothic !important;">* Command Highlight</div>
+                            <code id="output"
+                                  class="nginx"
+                                  style="height: 70px;">
+                            </code>
+                        </pre>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 </div>
-<!-- 스케쥴러 잡 선택시 설정 정보 표시 끝 -->
+<!-- 스케쥴러 잡 리스트 표시 끝 -->
+
 <style>
     .wh100 {
         height: 100%;
@@ -752,6 +800,36 @@
         margin-bottom: 10px;
         background: rgba(51, 51, 51, .3);
         color: #f8f8f8;
+    }
+
+    /* 하이라이트 */
+    .hljs-ln-numbers {
+        text-align: center;
+        color: #ccc;
+        vertical-align: top;
+        padding-right: 5px;
+        padding: 1px 5px 1px 5px !important;
+
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+    .hljs-ln-code {
+        padding: 0px 0px 0px 10px !important;
+        padding-left: 10px;
+        border-bottom: 0px !important;
+    }
+
+    .hljs-ln-numbers {
+        border-bottom: 0px !important;
+    }
+
+    code {
+        white-space: pre-wrap;
+        overflow: auto;
     }
 
 </style>

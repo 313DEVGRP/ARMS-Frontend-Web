@@ -743,8 +743,14 @@ function jsTreeBuild(jQueryElementID, serviceNameForURL) {
 					        let type = item.attr.rel;
 					        if(type !== "folder"){
                                 if (item.reqStateEntity && item.reqStateEntity.c_title) {
-                                    let state = item.reqStateEntity.c_title;
-                                    item.data = mappingStateIcon(state) +" "+item.data;
+                                    let stateIconInfo = item.reqStateEntity.reqStateCategoryEntity.c_category_icon;
+                                    let stateIcon
+                                    if(stateIconInfo){
+                                         stateIcon= stateIconInfo.replace('class="', 'class="status-icon ');
+                                    }else{
+                                        stateIcon=''
+                                    }
+                                    item.data = stateIcon +" "+item.data;
                                 }
 					        }
                         });
@@ -992,18 +998,6 @@ function jsTreeBuild(jQueryElementID, serviceNameForURL) {
 		$(jQueryElementID).jstree("search", document.getElementById("text").value);
 	});
 
-    function mappingStateIcon(key) {
-        if (key === "열림") {
-            return '<i class="fa fa-folder-o text-danger status-icon"></i>';
-        } else if (key === "진행중") {
-            return '<i class="fa fa-fire text-danger status-icon" style="color: #E49400;"></i>';
-        } else if (key === "해결됨") {
-            return '<i class="fa fa-fire-extinguisher text-success status-icon"></i>';
-        } else if (key === "닫힘") {
-            return '<i class="fa fa-folder text-primary status-icon"></i>';
-        }
-        return ''; // 기본적으로 빈 문자열 반환
-    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////

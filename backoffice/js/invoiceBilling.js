@@ -86,9 +86,61 @@ function execDocReady() {
             // 사이드 메뉴 색상 설정
             $(".widget").widgster();
             setSideMenu("sidebar_menu_system", "sidebar_menu_system_billing");
+
+            BillingPlanObserver.setTarget("billing-plan-div","class");
+            // BillingPlanObserver.startObserver();
+
+            // 모달이 열릴 때 body 스크롤 허용
+            $(document).on('shown.bs.modal', function () {
+                $('body').removeClass('modal-open'); // 기본적으로 추가되는 클래스 제거
+                $('body').css('overflow', 'auto');   // 스크롤 허용
+            });
         })
         .catch(function (error) {
             console.error("플러그인 로드 중 오류 발생");
             console.log(error);
         });
 }
+
+var BillingPlanObserver = (function () {
+    let targetElement;
+
+    var setTarget = function (target, type) {
+        if (type === "class") {
+            targetElement = $(`.${target}`)[0];
+        } else if (type === "id" ) {
+            targetElement = $(`#${target}`)[0];
+        } else {
+            targetElement = $(`${target}`)[0];
+        }
+    };
+
+    var getTarget = function () {
+        return targetElement;
+    }
+
+    let observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (!entry.isIntersecting) {
+                console.log("화면에서 가려졌습니다.");
+                $("#stickyBilling").addClass("in");
+                $("#stickyBilling").css("display","block");
+                $("#stickyBilling").css("margin-right","2.5641%");
+            } else {
+                console.log("화면에서 보입니다.");
+                $("#stickyBilling").removeClass("in");
+                $("#stickyBilling").css("display","none");
+            }
+        });
+    },{ threshold: 0});
+
+    function startObserver() {
+        observer.observe(getTarget());
+
+        $('#stickyBilling').modal({
+            backdrop: false, // 백드롭 비활성화
+            keyboard: true   // 키보드로 모달 닫기 가능
+        });
+    }
+    return { setTarget , startObserver };
+})();
