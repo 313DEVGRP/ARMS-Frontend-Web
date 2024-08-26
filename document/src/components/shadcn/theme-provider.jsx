@@ -1,6 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-
 // 테마
 const allowedThemes = ['dark', 'light'];
 

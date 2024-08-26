@@ -142,6 +142,15 @@
 							요구사항 상태 추가
 					</button>
 				</div>
+				<div style="display: none; float: right; margin-right: 5px;">
+					<button class="btn btn-success btn-block btn-sm"
+							data-toggle="modal"
+							id="default_state_setting_modal_button"
+							type="button"
+							onClick="req_state_data_table()">
+						요구사항 기본 상태 설정
+					</button>
+				</div>
 			</div>
 			<br/>
 			<div class="row">
@@ -425,6 +434,7 @@
 											id="popup_view_change_state_name"
 											name="popup_view_change_state_name"
 											class="form-control parsley-validated font13 darkBack"
+											disabled="disabled"
 											data-placement="top"
 											data-original-title="상태의 이름을 입력해주세요."
 											placeholder="Requirement State Name"
@@ -474,570 +484,140 @@
 		<!-- /.modal-dialog -->
 </div>
 
-<!--<div class="col-lg-12 col-layer">
-	<section class="widget">
-		<header>
-			<h4>
-				<strong class="font13">
-					<i class="fa fa-sitemap fs-larger media-middle"></i>
-					<span data-locale="category.state.title">
-						A-RMS 상태별 ALM 상태 매핑
-					</span>
-				</strong>
-			</h4>
-			<div class="widget-controls">
-				<a
-						data-widgster="expand"
-						title="Expand"
-						href="#">
-					<i class="glyphicon glyphicon-chevron-up"></i>
-				</a>
-				<a
-						data-widgster="collapse"
-						title="Collapse"
-						href="#">
-					<i class="glyphicon glyphicon-chevron-down"></i>
-				</a>
-				<a
-						data-widgster="restore"
-						title="Restore"
-						href="#">
-					<span class="glyphicon glyphicon-repeat"></span>
-				</a>
-				<a
-						data-widgster="fullscreen"
-						title="Fullscreen"
-						href="#">
-					<i
-							class="glyphicon glyphicon-fullscreen"
-							style="font-size: 11px"></i>
-				</a>
+<div
+		id="default_state_setting_modal"
+		class="modal fade"
+		role="dialog"
+		aria-labelledby="myModalLabel"
+		aria-hidden="true"
+		style="display: none; border-radius: 10px;">
+	<div    class="modal-dialog"
+			style="width: 80%; height: 80%">
+		<div class="modal-content modalDarkBack">
+			<div    class="modal-header"
+					style="padding: 0px; border-bottom: 1px">
+				<h4 class="modal-title font14"
+					id="default_state_setting_modal_label"
+					style="color: #f8f8f8; text-align: left; padding: 5px">
+											<span   class="font13"
+													style="font-weight: bold"
+													id="default_state_setting_modal_title">
+													<i class="fa fa-edit"></i>
+													기본 A-RMS 상태 설정
+											</span>
+					<blockquote    class="search-result"
+								   style="border-left: 5px solid #e5603b">
+						<p
+								style="font-size: 13px; margin: 10px 0px 10px 0px; padding-left: 10px"
+								id="my_modal1_description">
+							싱테 카테고리에 연결된 상태 중 A-RMS 요구사항의 기본 상태를 설정합니다.
+						</p>
+					</blockquote>
+				</h4>
+				<div    class="widget-controls"
+						style="padding-top: 10px">
+					<a  data-widgster="close"
+						title="Close"
+						href="#"
+						data-dismiss="modal"
+						aria-hidden="true">
+						<i class="glyphicon glyphicon-remove"></i>
+					</a>
+				</div>
 			</div>
-			&lt;!&ndash;			<blockquote
-                      class="font13"
-                      style="margin-top: 5px">
-                    1. ARMS 요구사항의 상태와 ALM 이슈 상태와 연결합니다.
-                  </blockquote>&ndash;&gt;
-		</header>
-		<div class="body">
-			<div class="row">
-				<div class="col-lg-3">
-					<section class="widget">
-						<header style="margin-bottom: 20px">
-							<h4>
-								<span
-										class="font13"
-										style="font-weight: bold">
-									<i class="fa fa-asterisk"></i>
-									ALM 서버 선택
-								</span>
-							</h4>
-							<div    class="gradient_middle_border"
-									style="width: 100%; margin-top: 8px"></div>
-						</header>
-						<div class="body">
-							<div class="column">
-								<blockquote class="font13">
-									1. ALM 서버 선택
-								</blockquote>
-								<div class="clearfix widget-content">
-									&lt;!&ndash; 컴포넌트 대상 &ndash;&gt;
-									<div id="selected_info">
-										<div
-												class="panel-group json-menu"
-												style="margin-bottom: 0px !important">
-											<li
-													class="list-group-item json-menu-header"
-													style="padding: 0px">
-												<div class="chat-message">
-													<div
-															class="chat-message-body"
-															style="margin-left: 0px !important; border-right: 2px solid #e5603b; border-left: 0px">
-													<span
-															id="toRight"
-															class="arrow"
-															style="
-															top: 10px !important;
-															right: -7px;
-															border-top: 5px solid transparent;
-															border-bottom: 5px solid transparent;
-															border-left: 5px solid #e5603b;
-															border-right: 0px;
-															left: unset;
-														"></span>
-														<div
-																class="sender"
-																style="padding-bottom: 5px; padding-top: 3px">
-															<i class="fa fa-check"></i>
-															선택된 서버
-															:
-															<span
-																	id="select-alm-server"
-																	style="color: #a4c6ff">
-                                                                    선택되지 않음
-														        </span>
-														</div>
-														<div
-																id="select-project-div"
-																class="sender"
-																style="padding-bottom: 5px; padding-top: 3px; display: none;">
-															<i class="fa fa-check"></i>
-															선택된 프로젝트 :
-															<span
-																	id="select-project"
-																	style="color: #a4c6ff">
-                                                                    선택되지 않음
-														        </span>
-														</div>
-													</div>
-												</div>
-											</li>
-										</div>
-									</div>
-								</div>
-								<div class="wrapper">
-									<div class="control-group">
-										<div
-												class="controls form-group select-box"
-												style="margin-bottom: 15px !important">
-											<select
-													id="selected_alm_server"
-													name="selected_alm_server"
-													required="required"
-													data-placeholder="Select ALM Server"
-													class="select-block-level chzn-select darkBack"
-													tabindex="-1"
-													style="width: 100% !important">
-												<option value=""></option>
-											</select>
-										</div>
-									</div>
-									<div
-											id="cloud_project_tree"
-											style="display: none;">
-										<div
-												class="gradient_bottom_border"
-												style="width: 100%; height: 2px"></div>
-										<div
-												id="mmenu"
-												style="padding-bottom: 5px; padding-top: 15px">
-											<form
-													class="form-search no-margin"
-													role="form">
-												<div class="input-group">
-													<input
-															type="search"
-															id="text"
-															class="form-control searchDarkBack"
-															style="color: #f8f8f8"
-															placeholder="찾을 프로젝트 이름 입력"
-															data-tooltip="Press Enter To Node To Search" />
-													<span class="input-group-btn">
-														<button
-																type="button"
-																id="search"
-																title="Search"
-																class="btn btn-default btn-sm"
-																style="line-height: 1.63">
-															Search
-														</button>
-													</span>
-												</div>
-											</form>
-										</div>
-										<div
-												id="alm_server_tree"
-												style="padding-top: 5px; overflow: hidden"
-												class="darkBack"></div>
-										<div
-												style="margin-top: 10px"
-												class="darkBack">
-											클라우드 지라의 경우 "프로젝트" 항목을 선택하시면 해당 이슈유형별 상태를 매핑할 수 있습니다.
-										</div>
-									</div>
+			<div    class="modal-body"
+					style="padding: 5px; border-top: 1px solid rgba(51, 51, 51, 0.3); padding-top: 5px">
+				<div class="clearfix widget-content">
+					<div
+							class="panel-group json-menu"
+							style="margin-bottom: 0px !important">
+						<li
+								id="not_ready_priority"
+								class="list-group-item json-menu-header hidden"
+								style="padding: 0px; background-color: rgba(51, 51, 51, 0);">
+							<blockquote
+									class="search-result"
+									style="border-left: 5px solid #e5603b">
+								<p id="not_ready_priority_messages" style="font-size: 13px; margin: 10px 0px 10px 0px;"></p>
+								<div id="not_ready_priority_buttons"></div>
+							</blockquote>
+						</li>
+						<li
+								id="not_ready_issuetype"
+								class="list-group-item json-menu-header hidden"
+								style="padding: 0px; background-color: rgba(51, 51, 51, 0);">
+							<blockquote
+									class="search-result"
+									style="border-left: 5px solid #e5603b">
+								<p id="not_ready_issuetype_messages" style="font-size: 13px; margin: 10px 0px 10px 0px;"></p>
+							</blockquote>
+						</li>
+					</div>
+				</div>
+				<div style="float: right; margin-bottom:10px;">
+					<button
+							type="button"
+							id="save_default_state_setting"
+							class="btn btn-success">
+						기본 상태 설정
+					</button>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<section
+								class="widget widget-tabs"
+								style="margin-bottom: 0">
+							<header style="display: none;">
+								<ul class="nav nav-tabs">
+									<li>
+										<a
+												href="#report"
+												data-toggle="tab"
+												id="folder_tab">
+											<strong>리스트로 보기</strong>
+										</a>
+									</li>
+								</ul>
+							</header>
+							<div class="body tab-content">
+								<div    id="report"
+										class="tab-pane active"
+										style="">
+									<table class="display"
+										   id="req_state_table"
+										   style="width: 100%; overflow: hidden; border-top: 1px dashed rgba(51, 51, 51, 0.3)">
+										<thead>
+										<tr>
+											<th>c_id</th>
+											<th>c_title</th>
+										</tr>
+										</thead>
+									</table>
 								</div>
 							</div>
-						</div>
-					</section>
-					&lt;!&ndash;					<section class="widget">
-                                <div class="body">
-                                  <div
-                                      class="gradient_middle_border"
-                                      style="width: 100%; height: 2px"></div>
-                                  <blockquote
-                                      class="font13"
-                                      style="margin-top: 5px">
-                                    1. 제품(서비스) 선택
-                                    <div style="float: right">
-                                      <button
-                                          class="btn btn-transparent btn-xs"
-                                          style="margin-top: -3px; color: #acacac; background: rgba(51, 51, 51, 0.2); padding: 1px 9px"
-                                          onclick="window.open('docs/guide.html#reqstatus_version_selection')">
-                                        Help
-                                        <i
-                                            class="fa fa-question"
-                                            style="font-size: 14px; vertical-align: middle; color: #acacac"></i>
-                                      </button>
-                                    </div>
-                                  </blockquote>
 
-                                  <div class="row">
-                                    <div class="col-md-3 kanban-top">
-                                      <section class="widget">
-                                        <header style="margin-bottom: 20px">
-                                          <h4>
-                                            <span
-                                                class="font13"
-                                                style="font-weight: bold">
-                                              <i class="fa fa-asterisk"></i>
-                                              제품(서비스) - 버전 선택
-                                            </span>
-                                          </h4>
-                                          <div    class="gradient_middle_border"
-                                              style="width: 100%; margin-top: 8px"></div>
-                                        </header>
-                                        <div class="body">
-                                          <div class="column">
-                                            <blockquote class="font13">
-                                              1. 제품
-                                              <sup>서비스</sup>
-                                              선택 → 버전 선택
-                                            </blockquote>
-                                            <div class="clearfix widget-content">
-                                              &lt;!&ndash; 컴포넌트 대상 &ndash;&gt;
-                                              <div id="selected_info">
-                                                <div
-                                                    class="panel-group json-menu"
-                                                    id="versionAccordion"
-                                                    style="margin-bottom: 0px !important">
-                                                  <li
-                                                      class="list-group-item json-menu-header"
-                                                      style="padding: 0px">
-                                                    <div class="chat-message">
-                                                      <div
-                                                          class="chat-message-body"
-                                                          style="margin-left: 0px !important; border-right: 2px solid #e5603b; border-left: 0px">
-                                              <span
-                                                  id="toRight"
-                                                  class="arrow"
-                                                  style="
-                                                  top: 10px !important;
-                                                  right: -7px;
-                                                  border-top: 5px solid transparent;
-                                                  border-bottom: 5px solid transparent;
-                                                  border-left: 5px solid #e5603b;
-                                                  border-right: 0px;
-                                                  left: unset;
-                                                "></span>
-                                                        <div
-                                                            class="sender"
-                                                            style="padding-bottom: 5px; padding-top: 3px">
-                                                          <i class="fa fa-check"></i>
-                                                          선택된 제품
-                                                          <sup>서비스</sup>
-                                                          :
-                                                          <span
-                                                              id="select-pdService"
-                                                              style="color: #a4c6ff">
-                                                                                        선택되지 않음
-                                                        </span>
-                                                        </div>
-                                                        <div
-                                                            class="sender"
-                                                            style="padding-bottom: 5px; padding-top: 3px">
-                                                          <i class="fa fa-check"></i>
-                                                          선택된 버전 :
-                                                          <span
-                                                              id="select-version"
-                                                              style="color: #a4c6ff">
-                                                                                        선택되지 않음
-                                                        </span>
-                                                        </div>
-                                                      </div>
-                                                    </div>
-                                                  </li>
-                                                </div>
-                                              </div>
-                                            </div>
-                                            <div class="wrapper">
-                                              <div
-                                                  class="control-group"
-                                                  style="border: dashed; border-width: thin; border-color: lightsteelblue; margin-bottom: 10px">
-                                                <div
-                                                    class="controls form-group select-box"
-                                                    style="margin-bottom: 15px !important">
-                                                  <select
-                                                      id="selected_pdService"
-                                                      required="required"
-                                                      data-placeholder="Select Product(Service)"
-                                                      class="select-block-level chzn-select darkBack"
-                                                      tabindex="-1"
-                                                      name="selected_pdService"
-                                                      style="width: 100% !important">
-                                                    <option value=""></option>
-                                                  </select>
-                                                </div>
-                                                <div
-                                                    class="controls form-group select-box"
-                                                    style="margin-bottom: 5px !important">
-                                                  <select
-                                                      multiple="multiple"
-                                                      id="multi-version"
-                                                      class="multiple-select btn-block darkBack"
-                                                      placeholder="&nbsp;&nbsp;Select Version"></select>
-                                                  <select
-                                                      multiple="multiple"
-                                                      id="req-versions"
-                                                      class="multiple-select hidden"></select>
-                                                </div>
-                                              </div>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </section>
-                                    </div>
-                                  </div>
-                                </div>
-                              </section>&ndash;&gt;
+						</section>
+					</div>
 				</div>
-				<div class="col-lg-9">
-					<section class="widget">
-						<div class="body">
-							&lt;!&ndash;							<div id="chart_container" style="overflow: hidden; position: relative;">
-                                            <div class="flowchart-example-container flowchart-container"
-                                               id="example_9"
-                                               style="transform: matrix(0.5, 0, 0, 0.5, -797.583, -775.667); backface-visibility: hidden; transform-origin: 50% 50%; cursor: move; transition: none 0s ease 0s;">
-                                            </div>
-                                          </div>&ndash;&gt;
-							<div class="flowchart-example" id="flow_chart_container">
-								<div class="flowchart-example-container flowchart-container" id="state_flow_chart"
-									 style="transform: matrix(0.5, 0, 0, 0.5, -797.583, -775.667); backface-visibility: hidden; transform-origin: 50% 50%; cursor: move; transition: none 0s ease 0s;">
-								</div>
-								<button class="delete_selected_button">Delete selected operator / link</button>
-								<div class="flowchart-example-event" id="last_event_state_flow_chart_container" style="">
-									Last events:
-									<pre id="last_event_state_flow_chart">
-									</pre>
-								</div>
-							</div>
-							&lt;!&ndash;						<div class="body">
-                                          <div id="chart_container">
-                                            <div class="flowchart-example-container" id="mapping-flow-chart"></div>
-                                          </div>
-                                          <div class="draggable_operators">
-                                            <div class="draggable_operators_label">
-                                              Operators (drag and drop them in the flowchart):
-                                            </div>
-                                            <div class="draggable_operators_divs">
-                                              <div class="draggable_operator" data-nb-inputs="1" data-nb-outputs="0">1 input</div>
-                                              <div class="draggable_operator" data-nb-inputs="0" data-nb-outputs="1">1 output</div>
-                                              <div class="draggable_operator" data-nb-inputs="1" data-nb-outputs="1">1 input &amp; 1 output</div>
-                                              <div class="draggable_operator" data-nb-inputs="1" data-nb-outputs="2">1 in &amp; 2 out</div>
-                                              <div class="draggable_operator" data-nb-inputs="2" data-nb-outputs="1">2 in &amp; 1 out</div>
-                                              <div class="draggable_operator" data-nb-inputs="2" data-nb-outputs="2">2 in &amp; 2 out</div>
-                                            </div>
-                                          </div>
-                                          <button class="create_operator">Create operator</button>
-                                          <button class="delete_selected_button">Delete selected operator / link</button>
-                                          <div id="operator_properties" style="display: block;">
-                                            <label for="operator_title">Operator's title: </label><input id="operator_title" type="text">
-                                          </div>
-                                          <div id="link_properties" style="display: block;">
-                                            <label for="link_color">Link's color: </label><input id="link_color" type="color">
-                                          </div>
-                                          <button class="get_data" id="get_data">Get data</button>
-                                          <button class="set_data" id="set_data">Set data</button>
-                                          <button id="save_local">Save to local storage</button>
-                                          <button id="load_local">Load from local storage</button>
-                                        </div>&ndash;&gt;
-						</div>
-					</section>
-				</div>
+			</div>
+			<div    class="modal-footer"
+					style="background-color: transparent; padding: 5px; text-align: right; border-top: 0px">
+				<button
+						type="button"
+						id="close_modal_popup"
+						class="btn btn-default"
+						data-dismiss="modal">
+					Close
+				</button>
+				<button
+						type="button"
+						id="save_default_state_setting"
+						class="btn btn-success">
+					기본 상태 설정
+				</button>
 			</div>
 		</div>
-	</section>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
 </div>
-
-<div class="col-lg-12 col-layer">
-	<section class="widget">
-		<header>
-			<h4>
-				<strong class="font13">
-					<i class="fa fa-list-alt fs-larger media-middle"></i>
-					<span data-locale="category.state.title">
-						상태 카테고리별 분류
-					</span>
-				</strong>
-			</h4>
-			<div class="widget-controls">
-				<a
-						data-widgster="expand"
-						title="Expand"
-						href="#">
-					<i class="glyphicon glyphicon-chevron-up"></i>
-				</a>
-				<a
-						data-widgster="collapse"
-						title="Collapse"
-						href="#">
-					<i class="glyphicon glyphicon-chevron-down"></i>
-				</a>
-				<a
-						data-widgster="restore"
-						title="Restore"
-						href="#">
-					<span class="glyphicon glyphicon-repeat"></span>
-				</a>
-				<a
-						data-widgster="fullscreen"
-						title="Fullscreen"
-						href="#">
-					<i
-							class="glyphicon glyphicon-fullscreen"
-							style="font-size: 11px"></i>
-				</a>
-			</div>
-		</header>
-		<div class="body">
-			<div class="clearfix">
-				<div style="float: right;">
-					<button class="btn btn-primary btn-block btn-sm"
-							data-toggle="modal"
-							id="save_modal_button"
-							type="button"
-							onClick="popup_modal('save_popup')">
-						상태 등록하기
-					</button>
-				</div>
-			</div>
-&lt;!&ndash;			<div
-				class="gradient_middle_border"
-				style="width: 100%; height: 2px"></div>
-			<blockquote
-					class="font13"
-					style="margin-top: 5px">
-				1. 상태 카테고리별 요구사항의 상태 목록을 확인합니다.
-				&lt;!&ndash;				<div style="float: right">
-	  <button
-		class="btn btn-transparent btn-xs"
-		style="margin-top: -3px; color: #acacac; background: rgba(51, 51, 51, 0.2); padding: 1px 9px"
-		onclick="window.open('docs/guide.html#requirement_regist_inquiry')">
-	  Help
-	  <i
-		class="fa fa-question"
-		style="font-size: 14px; vertical-align: middle; color: #acacac"></i>
-	  </button>
-	</div>&ndash;&gt;
-			</blockquote>
-			<div
-					class="clearfix widget-content"
-					style="margin: 10px!important;">
-				<div style="float: right; margin: 0px!important;">
-					<button
-							type="button"
-							id="version_popup"
-							class="btn btn-warning btn-sm"
-							data-toggle="modal"
-							data-target="#my_modal2"
-							onClick="modalPopup('versionPopup')">
-						팝업 창으로 보기
-					</button>
-					<button
-							type="button"
-							id="version_update"
-							class="btn btn-success btn-sm hidden ladda-update-pdservice-version">
-						버전 정보 변경
-					</button>
-					<button
-							type="button"
-							id="del_version"
-							class="btn btn-danger btn-sm ladda_delete_pdservice_version hidden">
-						버전 삭제
-					</button>
-				</div>
-			</div>&ndash;&gt;
-			<div class="row">
-				<div class="col-lg-12">
-					<section class="widget widget-tabs">
-						<header>
-							<ul class="nav nav-tabs" data-group="state_category_tab_group">
-								<li class="active">
-									<a
-										href="#board"
-										data-toggle="tab">
-										<i class="fa fa-columns"></i>
-										<strong>보드로 보기</strong>
-									</a>
-								</li>
-								<li>
-									<a
-										href="#table"
-										data-toggle="tab">
-										<i class="fa fa-table"></i>
-										<strong>테이블로 보기</strong>
-									</a>
-								</li>
-							</ul>
-						</header>
-						<div class="body tab-content">
-							<div
-									id="board"
-									class="tab-pane active clearfix">
-								<blockquote
-										class="font13"
-										style="margin-top: 5px">
-									1. A-RMS 요구사항의 상태 목록을 카테고리별 보드 형태로 확인합니다.
-								</blockquote>
-								<div class="row">
-									<div class="col-md-12">
-										<div class="kanban_assist">
-											<div style="width: 48%; margin: 0 0 10px 1%;">
-												<div class="input-group"
-													 style="width: 100%;">
-													<input
-															type="text"
-															id="kanban_search"
-															class="form-control searchDarkBack"
-															style="color: #f8f8f8; padding: 5px 28px; border-radius: 3px;"
-															placeholder="찾을 상태 입력" />
-													<i class="kanban_search_clear glyphicon glyphicon-remove"></i>
-												</div>
-											</div>
-										</div>
-										<div id="myKanban"></div>
-									</div>
-								</div>
-							</div>
-							<div
-								id="table"
-								class="tab-pane">
-								<blockquote
-										class="font13"
-										style="margin-top: 5px">
-									2. A-RMS 요구사항의 상태와 카테고리를 테이블 형태로 확인합니다.
-								</blockquote>
-								<div class="row">
-									<div class="col-md-12">
-										<div>
-											<table class="display"
-												   id="req_state_table"
-												   style="width: 100%; overflow: hidden; border-top: 1px dashed rgba(51, 51, 51, 0.3)">
-												<thead>
-													<tr>
-														<th>c_id</th>
-														<th>c_title</th>
-														<th>c_id</th>
-													</tr>
-												</thead>
-											</table>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</section>
-				</div>
-			</div>
-		</div>
-	</section>
-</div>-->
