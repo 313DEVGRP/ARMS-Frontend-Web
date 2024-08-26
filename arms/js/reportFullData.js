@@ -656,13 +656,8 @@ function drawExcel(target, data) {
 		allowInsertColumn: false,
 		updateTable: function(instace, cell, col, row, val, id) {
 			cell.style.whiteSpace = "normal";
-			cell.style.whiteSpace = "normal";
-			if (col === 0 || col === 2 || col === 5) {
-				cell.style.textAlign = "right";
-				cell.style.color = "#a4c6ff";
-			} else if (col === 1 || col === 4 || col === 7) {
-				cell.style.textAlign = "left";
-			}
+			cell.style.textAlign = "left";
+			cell.style.color = "#a4c6ff";
 		}
 	};
 	SpreadsheetFunctions.setTargetId(target);
