@@ -42,8 +42,8 @@ function execDocReady() {
         ],
         [
             // 하이라이트
-            "../reference/jquery-plugins/highlight.js-11.9.0/highlight.js/highlight.min.js",
-            "../reference/jquery-plugins/highlight.js-11.9.0/src/styles/arta.css",
+            "../reference/jquery-plugins/highlight.js-11.10.0/highlight.js.lib/highlight.min.js",
+            "../reference/jquery-plugins/highlight.js-11.10.0/highlight.js.lib/src/styles/arta.css",
             // 검색엔진
             "../arms/css/searchEngine.css",
             "../arms/js/searchEngine/searchApiModule.js",

@@ -35,16 +35,15 @@ function execDocReady() {
 			"../reference/lightblue4/docs/lib/widgster/widgster.js"
 		],
 		[	// 하이라이트
-			"../reference/jquery-plugins/highlight.js-11.9.0/highlight.js/highlight.min.js",
-			"../reference/jquery-plugins/highlight.js-11.9.0/src/styles/arta.css",
+			"../reference/jquery-plugins/highlight.js-11.10.0/highlight.js.lib/highlight.min.js",
+			"../reference/jquery-plugins/highlight.js-11.10.0/highlight.js.lib/src/styles/arta.css",
 			// 검색엔진
 			"css/searchEngine.css",
 			"js/searchEngine/searchApiModule.js",
 			//날짜 검색
 			"../reference/light-blue/lib/bootstrap-datepicker.js",
 			"../reference/jquery-plugins/datetimepicker-2.5.20/build/jquery.datetimepicker.min.css",
-			"../reference/jquery-plugins/datetimepicker-2.5.20/build/jquery.datetimepicker.full.min.js",
-
+			"../reference/jquery-plugins/datetimepicker-2.5.20/build/jquery.datetimepicker.full.min.js"
 		]
 		// 추가적인 플러그인 그룹들을 이곳에 추가하면 됩니다.
 	];
