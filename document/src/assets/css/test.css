@@ -56,14 +56,14 @@ body {
 	background-attachment: fixed;
 }
 
-.bg-logo{position:relative;padding-left:50px}
+.bg-logo{position:relative; padding-left:50px;}
 .bg-logo:after{
     content:'';
     position:absolute;
     left:0;
     top:0;
-    width:43px;
-    height:26px;
+    width:100px;
+    height:100px;
     background:url(../images/313_logo.png) no-repeat;
     background-size:100%;
 }

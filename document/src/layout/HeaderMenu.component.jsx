@@ -16,24 +16,24 @@ const HeaderMenuComponents = () => {
     return (
         <>
         {/* 모바일 Breakpoint 좌측 사이드 메뉴  -- mobile menu & top right menu start -- */}
-        <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
+        <header className="flex h-14 bg-transparent items-center gap-4 bg-muted/40 px-4 lg:h-[60px] lg:px-6">
         <Sheet>
           <SheetTrigger asChild>
             <Button
               variant="outline"
               size="icon"
-              className="shrink-0 md:hidden"
+              className="group shrink-0 md:hidden bg-transparent"
             >
-              <Menu className="h-5 w-5" />
+              <Menu className="h-5 w-5 text-white group-hover:text-black" />
             </Button>
           </SheetTrigger>
           <SheetContent side="left" className="flex flex-col">
             <nav className="grid gap-2 text-lg font-medium">
               <Link
                 to=""
-                className="flex items-center gap-2 text-lg font-semibold"
+                className="flex !shrink-0 items-center gap-2 text-lg font-semibold"
               >
-               <span className="mb-6 bg-logo">313 DEV GRP</span>
+               <span className="mb-16 bg-logo"></span>
               </Link>
             {/* Dynamic 서브 메뉴 */}
              <SubMenu />
@@ -58,7 +58,7 @@ const HeaderMenuComponents = () => {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="secondary" size="icon" className="rounded-full bg-transparent">
-              <Settings className="h-5 w-5" />
+              <Settings className="h-5 w-5 text-white hover:text-black" />
               <span className="sr-only">Toggle user menu</span>
             </Button>
           </DropdownMenuTrigger>
