@@ -1,10 +1,10 @@
 import { Loader } from "lucide-react"
-import { useFetchData } from '../reducer/linkFetchReducer';
-// 도큐먼트의 가장 메인 페이지 입니다.
-// 루트 = '/'
+import { useFetchData } from '../../reducer/linkFetchReducer';
+// ARMS Poduct (service) 의 제품관리 : 서비스 산출물 조회 페이지 입니다.
+// 루트 = '/product-service-check'
 // 
-function Dashboard() {
-  const  wr_id  = 16; // 게시판 or 페이지 id
+function ProductServiceCheck() {
+  const  wr_id  = 11; // 게시판 or 페이지 id
   const { loading, htmlContent, error } = useFetchData(wr_id);
   //
   //  html -> jsx 로 데이터 Axios로 불러오는 패치는 
@@ -27,4 +27,4 @@ function Dashboard() {
   )
 }
 
-export default Dashboard
+export default ProductServiceCheck

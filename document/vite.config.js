@@ -5,12 +5,16 @@ import react from '@vitejs/plugin-react-swc'
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-// const VITE_ASSET_URL = import.meta.env.VITE_ASSET_URL || '';
 
 export default defineConfig({
   plugins: [react()],
- // base: import.meta.env.VITE_ASSET_URL,
+  base: './',
+  // root: 'src',
+  // build: {
+  //          outDir: path.resolve(__dirname, '/document/dist'),
+  //       },
   server: {
+    cors: { origin: "*" },
     fs: {
       // 1레벨 프로젝트 루트까지 파일 접속 허용
       allow: ['..'],
@@ -21,10 +25,6 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
       },
-    },
-    '/': {
-      target: 'http://313.co.kr/php/gnuboard5/bbs/board.php?bo_table=manual',
-      changeOrigin: true,
     },
   },
   resolve: {
