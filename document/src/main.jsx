@@ -4,7 +4,7 @@ import App from '@/App';
 import { BrowserRouter } from 'react-router-dom'
 
 // 빌드시 env 설정에 따라 Dev 와 Prod 베이스 URL 설정 
-const baseName = import.meta.env.DEV ? "/" : import.meta.env.VITE_ASSET_URL + "/document/dist";
+const baseName = import.meta.env.DEV ? "/" : "/document/dist";
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
