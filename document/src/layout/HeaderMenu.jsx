@@ -60,14 +60,14 @@ const HeaderMenu = () => {
     <>
       <div className="hidden bg-transparent md:block">
         <div className="flex h-full max-h-screen flex-col gap-2">
-          <div className="flex h-80 items-center px-4 lg:h-[100px] lg:px-6">
-            <Link to="/" className="flex !shrink-0 lg:top-7 lg:absolute items-center gap-2 font-semibold ">
+          <div className="flex h-16 items-center px-4 lg:h-[100px] lg:px-6">
+            <Link to="/" className="flex lg:top-7 lg:absolute items-center gap-2 font-semibold ">
               {/* 상단 브랜드 로고 --  Page Header -- */}
               <span className="bg-logo "></span>
             </Link>
           </div>
           <div className="flex-1">
-            <nav className="grid items-start px-2 text-sm font-medium lg:px-4 lg:mt-0 !sm:pt-6">
+            <nav className="grid items-start px-2 text-sm font-medium lg:px-4 lg:mt-0 ">
               {/* 좌측 메뉴 -- Right hand side menu -- */}
               <SubMenu />
             </nav>

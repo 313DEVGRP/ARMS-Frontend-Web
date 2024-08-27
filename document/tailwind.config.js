@@ -9,6 +9,11 @@ module.exports = {
   ],
   prefix: "",
   theme: {
+    screens: {
+      'sm': '640px',
+      'md': '768px',
+      'lg': '1024px',
+    },
     fontSize: {
       xs: '0.7rem',
       sm: '0.8rem',

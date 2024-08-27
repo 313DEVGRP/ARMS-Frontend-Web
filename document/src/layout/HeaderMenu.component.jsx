@@ -31,7 +31,7 @@ const HeaderMenuComponents = () => {
             <nav className="grid gap-2 text-lg font-medium">
               <Link
                 to=""
-                className="flex !shrink-0 items-center gap-2 text-lg font-semibold"
+                className="flex items-center gap-2 text-lg font-semibold"
               >
                <span className="mb-16 bg-logo"></span>
               </Link>

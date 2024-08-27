@@ -51,11 +51,14 @@ export function useFetchData(wrId) { // 페이지 id 로 데이터 로드
                 const savedSrc = domNode.attribs.src
                 return ( <img src={savedSrc} 
                           // style={{ width: 300 }}
-                          onError={e => {
-                          return e.target.src = import.meta.env.VITE_ASSET_URL + savedSrc;
-                    }} 
+                          // onError={e => {
+                          // return e.target.src = import.meta.env.VITE_ASSET_URL + savedSrc;
+                          // }} 
                    />
                  )}
+              if (domNode.name === "header") {
+                return <div />
+              }   
               if (domNode.name === "html" && domNode.attribs.lang.toLowerCase() === "ko") {
                 return domNode.name = "div"
               }
@@ -75,14 +78,15 @@ export function useFetchData(wrId) { // 페이지 id 로 데이터 로드
         });
         dispatch({ type: FETCH_SUCCESS, payload: parsedHtml });
       } catch (error) {
-        console.log(error);
-        dispatch({ type: FETCH_ERROR, payload: error.message });
-      }
+      
+          console.log(error);
+          dispatch({ type: FETCH_ERROR, payload: error.message });
+        }
     }
     if (wrId) {
       fetchData(wrId); // id 불러오기
     }
-  }, [wrId]);
+ }, [wrId]);
 
   return state;
 }
