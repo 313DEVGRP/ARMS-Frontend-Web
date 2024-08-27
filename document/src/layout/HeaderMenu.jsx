@@ -11,9 +11,9 @@ import {
 
 export const AccordionMenu = ({ title, to }) => {
   return (
-        <AccordionContent className='px-8 hover:underline'>
-          <Link to={to} className='text-xs !sm:max-sm:text-base'> {title} </Link>
-        </AccordionContent>
+    <AccordionContent className='px-8 hover:underline lg:text-white dark:text-white !max-sm:text-black'>
+      <Link to={to} className='text-xs !sm:max-sm:text-base'> {title} </Link>
+    </AccordionContent>
   )
 }
 
@@ -26,7 +26,7 @@ export const SubMenu = () => {
         item.subMenus && item.subMenus.length > 0 ? ( // 메뉴 Data에 서브메뉴가 있을 시 아코디언 컴포넌트로 출력
           <Accordion key={index} type="single" collapsible className="flex flex-col gap-1 ">
             <AccordionItem value={`item-${index}`}>
-              <AccordionTrigger className="!sm:text-base !justify-start gap-3 rounded-lg px-3 py-2 text-black dark:text-white transition-all hover:text-primary hover:bg-muted">
+              <AccordionTrigger className=" !sm:text-base !max-sm:text-black !justify-start gap-3 rounded-lg px-3 py-2 lg:text-white dark:text-white transition-all hover:text-primary hover:bg-muted">
                 <item.Icon className="h-4 w-4" />
                 {item.title}  
               </AccordionTrigger>
@@ -44,7 +44,7 @@ export const SubMenu = () => {
           <Link
             key={index}
             to={item.to}
-            className="flex items-center gap-3 rounded-lg px-3 py-2 text-black dark:text-white transition-all hover:text-primary hover:bg-muted hover:underline"
+            className="flex items-center gap-3 rounded-lg px-3 py-2 !max-sm:text-white lg:text-white dark:text-white transition-all hover:text-primary hover:bg-muted hover:underline"
           >
             <item.Icon className="h-4 w-4" />
             {item.title}
@@ -58,16 +58,16 @@ export const SubMenu = () => {
 const HeaderMenu = () => {
   return (
     <>
-      <div className="hidden border-r bg-muted/40 md:block">
+      <div className="hidden bg-transparent md:block">
         <div className="flex h-full max-h-screen flex-col gap-2">
-          <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
-            {/* 상단 브랜드 로고 --  Page Header -- */}
-            <Link to="/" className="flex items-center gap-2 font-semibold">
-              <span className="bg-logo">313 DEV GRP</span>
+          <div className="flex h-80 items-center px-4 lg:h-[100px] lg:px-6">
+            <Link to="/" className="flex !shrink-0 lg:top-7 lg:absolute items-center gap-2 font-semibold ">
+              {/* 상단 브랜드 로고 --  Page Header -- */}
+              <span className="bg-logo "></span>
             </Link>
           </div>
           <div className="flex-1">
-            <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
+            <nav className="grid items-start px-2 text-sm font-medium lg:px-4 lg:mt-0 !sm:pt-6">
               {/* 좌측 메뉴 -- Right hand side menu -- */}
               <SubMenu />
             </nav>

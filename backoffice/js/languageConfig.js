@@ -49,8 +49,7 @@ function execDocReady() {
             "../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jspreadsheet.css",
             "../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jspreadsheet.datatables.css",
             "../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jspreadsheet.theme.css",
-            "/arms/js/common/jspreadsheet/spreadsheet.js",
-            "/arms/css/jspreadsheet/custom_sheet.css"
+            "/arms/js/common/jspreadsheet/spreadsheet.js"
         ],
 
         [
@@ -80,7 +79,6 @@ function execDocReady() {
             setSideMenu("sidebar_menu_config", "sidebar_menu_config_language");
 
             drawExcel("modal_excel");
-
         })
         .catch(function (error) {
             console.error("플러그인 로드 중 오류 발생");
@@ -281,3 +279,62 @@ var SpreadsheetFunctions = (function () {
         startObserver, drawExcel
     };
 })();
+
+///////////////////////////////////////////////////
+// 엑셀데이터 JSON 변경 및 JSON 파일로 다운로드
+/////////////////////////////////////////////////
+function jsonLocaleExport() {
+    let excelData = SpreadsheetFunctions.getExcelData();
+    const koJson = convertToLocaleJson(excelData, 2);
+    const enJson = convertToLocaleJson(excelData, 3);
+    const jpJson = convertToLocaleJson(excelData, 4);
+
+    // JSON 파일로 다운로드
+    downloadJSON('ko.json', koJson);
+    downloadJSON('en.json', enJson);
+    downloadJSON('jp.json', jpJson);
+}
+
+///////////////////////////////////////////////////
+// JSON 파일 다운로드
+/////////////////////////////////////////////////
+function downloadJSON(filename, jsonObject) {
+    const jsonData = JSON.stringify(jsonObject, null, 2);
+    const blob = new Blob([jsonData], { type: 'application/json' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    link.click();
+    URL.revokeObjectURL(link.href);
+}
+
+///////////////////////////////////////////////////
+// language_config.json 엑셀형식 데이터 - JSON 변환
+/////////////////////////////////////////////////
+function convertToLocaleJson(dataArray, langIndex) {
+    const result = {};
+
+    dataArray.forEach(row => {
+        const keys = row[1].split('.');  // "Dashboard.Header.title" => ["Dashboard", "Header", "title"]
+        const value = row[langIndex];    // 해당 언어의 값
+
+        let current = result;
+
+        keys.forEach((key, index) => {
+            if (index === keys.length - 1) {
+                current[key] = value;
+            } else {
+                if (!current[key]) {
+                    current[key] = {};
+                }
+                current = current[key];
+            }
+        });
+    });
+
+    return result;
+}
+
+function csvExport() {
+    $(".jexcel_toolbar_item.material-icons.fa.fa-save").click();
+}
