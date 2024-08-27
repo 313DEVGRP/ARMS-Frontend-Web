@@ -38,7 +38,7 @@ export function useFetchData(wrId) { // 페이지 id 로 데이터 로드
     const fetchData = async (wrId) => {
       dispatch({ type: FETCH_START });
       try {
-        const response = await axios.get(`/api/&wr_id=${wrId}`, {
+        const response = await axios.get(`http://313.co.kr/php/gnuboard5/bbs/board.php?bo_table=manual&wr_id=${wrId}`, {
           headers: {
             'Access-Control-Allow-Origin': '*',
           },
