@@ -6,7 +6,7 @@
   "homepage" : "https://313.co.kr/document/dist",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && mv dist/document/dist/assets dist",
+    "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },

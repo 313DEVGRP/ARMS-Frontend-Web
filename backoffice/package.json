@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && mv dist/backoffice/dist/assets dist",
+    "build": "vite build",
     "lint": "eslint ./src --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "lint:fix": "eslint --fix src/**/*.{js,jsx}",
     "format": "prettier --cache --write .",
