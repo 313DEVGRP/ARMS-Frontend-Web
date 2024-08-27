@@ -1,10 +1,10 @@
 import { Loader } from "lucide-react"
-import { useFetchData } from '../reducer/linkFetchReducer';
-// 도큐먼트의 가장 메인 페이지 입니다.
-// 루트 = '/'
+import { useFetchData } from '../../reducer/linkFetchReducer';
+// ARMS Poduct (service) 의 버전관리 : 서비스 선택 페이지 입니다.
+// 루트 = '/version-control-choice'
 // 
-function Dashboard() {
-  const  wr_id  = 16; // 게시판 or 페이지 id
+function VersionControlChoice() {
+  const  wr_id  = 9; // 게시판 or 페이지 id
   const { loading, htmlContent, error } = useFetchData(wr_id);
   //
   //  html -> jsx 로 데이터 Axios로 불러오는 패치는 
@@ -27,4 +27,4 @@ function Dashboard() {
   )
 }
 
-export default Dashboard
+export default VersionControlChoice

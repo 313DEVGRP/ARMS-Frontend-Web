@@ -27,9 +27,9 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        entryFileNames: 'mmc/dist/assets/[name]-[hash].js',
-        chunkFileNames: 'mmc/dist/assets/[name]-[hash].js',
-        assetFileNames: 'mmc/dist/assets/[name]-[hash][extname]',
+        entryFileNames: 'backoffice/dist/assets/[name]-[hash].js',
+        chunkFileNames: 'backoffice/dist/assets/[name]-[hash].js',
+        assetFileNames: 'backoffice/dist/assets/[name]-[hash][extname]',
       },
     },
   },
