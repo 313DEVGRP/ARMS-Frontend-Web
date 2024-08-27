@@ -32,8 +32,13 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  base: '/document/dist/',
   build: {
-    outDir: 'document/dist'
-  },
+    rollupOptions: {
+      output: {
+        entryFileNames: 'document/dist/assets/[name]-[hash].js',
+        chunkFileNames: 'document/dist/assets/[name]-[hash].js',
+        assetFileNames: 'document/dist/assets/[name]-[hash][extname]',
+      },
+    },
+  }
 })
