@@ -50,7 +50,7 @@ export function useFetchData(wrId) { // 페이지 id 로 데이터 로드
             if (domNode.name === "img") {
                 const savedSrc = domNode.attribs.src
                 return ( <img src={savedSrc} 
-                          style={{ width: 300 }}
+                          // style={{ width: 300 }}
                           onError={e => {
                           return e.target.src = import.meta.env.VITE_ASSET_URL + savedSrc;
                     }} 
