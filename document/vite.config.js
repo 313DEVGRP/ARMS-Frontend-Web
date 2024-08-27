@@ -15,6 +15,10 @@ export default defineConfig({
   //       },
   server: {
     cors: { origin: "*" },
+    fs: {
+      // 1레벨 프로젝트 루트까지 파일 접속 허용
+      allow: ['..'],
+    },
     proxy: {
       '/api': {
         target: 'http://313.co.kr/php/gnuboard5/bbs/board.php?bo_table=manual',
@@ -28,4 +32,13 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        entryFileNames: 'document/dist/assets/[name]-[hash].js',
+        chunkFileNames: 'document/dist/assets/[name]-[hash].js',
+        assetFileNames: 'document/dist/assets/[name]-[hash][extname]',
+      },
+    },
+  }
 })

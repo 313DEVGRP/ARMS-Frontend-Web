@@ -23,7 +23,7 @@ PropTypes : 타입과 형식을 따르는지 검증하는 도구
 */
 function App() {
   return (
-    <ThemeProvider defaultTheme="light"> 
+    <ThemeProvider defaultTheme="dark"> 
      <SubMenuContextProvider>
           <Routes>
             {/* 

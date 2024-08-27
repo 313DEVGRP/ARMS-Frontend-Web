@@ -10,6 +10,7 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     {/* -- React-Router-dom -- BrowserRouter : URL 변경 시 렌더링할 컴포넌트 */}
    <BrowserRouter basename={baseName}> 
+   {/* <BrowserRouter basename="/document/dist"> */}
       <App />
     </BrowserRouter>
   </StrictMode>,
