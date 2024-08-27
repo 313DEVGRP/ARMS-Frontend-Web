@@ -9,6 +9,11 @@ module.exports = {
   ],
   prefix: "",
   theme: {
+    fontSize: {
+      xs: '0.7rem',
+      sm: '0.8rem',
+      base: '1rem',
+    },
     container: {
       center: true,
       padding: "2rem",

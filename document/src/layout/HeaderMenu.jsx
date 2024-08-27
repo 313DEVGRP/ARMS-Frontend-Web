@@ -12,7 +12,7 @@ import {
 export const AccordionMenu = ({ title, to }) => {
   return (
         <AccordionContent className='px-8 hover:underline'>
-          <Link to={to}> {title} </Link>
+          <Link to={to} className='text-xs !sm:max-sm:text-base'> {title} </Link>
         </AccordionContent>
   )
 }
@@ -26,11 +26,11 @@ export const SubMenu = () => {
         item.subMenus && item.subMenus.length > 0 ? ( // 메뉴 Data에 서브메뉴가 있을 시 아코디언 컴포넌트로 출력
           <Accordion key={index} type="single" collapsible className="flex flex-col gap-1 ">
             <AccordionItem value={`item-${index}`}>
-              <AccordionTrigger className="!justify-start gap-3 rounded-lg px-3 py-2 text-black dark:text-white transition-all hover:text-primary hover:bg-muted">
+              <AccordionTrigger className="!sm:text-base !justify-start gap-3 rounded-lg px-3 py-2 text-black dark:text-white transition-all hover:text-primary hover:bg-muted">
                 <item.Icon className="h-4 w-4" />
                 {item.title}  
               </AccordionTrigger>
-              <div className="pl-8">
+              <div className="pl-5 py-1">
               {/* 아코디언 서브 메뉴 출력 */}
                 {item.subMenus.map((el) => (
                   <AccordionMenu key={el.id} title={el.title} to={el.to} />
