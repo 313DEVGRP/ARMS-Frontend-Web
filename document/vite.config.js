@@ -20,10 +20,9 @@ export default defineConfig({
       allow: ['..'],
     },
     proxy: {
-      '/api': {
-        target: 'http://313.co.kr/php/gnuboard5/bbs/board.php?bo_table=manual',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''),
+      '/php': {
+        target: 'http://313.co.kr',
+        changeOrigin: true
       },
     },
   },
