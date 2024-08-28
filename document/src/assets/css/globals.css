@@ -73,3 +73,10 @@
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+/* global lucide icon size  */
+/* 루시드 아이콘 전역 사이즈 변경 */
+.lucide {
+  width: 14px;
+  height: 14px;
+}

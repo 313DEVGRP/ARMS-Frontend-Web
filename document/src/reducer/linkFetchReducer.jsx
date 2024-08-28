@@ -71,8 +71,11 @@ export function useFetchData(wrId) { // 페이지 id 로 데이터 로드
                 // Return the updated div 
                 return domNode;
               }
-              if (domNode.name === "aside" && domNode.id === "bo_vc_w") { 
-                return <div />
+              if (domNode.name === "div" && domNode.id === "topicon") { 
+                 // Add the "hidden" class 하단에 로더 문구 숨김
+                 domNode.attribs.class += ' hidden';
+                 // Return the updated div 
+                 return domNode;
               }  
           },
         });
