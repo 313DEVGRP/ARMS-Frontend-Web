@@ -47,6 +47,8 @@ export function useFetchData(wrId) { // 페이지 id 로 데이터 로드
         const htmlString = response.data;
         const parsedHtml = parse(htmlString, {
           replace: (domNode) => {
+          // console.log(domNode.name === "section")
+           //  console.log(domNode)
             if (domNode.name === "img") {
                 const savedSrc = domNode.attribs.src
                 return ( <img src={savedSrc} 
@@ -57,6 +59,12 @@ export function useFetchData(wrId) { // 페이지 id 로 데이터 로드
                    />
                  )}
               if (domNode.name === "header") {
+                return <div />
+              }   
+              if (domNode.name === "section" && domNode.attribs.id === "bo_v_info") {
+                return <div />
+              }   
+              if (domNode.name === "div" && domNode.attribs.id === "bo_v_top") {
                 return <div />
               }   
               if (domNode.name === "html" && domNode.attribs.lang.toLowerCase() === "ko") {
@@ -71,11 +79,13 @@ export function useFetchData(wrId) { // 페이지 id 로 데이터 로드
                 // Return the updated div 
                 return domNode;
               }
-              if (domNode.name === "div" && domNode.id === "topicon") { 
-                 // Add the "hidden" class 하단에 로더 문구 숨김
+              if (domNode.name === "div" && domNode.attribs.id === "topicon") { 
+                 // Add the "hidden" class 하단에 topicon 숨김
                  domNode.attribs.class += ' hidden';
-                 // Return the updated div 
                  return domNode;
+              }  
+              if (domNode.name === "span" && domNode.attribs.class === "cmt_more") { 
+                 return <span />
               }  
           },
         });
