@@ -204,7 +204,7 @@ function bind_VersionData_By_PdService() {
 				// 시작일 종료일 세팅(datetimepicker)
 				setEdgeDateRange(versionListData);
 				// 선택 된 제품 버전에 해당하는 ALM 프로젝트 조회
-				fetchJiraProjects(selectedPdServiceId, selectedVersionIds);
+				fetchJiraProjects();
 				if (data.length > 0) {
 					console.log("display 재설정.");
 				}
@@ -235,7 +235,7 @@ function makeVersionMultiSelectBox() {
 			let filteredVersionData = versionListData.filter(item => versionTag.includes(item.c_id.toString()));
 			// 시작일 종료일 세팅(datetimepicker)
 			setEdgeDateRange(filteredVersionData);
-			fetchJiraProjects(selectedPdServiceId, selectedVersionIds);
+			fetchJiraProjects();
 
 			$("#multiple-version").siblings(".ms-parent").css("z-index", 1000);
 		},
@@ -297,39 +297,22 @@ function isAllVersionsSelected() {
 }
 
 ////////////////////////////////////////
-// 검색 조건을 선택하여 API 호출 시, ALM 프로젝트가 모두 선택되어 있는지 체크하는 함수
-// 모두 선택 된 경우, query param 으로 보낼 필요가 없기 때문
-////////////////////////////////////////
-function isAllProjectsSelected() {
-	if (!selectedAlmProjectIds) {
-		return false;
-	}
-	return $("#multiple-alm-project option").length === selectedAlmProjectIds.split(",").length;
-}
-
-////////////////////////////////////////
 // 선택 된 제품, 제품 버전 ID 값을 서버에 전달하여 관련 ALM 프로젝트 목록 조회
 ////////////////////////////////////////
-function fetchJiraProjects(pdServiceId, versionIds = null) {
-	let url = "/auth-user/api/arms/jiraProjectPure/getJiraProjects.do?pdServiceId=" + pdServiceId;
-
+function fetchJiraProjects() {
 	let optionalParams = {
 		startDate: $('#date_timepicker_start').val(),
 		endDate: $('#date_timepicker_end').val()
 	};
 
-	if (versionIds) {
-		url += "&pdServiceVersionIds=" + versionIds;
-	}
-
 	if (!isAllVersionsSelected()) {
-		optionalParams.pdServiceVersionIds = versionIds;
+		optionalParams.pdServiceVersionIds = selectedVersionIds;
 	}
 
 	$("#multiple-alm-project option").remove();
 
 	$.ajax({
-		url: url,
+		url: "/auth-user/api/arms/jiraProjectPure/getJiraProjects.do",
 		type: "GET",
 		dataType: "json",
 		success: function(data) {
