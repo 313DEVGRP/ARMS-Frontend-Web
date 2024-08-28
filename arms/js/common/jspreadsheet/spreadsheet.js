@@ -134,6 +134,7 @@
 				tableOverflow: true,
 				textOverflow: false,
 				tableWidth: "100%",
+				columnSorting: false,
 				onchange: function (instance, cell, x, y, value) {
 					console.log(cell);
 				},
