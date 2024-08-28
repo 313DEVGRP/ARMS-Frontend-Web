@@ -497,10 +497,48 @@
 												style="display: flex; flex-direction: row; color:#f8f8f8; flex:0 0 3%;
 															 padding-bottom: 3px; align-items: center; margin-bottom: 0">
 											<div class="tab-image-container" style="margin: 5px 3px 5px 0">
-												<img src="./img/spreadsheet/spreadsheet-2127832_1920.png" width="40px">
+												<img src="./img/spreadsheet/spreadsheet-2127832_1920.png" width="45px">
 											</div>
 											<div class="tab-title-container" style="display: flex; flex-direction: column; width:100%;">
 												<div id="tab-doc-title-bar" style="line-height: 20px; font-size: 13px; margin: 8px 0 8px 8px; min-width:150px">List View (Excel)</div>
+												<div style="float: left" class="btn-group">
+													<button class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
+														&nbsp; Export &nbsp;
+														<i class="fa fa-caret-down"></i>
+													</button>
+													<ul class="dropdown-menu" style="background: rgba(51, 51, 51, 0.9) !important">
+														<li class="hidden">
+															<a id="copychecker" style="color: white">
+																Copy
+															</a>
+														</li>
+														<li>
+															<a id="csvchecker" onClick="csvExport()" style="color: white">
+																CSV
+															</a>
+														</li>
+														<li>
+															<a onClick="jsonExport()" style="color: white">
+																JSON
+															</a>
+														</li>
+														<li class="hidden">
+															<a id="excelchecker" style="color: white">
+																Excel
+															</a>
+														</li>
+														<li class="hidden">
+															<a id="printchecker" style="color: white">
+																Print
+															</a>
+														</li>
+														<li class="hidden">
+															<a id="pdfchecker" style="color: white">
+																PDF
+															</a>
+														</li>
+													</ul>
+												</div>
 												<div id="tab-doc-bar"
 														 class="btn-group hidden"
 														 style="display: flex; flex-direction: row;">

@@ -604,29 +604,29 @@ function dataTableDrawCallback(tableInfo) {
 /////////////////////////////////////////////////
 function drawExcel(target, data) {
 	var columnList = [
-		{ readOnly: true, type: "text", name:"pdServiceName", title: "제품(서비스)", wRatio: 0.1 },				//0
-		{ readOnly: true, type: "text", name:"pdServiceVersionNames", title: "버전(일정)", wRatio: 0.1 }, 					//1 버전(시작일 ~ 종료일)
-		{ readOnly: true, type: "text", name:"almProjectName", title: "ALM Project", wRatio: 0.1 }, 				//2 ALM Project
-		{ readOnly: true, type: "text", name:"isReqName", title: "요구사항 구분", wRatio: 0.1 }, 			//3 요구사항 이슈, 연결이슈, 하위이슈
-		{ readOnly: true, type: "text", name:"reqTitle", title: "A-RMS 요구사항", wRatio: 0.1 },  		//4 암스가 생성한 요구사항
-		{ readOnly: true, type: "text", name:"reqState", title: "A-RMS 요구사항 상태", wRatio: 0.1 }, //5 암스 요구사항 상태
-		{ readOnly: true, type: "text", name: "key", title: "ALM 이슈 키", wRatio: 0.1 }, //16
-		{ readOnly: true, type: "text", name:"issueTitle", title: "ALM 이슈 제목", wRatio: 0.2 },				//6
-		{ readOnly: true, type: "text", name:"issueStatus", title: "ALM 이슈 상태", wRatio: 0.1 }, 			//7
-		{ readOnly: true, type: "text", name:"assigneeName", title: "ALM 이슈 담당자", wRatio: 0.1 }, 		//8
-		{ readOnly: true, type: "calendar", name: "createDate", title: "ALM 이슈 생성일", wRatio: 0.1 }, //9
-		{ readOnly: true, type: "calendar", name: "updatedDate", title: "ALM 이슈 수정일", wRatio: 0.1 }, //10
-		{ readOnly: true, type: "calendar", name: "resolutionDate", title: "ALM 이슈 해결일", wRatio: 0.1 }, //11 해결된 날짜 또는 닫힌 날짜
-		{ readOnly: true, type: "hidden", name: "pdServiceVersions", title: "버전키", wRatio: 0.1 }, //12
-		{ readOnly: true, type: "hidden", name: "pdServiceId", title: "제품서비스키", wRatio: 0.1 }, //13
-		{ readOnly: true, type: "hidden", name: "assigneeEmail", title: "담당자메일", wRatio: 0.1 }, //14
-		{ readOnly: true, type: "hidden", name: "upperKey", title: "upperKey", wRatio: 0.1 }, //15
-		{ readOnly: true, type: "hidden", name: "issueID", title: "issueID", wRatio: 0.1 }, //17
-		{ readOnly: true, type: "hidden", name: "parentReqKey", title: "parentReqKey", wRatio: 0.1 }, //17
-		{ readOnly: true, type: "hidden", name: "etc", title: "etc", wRatio: 0.1 }, //17
-		{ readOnly: true, type: "hidden", name: "isReq", title: "isReq", wRatio: 0.1 }, //17
-		{ readOnly: true, type: "hidden", name: "creqLink", wRatio: 0.1 }, //18
-		{ readOnly: true, type: "hidden", name: "deletedDate", wRatio: 0.1 } //18
+		{ readOnly: true, type: "text", name:"pdServiceName", title: "제품(서비스)", wRatio: 0.1 },						//0
+		{ readOnly: true, type: "text", name:"pdServiceVersionNames", title: "버전(일정)", wRatio: 0.1 }, 		//1 버전(시작일 ~ 종료일)
+		{ readOnly: true, type: "text", name:"almProjectName", title: "ALM Project", wRatio: 0.1 }, 					//2 ALM Project
+		{ readOnly: true, type: "text", name:"isReqName", title: "요구사항 구분", wRatio: 0.1 }, 							//3 요구사항 이슈, 연결이슈, 하위이슈
+		{ readOnly: true, type: "text", name:"reqTitle", title: "A-RMS 요구사항", wRatio: 0.1 },  						//4 암스가 생성한 요구사항
+		{ readOnly: true, type: "text", name:"reqState", title: "A-RMS 요구사항 상태", wRatio: 0.1 }, 				//5 암스 요구사항 상태
+		{ readOnly: true, type: "text", name: "key", title: "ALM 이슈 키", wRatio: 0.1 }, 										//6 (필수)
+		{ readOnly: true, type: "text", name:"issueTitle", title: "ALM 이슈 제목", wRatio: 0.2 },							//7
+		{ readOnly: true, type: "text", name:"issueStatus", title: "ALM 이슈 상태", wRatio: 0.1 }, 						//8
+		{ readOnly: true, type: "text", name:"assigneeName", title: "ALM 이슈 담당자", wRatio: 0.1 }, 				//9
+		{ readOnly: true, type: "calendar", name: "createDate", title: "ALM 이슈 생성일", wRatio: 0.1 }, 			//10
+		{ readOnly: true, type: "calendar", name: "updatedDate", title: "ALM 이슈 수정일", wRatio: 0.1 }, 	  //11
+		{ readOnly: true, type: "calendar", name: "resolutionDate", title: "ALM 이슈 해결일", wRatio: 0.1 },  //12 해결된 날짜 또는 닫힌 날짜
+		{ readOnly: true, type: "hidden", name: "pdServiceVersions", title: "버전키", wRatio: 0.1 }, 					//13 (필수X)
+		{ readOnly: true, type: "hidden", name: "pdServiceId", title: "제품서비스키", wRatio: 0.1 }, 					//14 (필수X)
+		{ readOnly: true, type: "hidden", name: "assigneeEmail", title: "담당자메일", wRatio: 0.1 }, 					//15 (필수X)
+		{ readOnly: true, type: "hidden", name: "upperKey", title: "upperKey", wRatio: 0.1 }, 								//16 (필수X)
+		{ readOnly: true, type: "hidden", name: "issueID", title: "issueID", wRatio: 0.1 }, 									//17 (필수X)
+		{ readOnly: true, type: "hidden", name: "parentReqKey", title: "parentReqKey", wRatio: 0.1 }, 				//18 (필수X)
+		{ readOnly: true, type: "hidden", name: "etc", title: "etc", wRatio: 0.1 }, 													//19 (필수X)
+		{ readOnly: true, type: "hidden", name: "isReq", title: "isReq", wRatio: 0.1 }, 											//20 (필수X)
+		{ readOnly: true, type: "hidden", name: "creqLink", title: "cReqLink", wRatio: 0.1 }, 								//21 (필수X)
+		{ readOnly: true, type: "hidden", name: "deletedDate", title: "deletedDate", wRatio: 0.1 } 						//22 (필수X)
 	];
 
 
@@ -808,3 +808,54 @@ var SpreadsheetFunctions = (function () {
 		startObserver, drawExcel
 	};
 })();
+
+///////////////////////////////////////////////////
+// 엑셀데이터 Export (JSON)
+/////////////////////////////////////////////////
+function jsonExport() {
+	let csvDataList = $(SpreadsheetFunctions.getTargetId("jq"))[0].jexcel.getData();
+
+	if (csvDataList.length === 0) {
+		console.log("[ reportFullData :: jsonExport ] :: excelData 가 없습니다.");
+		return false;
+	}
+
+	const jsonArray = csvDataList.map(row => {
+		const jsonObject = {};
+		SpreadsheetFunctions.getColumns().forEach((column,index) => {
+			jsonObject[column.title] = row[index];
+
+		});
+		return jsonObject;
+	});
+	//let jsonResult = [jsonArray];
+	let currentDate = date_YYMMDD();
+	let fileName = "fullData_" +  currentDate;
+	downloadJSON(fileName, jsonArray);
+}
+
+function downloadJSON(filename, jsonObject) {
+	const jsonData = JSON.stringify(jsonObject, null, 2);
+	const blob = new Blob([jsonData], { type: 'application/json' });
+	const link = document.createElement('a');
+	link.href = URL.createObjectURL(blob);
+	link.download = filename;
+	link.click();
+	URL.revokeObjectURL(link.href);
+}
+///////////////////////////////////////////////////
+// 엑셀데이터 Export (CSV)
+/////////////////////////////////////////////////
+function csvExport() {
+	$(".jexcel_toolbar_item.material-icons.fa.fa-save").click();
+}
+
+let date_YYMMDD = function ()  {
+
+	let date = new Date();
+	let year = String(date.getFullYear()).slice(2);
+	let month = String(date.getMonth() + 1).padStart(2, '0');
+	let day = String(date.getDate()).padStart(2, '0');
+
+	return year + month + day;
+}
