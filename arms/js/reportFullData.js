@@ -116,6 +116,8 @@ function execDocReady() {
 			// 테이블 초기화
 			table = initTable();
 
+			fetchAssignees(selectedPdServiceId, optionalParams);
+
 		})
 		.catch(function(e) {
 			console.error('플러그인 로드 중 오류 발생');
@@ -272,7 +274,7 @@ function makeProjectMultiSelectBox () {
 
 			optionalParams.almProjectIds = selectedAlmProjectIds;
 
-			fetchAssignees(selectedPdServiceId, optionalParams);
+			//fetchAssignees(selectedPdServiceId, optionalParams);
 
 			fetchExcelData(selectedPdServiceId, optionalParams);
 
@@ -348,7 +350,7 @@ function fetchJiraProjects(pdServiceId, versionIds = null) {
 
 			optionalParams.almProjectIds = selectedAlmProjectIds;
 
-			fetchAssignees(selectedPdServiceId, optionalParams);
+			//fetchAssignees(selectedPdServiceId, optionalParams);
 
 			fetchExcelData(selectedPdServiceId, optionalParams);
 
@@ -363,10 +365,12 @@ function fetchJiraProjects(pdServiceId, versionIds = null) {
 // 모든 검색 필터(제품, 제품 버전, ALM 프로젝트, 날짜 등) 선택이 완료 된 경우, 데이터를 조회한다.
 ////////////////////////////////////////
 function fetchAssignees(pdServiceId, optionalParams = {}) {
-	if (!pdServiceId) {
-		jError("제품(서비스)가 선택되지 않았습니다.");
-		return false;
-	}
+
+	// 삭제 대상
+	// if (!pdServiceId) {
+	// 	jError("제품(서비스)가 선택되지 않았습니다.");
+	// 	return false;
+	// }
 
 	let urlBuilder = new UrlBuilder()
 		.setBaseUrl('/auth-user/api/arms/report/full-data/assignees')
@@ -471,7 +475,7 @@ function dateTimePicker() {
 
 				optionalParams.almProjectIds = selectedAlmProjectIds;
 
-				fetchAssignees(selectedPdServiceId, optionalParams);
+				//fetchAssignees(selectedPdServiceId, optionalParams);
 
 				fetchExcelData(selectedPdServiceId, optionalParams);
 			}
@@ -504,7 +508,7 @@ function dateTimePicker() {
 
 				optionalParams.almProjectIds = selectedAlmProjectIds;
 
-				fetchAssignees(selectedPdServiceId, optionalParams);
+				//fetchAssignees(selectedPdServiceId, optionalParams);
 
 				fetchExcelData(selectedPdServiceId, optionalParams);
 			}
@@ -654,6 +658,7 @@ function drawExcel(target, data) {
 		search: true,
 		allowInsertRow: false,
 		allowInsertColumn: false,
+		columnSorting: false,
 		updateTable: function(instace, cell, col, row, val, id) {
 			cell.style.whiteSpace = "normal";
 			cell.style.textAlign = "left";
