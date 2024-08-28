@@ -58,9 +58,19 @@ export function useFetchData(wrId) { // 페이지 id 로 데이터 로드
                           // }} 
                    />
                  )}
+              // if (domNode.name === "header") {
+              //   return <div />
+              // }   
               if (domNode.name === "header") {
-                return <div />
+                // Iterate over the children of the header
+                domNode.children.forEach((child) => {
+                  if (child.name === "h4") {
+                    // Modify the <h4> element as needed
+                    child.attribs.class += ' hidden'
+                  }
+                })
               }   
+
               if (domNode.name === "section" && domNode.attribs.id === "bo_v_info") {
                 return <div />
               }   
