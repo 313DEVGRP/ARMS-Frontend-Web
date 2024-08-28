@@ -116,7 +116,6 @@ function execDocReady() {
 			// 테이블 초기화
 			table = initTable();
 
-			fetchAssignees(selectedPdServiceId, optionalParams);
 
 		})
 		.catch(function(e) {
@@ -274,7 +273,7 @@ function makeProjectMultiSelectBox () {
 
 			optionalParams.almProjectIds = selectedAlmProjectIds;
 
-			//fetchAssignees(selectedPdServiceId, optionalParams);
+			fetchAssignees(selectedPdServiceId, optionalParams);
 
 			fetchExcelData(selectedPdServiceId, optionalParams);
 
@@ -350,7 +349,7 @@ function fetchJiraProjects(pdServiceId, versionIds = null) {
 
 			optionalParams.almProjectIds = selectedAlmProjectIds;
 
-			//fetchAssignees(selectedPdServiceId, optionalParams);
+			fetchAssignees(selectedPdServiceId, optionalParams);
 
 			fetchExcelData(selectedPdServiceId, optionalParams);
 
@@ -475,7 +474,7 @@ function dateTimePicker() {
 
 				optionalParams.almProjectIds = selectedAlmProjectIds;
 
-				//fetchAssignees(selectedPdServiceId, optionalParams);
+				fetchAssignees(selectedPdServiceId, optionalParams);
 
 				fetchExcelData(selectedPdServiceId, optionalParams);
 			}
@@ -508,7 +507,7 @@ function dateTimePicker() {
 
 				optionalParams.almProjectIds = selectedAlmProjectIds;
 
-				//fetchAssignees(selectedPdServiceId, optionalParams);
+				fetchAssignees(selectedPdServiceId, optionalParams);
 
 				fetchExcelData(selectedPdServiceId, optionalParams);
 			}
