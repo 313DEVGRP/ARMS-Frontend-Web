@@ -534,14 +534,10 @@ function setEdgeDateRange(versionData) {
 	}
 
 	$('#date_timepicker_start').datetimepicker('setOptions', {
-		minDate: minMaxDate.min,
-		maxDate: minMaxDate.max,
 		value: oneMonthAgo
 	});
 
 	$('#date_timepicker_end').datetimepicker('setOptions', {
-		minDate: minMaxDate.min,
-		maxDate: minMaxDate.max,
 		value: minMaxDate.max
 	});
 }
