@@ -1,6 +1,7 @@
 import { useEffect, useReducer } from 'react';
 import axios from 'axios';
 import parse from 'html-react-parser';  // html -> jsx 테스트
+import SideContent from '@/layout/SideContent';
 // 리액트 리듀서를 사용하여 코드 repeat을 줄이고 
 // 재사용이 가능하도록 만들었습니다.
 // 액션 타입 설정 -- Define action types --
@@ -14,7 +15,7 @@ function reducer(state, action) {
     case FETCH_START:
       return { ...state, loading: true };
     case FETCH_SUCCESS:
-      return { ...state, loading: false, htmlContent: action.payload, error: null };
+      return { ...state, loading: false, htmlContent: action.payload, sideContent: <SideContent parsedHtml={action.payload} />, error: null };
     case FETCH_ERROR:
       return { ...state, loading: false, error: action.payload };
     default:
@@ -24,6 +25,7 @@ function reducer(state, action) {
 
 // 이니셜 스테이트 -- Initial state --
 const initialState = {
+  sideContent: null,
   htmlContent: null,
   loading: true,
   error: null,
