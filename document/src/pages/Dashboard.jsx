@@ -21,7 +21,7 @@ function Dashboard() {
         ) : error ? (
           <div>Error: {error}</div>
         ) : (
-            <div>
+            <div className="cnt-style">
               {sideContent}
               {htmlContent}
             </div>
