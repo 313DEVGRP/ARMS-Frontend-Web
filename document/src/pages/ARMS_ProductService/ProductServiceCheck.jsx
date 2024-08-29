@@ -4,8 +4,8 @@ import { useFetchData } from '../../reducer/linkFetchReducer';
 // 루트 = '/product-service-check'
 // 
 function ProductServiceCheck() {
-  const  wr_id  = 11; // 게시판 or 페이지 id
-  const { loading, htmlContent, error } = useFetchData(wr_id);
+  const  wr_id  = 13; // 게시판 or 페이지 id
+  const { loading, htmlContent, sideContent, error } = useFetchData(wr_id);
   //
   //  html -> jsx 로 데이터 Axios로 불러오는 패치는 
   //  useFetchData로 이동 했습니다.
@@ -21,7 +21,10 @@ function ProductServiceCheck() {
         ) : error ? (
           <div>Error: {error}</div>
         ) : (
-          htmlContent
+          <div className="cnt-style">
+            {sideContent}
+            {htmlContent}
+          </div>  
         )}
      </>
   )

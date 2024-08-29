@@ -6,7 +6,6 @@ import {
 } from "@/components/shadcn/ui/card"
 
 const SideContent = ({ parsedHtml }) => {
-
   const el = parsedHtml;
 
   // 특정 기호가 포함된 텍스트를 추출
@@ -14,10 +13,9 @@ const SideContent = ({ parsedHtml }) => {
     let texts = [];
 
     const traverse = (node) => {
-      
+ 
       if (node.type === 'b') {
         const text = typeof node.props.children === 'string' ? node.props.children.trim() : '';
-
         // 특정 문자 추출 
         if (text[0] === '■' || text[0] === '●') {
           texts.push(text);
@@ -38,6 +36,7 @@ const SideContent = ({ parsedHtml }) => {
   };
 
   const specificTexts = extractTexts(el);
+
   return (
     <Card className="w-[400px] max-[1280px]:hidden border-none side-wrap" >
        <CardHeader>
@@ -58,4 +57,4 @@ const SideContentLi = ({ text, index }) => {
   return <li key={index}>{text}</li>
 };
 
-export default SideContent;
+export default SideContent

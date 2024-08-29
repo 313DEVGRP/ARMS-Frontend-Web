@@ -49,8 +49,6 @@ export function useFetchData(wrId) { // 페이지 id 로 데이터 로드
         const htmlString = response.data;
         const parsedHtml = parse(htmlString, {
           replace: (domNode) => {
-          // console.log(domNode.name === "section")
-           //  console.log(domNode)
             if (domNode.name === "img") {
                 const savedSrc = domNode.attribs.src
                 return ( <img src={savedSrc} 
@@ -60,9 +58,6 @@ export function useFetchData(wrId) { // 페이지 id 로 데이터 로드
                           // }} 
                    />
                  )}
-              // if (domNode.name === "header") {
-              //   return <div />
-              // }   
               if (domNode.name === "header") {
                 // Iterate over the children of the header
                 domNode.children.forEach((child) => {
@@ -72,7 +67,7 @@ export function useFetchData(wrId) { // 페이지 id 로 데이터 로드
                   }
                 })
               }   
-
+              
               if (domNode.name === "section" && domNode.attribs.id === "bo_v_info") {
                 return <div />
               }   

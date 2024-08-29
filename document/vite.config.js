@@ -9,10 +9,6 @@ const __dirname = path.dirname(__filename);
 export default defineConfig({
   plugins: [react()],
   base: './',
-  // root: 'src',
-  // build: {
-  //          outDir: path.resolve(__dirname, '/document/dist'),
-  //       },
   server: {
     cors: { origin: "*" },
     fs: {
