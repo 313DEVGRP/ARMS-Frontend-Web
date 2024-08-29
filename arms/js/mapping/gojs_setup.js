@@ -154,22 +154,21 @@ var gojs = (function () {
             );
 
         myDiagram.nodeTemplate.contextMenu =
-            $("ContextMenu",
+            $(go.Adornment, "Auto",
+                    $(go.Shape, "RoundedRectangle",
+                        {
+                            fill: "#ffffff",  // 컨텍스트 메뉴의 배경 색상
+                            stroke: "#ccc",  // 컨텍스트 메뉴의 테두리 색상
+                            parameter1: 5,  // 둥글기의 정도
+                        }
+                    ),
                 $(go.Panel, "Vertical",
-                    {
-                        padding: 1,
-                        defaultStretch: go.GraphObject.Horizontal,
-                        // 기본 테두리와 모서리 반경
-                        defaultAlignment: go.Spot.Left,
-                        cursor: "pointer",
-                        margin: 2
-                    },
                     $("ContextMenuButton",
                         $(go.TextBlock, "수정",
                             {
-                                font: "bold 14px sans-serif",  // 폰트 스타일
+                                font: "bold 13px sans-serif",  // 폰트 스타일
                                 stroke: "black",  // 글자 색상
-                                margin: new go.Margin(5, 10, 5, 10),  // 텍스트 블록의 여백
+                                margin: new go.Margin(0, 3, 0, 3),  // 텍스트 블록의 여백
                             }
                         ),
                         {
@@ -179,9 +178,9 @@ var gojs = (function () {
                     $("ContextMenuButton",
                         $(go.TextBlock, "삭제",
                             {
-                                font: "bold 14px sans-serif",  // 폰트 스타일
+                                font: "bold 13px sans-serif",  // 폰트 스타일
                                 stroke: "black",  // 글자 색상
-                                margin: new go.Margin(5, 10, 5, 10),  // 텍스트 블록의 여백
+                                margin: new go.Margin(0, 3, 0, 3),  // 텍스트 블록의 여백
                             }
                         ),
                         {
@@ -838,20 +837,28 @@ var gojs = (function () {
                 toPortId: 'to',
                 relinkableTo: true,
                 contextMenu:  // 우클릭 메뉴 추가
-                    $(go.Adornment, "Vertical",
-                        $("ContextMenuButton",
-                            $(go.TextBlock, "삭제",
-                                {
-                                    font: "bold 14px sans-serif",  // 폰트 스타일
-                                    stroke: "black",  // 글자 색상
-                                    margin: new go.Margin(5, 10, 5, 10),  // 텍스트 블록의 여백
-                                }
-                            ),
+                    $(go.Adornment, "Auto",
+                        $(go.Shape, "RoundedRectangle",
                             {
-                                click: function(e, obj) {
-                                    e.diagram.commandHandler.deleteSelection();
-                                }
+                                fill: "#ffffff",  // 컨텍스트 메뉴의 배경 색상
+                                stroke: "#ccc",  // 컨텍스트 메뉴의 테두리 색상
                             }
+                        ),
+                        $(go.Panel, "Vertical",
+                            $("ContextMenuButton",
+                                    $(go.TextBlock, "삭제",
+                                        {
+                                            font: "bold 13px sans-serif",  // 폰트 스타일
+                                            stroke: "black",  // 글자 색상
+                                            margin: new go.Margin(0, 3, 0, 3)  // 텍스트 블록의 여백
+                                        }
+                                    ),
+                                {
+                                    click: function(e, obj) {
+                                        e.diagram.commandHandler.deleteSelection();
+                                    }
+                                }
+                            )
                         )
                     )
             },

@@ -1,6 +1,7 @@
 import { useEffect, useReducer } from 'react';
 import axios from 'axios';
 import parse from 'html-react-parser';  // html -> jsx 테스트
+import SideContent from '@/layout/SideContent';
 // 리액트 리듀서를 사용하여 코드 repeat을 줄이고 
 // 재사용이 가능하도록 만들었습니다.
 // 액션 타입 설정 -- Define action types --
@@ -14,7 +15,7 @@ function reducer(state, action) {
     case FETCH_START:
       return { ...state, loading: true };
     case FETCH_SUCCESS:
-      return { ...state, loading: false, htmlContent: action.payload, error: null };
+      return { ...state, loading: false, htmlContent: action.payload, sideContent: <SideContent parsedHtml={action.payload} />, error: null };
     case FETCH_ERROR:
       return { ...state, loading: false, error: action.payload };
     default:
@@ -24,6 +25,7 @@ function reducer(state, action) {
 
 // 이니셜 스테이트 -- Initial state --
 const initialState = {
+  sideContent: null,
   htmlContent: null,
   loading: true,
   error: null,
@@ -38,7 +40,7 @@ export function useFetchData(wrId) { // 페이지 id 로 데이터 로드
     const fetchData = async (wrId) => {
       dispatch({ type: FETCH_START });
       try {
-        const response = await axios.get(`/api/&wr_id=${wrId}`, {
+        const response = await axios.get(`/php/gnuboard5/bbs/board_view.php?bo_table=manual&wr_id=${wrId}`, {
           headers: {
             'Access-Control-Allow-Origin': '*',
           },
@@ -50,12 +52,28 @@ export function useFetchData(wrId) { // 페이지 id 로 데이터 로드
             if (domNode.name === "img") {
                 const savedSrc = domNode.attribs.src
                 return ( <img src={savedSrc} 
-                          style={{ width: 300 }}
-                          onError={e => {
-                          return e.target.src = import.meta.env.VITE_ASSET_URL + savedSrc;
-                    }} 
+                          // style={{ width: 300 }}
+                          // onError={e => {
+                          // return e.target.src = import.meta.env.VITE_ASSET_URL + savedSrc;
+                          // }} 
                    />
                  )}
+              if (domNode.name === "header") {
+                // Iterate over the children of the header
+                domNode.children.forEach((child) => {
+                  if (child.name === "h4") {
+                    // Modify the <h4> element as needed
+                    child.attribs.class += ' hidden'
+                  }
+                })
+              }   
+              
+              if (domNode.name === "section" && domNode.attribs.id === "bo_v_info") {
+                return <div />
+              }   
+              if (domNode.name === "div" && domNode.attribs.id === "bo_v_top") {
+                return <div />
+              }   
               if (domNode.name === "html" && domNode.attribs.lang.toLowerCase() === "ko") {
                 return domNode.name = "div"
               }
@@ -68,21 +86,27 @@ export function useFetchData(wrId) { // 페이지 id 로 데이터 로드
                 // Return the updated div 
                 return domNode;
               }
-              if (domNode.name === "aside" && domNode.id === "bo_vc_w") { 
-                return <div />
+              if (domNode.name === "div" && domNode.attribs.id === "topicon") { 
+                 // Add the "hidden" class 하단에 topicon 숨김
+                 domNode.attribs.class += ' hidden';
+                 return domNode;
+              }  
+              if (domNode.name === "span" && domNode.attribs.class === "cmt_more") { 
+                 return <span />
               }  
           },
         });
         dispatch({ type: FETCH_SUCCESS, payload: parsedHtml });
       } catch (error) {
-        console.log(error);
-        dispatch({ type: FETCH_ERROR, payload: error.message });
-      }
+      
+          console.log(error);
+          dispatch({ type: FETCH_ERROR, payload: error.message });
+        }
     }
     if (wrId) {
       fetchData(wrId); // id 불러오기
     }
-  }, [wrId]);
+ }, [wrId]);
 
   return state;
 }
