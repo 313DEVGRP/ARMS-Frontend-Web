@@ -116,6 +116,7 @@ function execDocReady() {
 			// 테이블 초기화
 			table = initTable();
 
+			fetchAssignees();
 
 		})
 		.catch(function(e) {
@@ -273,7 +274,7 @@ function makeProjectMultiSelectBox () {
 
 			optionalParams.almProjectIds = selectedAlmProjectIds;
 
-			fetchAssignees(selectedPdServiceId, optionalParams);
+			//fetchAssignees(selectedPdServiceId, optionalParams);
 
 			fetchExcelData(selectedPdServiceId, optionalParams);
 
@@ -332,7 +333,7 @@ function fetchJiraProjects() {
 
 			optionalParams.almProjectIds = selectedAlmProjectIds;
 
-			fetchAssignees(selectedPdServiceId, optionalParams);
+			// fetchAssignees(selectedPdServiceId, optionalParams);
 
 			fetchExcelData(selectedPdServiceId, optionalParams);
 
@@ -348,15 +349,8 @@ function fetchJiraProjects() {
 ////////////////////////////////////////
 function fetchAssignees(pdServiceId, optionalParams = {}) {
 
-	// 삭제 대상
-	// if (!pdServiceId) {
-	// 	jError("제품(서비스)가 선택되지 않았습니다.");
-	// 	return false;
-	// }
-
 	let urlBuilder = new UrlBuilder()
-		.setBaseUrl('/auth-user/api/arms/report/full-data/assignees')
-		.addQueryParam('pdServiceId', pdServiceId);
+		.setBaseUrl('/auth-user/api/arms/report/full-data/assignee-list');
 
 	const { pdServiceVersionIds = null, almProjectIds = null, startDate = null, endDate = null, emailAddress = null } = optionalParams;
 
@@ -457,7 +451,7 @@ function dateTimePicker() {
 
 				optionalParams.almProjectIds = selectedAlmProjectIds;
 
-				fetchAssignees(selectedPdServiceId, optionalParams);
+				//fetchAssignees(selectedPdServiceId, optionalParams);
 
 				fetchExcelData(selectedPdServiceId, optionalParams);
 			}
@@ -490,7 +484,7 @@ function dateTimePicker() {
 
 				optionalParams.almProjectIds = selectedAlmProjectIds;
 
-				fetchAssignees(selectedPdServiceId, optionalParams);
+				//fetchAssignees(selectedPdServiceId, optionalParams);
 
 				fetchExcelData(selectedPdServiceId, optionalParams);
 			}
@@ -552,7 +546,8 @@ var initTable = function() {
 		rowGroup: [0],
 		isAddCheckbox: true,
 		autoWidth: false,
-		idColumnIndex: 1
+		idColumnIndex: 1,
+		order: [[2, "asc"]]
 	});
 
 
