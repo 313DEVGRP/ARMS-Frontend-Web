@@ -39,7 +39,7 @@ export const SubMenuContextProvider = ({children}) => {
     }, 
     {
       to: "/installation",
-      title: "ARMS Install",
+      title: "ARMS Installation",
       Icon: ()=> (<PackagePlus />),
     }, 
     {
@@ -53,7 +53,7 @@ export const SubMenuContextProvider = ({children}) => {
     },
     {
       to: "#",
-      title: ["ARMS Poduct", "Service"],
+      title: ["ARMS Product", "Service"],
       Icon: ()=> (<MonitorDown />),
       subMenus: [
         { id: 1, to: '/product-service-choice', title: '제품관리 : 서비스 선택' },
