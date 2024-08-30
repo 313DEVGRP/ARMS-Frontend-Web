@@ -91,6 +91,10 @@ function execDocReady() {
                 }
             }, 313 /*milli*/);
 
+            $("#text").on("input", function () {
+                var searchString = $(this).val();
+                $("#alm_server_tree").jstree("search", searchString);
+            });
         })
         .catch(function (e) {
             console.error("플러그인 로드 중 오류 발생");
@@ -254,6 +258,7 @@ function generate_gojs_mapping_data(req_state_category_list, arms_state_list, al
 
     const category_nodes = {};
     const arms_state_nodes = {};
+    let alm_status_nodes = {};
 
     Object.entries(req_state_category_list).forEach(([key, value]) => {
         const category_type = "arms-category";
@@ -311,6 +316,7 @@ function generate_gojs_mapping_data(req_state_category_list, arms_state_list, al
         };
 
         node_data_array.push(node);
+        alm_status_nodes[status.c_id] = node;
         alm_status_y_position += y_spacing;
     });
 
@@ -329,11 +335,25 @@ function generate_gojs_mapping_data(req_state_category_list, arms_state_list, al
         }
     });
 
+    // 암스 상태 노드 정렬
     const sorted_arms_state_nodes = Object.values(arms_state_nodes).sort((a, b) => {
-        const mappingA = (a.mapping_id || "9999").toString();
-        const mappingB = (b.mapping_id || "9999").toString();
-        // mapping_id를 기준으로 오름차순 정렬
-        return mappingA.localeCompare(mappingB);
+        const mappingAExists = a.mapping_id !== undefined && a.mapping_id !== null;
+        const mappingBExists = b.mapping_id !== undefined && b.mapping_id !== null;
+
+        // mapping_id가 없는 데이터는 아래쪽에 배치
+        if (!mappingAExists) return 1;
+        if (!mappingBExists) return -1;
+
+        // 매핑 기준 상태 카테고리 노드 조회
+        const category_node_a = category_nodes[a.mapping_id];
+        const category_node_b = category_nodes[b.mapping_id];
+
+        // 매핑된 상태 카테고리가 없으면 아래 쪽에 배치
+        if (category_node_a === undefined) return 1;
+        if (category_node_b === undefined) return -1;
+
+        // 상태 카테고리 y 좌표를 기준 정렬
+        return get_y_position(category_node_a) - get_y_position(category_node_b);
     });
 
     arms_state_y_position = 0;
@@ -342,11 +362,43 @@ function generate_gojs_mapping_data(req_state_category_list, arms_state_list, al
         arms_state_y_position += y_spacing;
     });
 
+    // ALM 상태 노드 ARMS에 매핑된 노드 기준으로 정렬
+    const sorted_alm_status_nodes = Object.values(alm_status_nodes).sort((a, b) => {
+        const mappingAExists = a.mapping_id !== undefined && a.mapping_id !== null;
+        const mappingBExists = b.mapping_id !== undefined && b.mapping_id !== null;
+
+        // mapping_id가 없는 데이터는 아래쪽에 배치
+        if (!mappingAExists) return 1;
+        if (!mappingBExists) return -1;
+
+        // 매핑 기준 ARMS 상태 노드 조회
+        const state_node_a = arms_state_nodes[a.mapping_id];
+        const state_node_b = arms_state_nodes[b.mapping_id];
+
+        // 매핑된 ARMS 상태가 없으면 아래 쪽에 배치
+        if (state_node_a === undefined) return 1;
+        if (state_node_b === undefined) return -1;
+
+        // ARNS 상태 y 좌표를 기준 정렬
+        return get_y_position(state_node_a) - get_y_position(state_node_b);
+    });
+
+    alm_status_y_position = 0;
+    sorted_alm_status_nodes.forEach(node => {
+        node.loc = `${alm_status_x_position} ${alm_status_y_position}`;
+        alm_status_y_position += y_spacing;
+    });
+
     return {
         class: 'GraphLinksModel',
         nodeDataArray: node_data_array,
         linkDataArray: link_data_array
     };
+}
+
+// y 좌표를 추출하는 헬퍼 함수
+function get_y_position(node) {
+    return parseFloat(node.loc.split(" ")[1]);
 }
 
 function get_arms_state_list() {
@@ -573,11 +625,6 @@ function jstree_click(data) {
         mapping_data_load(null, null, project_c_id, issueType_c_id);
     }
 }
-
-$("#text").on("input", function () {
-    var searchString = $(this).val();
-    $("#alm_server_tree").jstree("search", searchString);
-});
 
 ///////////////////////////////////
 // 팝업 띄울 때, UI 일부 수정되도록
