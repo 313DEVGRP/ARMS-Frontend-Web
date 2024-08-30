@@ -695,7 +695,7 @@ function save_btn_click() {
 		data.ref = 2;
 		jira_server_request_create_or_update(
 			"/auth-user/api/arms/jiraServer/addJiraServerNode.do",
-			"POST", data, "신규 제품 등록이 완료 되었습니다.");
+			"POST", data, "신규 서버가 등록이 완료 되었습니다.");
 	});
 }
 
@@ -1910,85 +1910,3 @@ function move_issuepriority_default_setting(alm_server_id) {
 			console.error("비동기 작업 중 에러 발생", error);
 		});
 }
-
-// 리팩토링 전 코드(오류 있을 시 원복용)
-// 데이터 테이블 구성 이후 꼭 구현해야 할 메소드 : 열 클릭시 이벤트
-/* function dataTableClick(tempDataTable, selectedData) {
-	// => 카드 목록 클릭시 해당 카드의 c_id를 활용해서 가져오도록 만들어야 함
-	console.log("[ jiraServer :: dataTableClick] :: selectedData =>  ");
-	console.log(selectedData);
-	selectId = selectedData.c_id;
-	// c_id로 getNode 실행
-
-	//jiraServerCardClick(selectId);
-	if(selectedData.c_jira_name !== undefined) {
-		selectProjectId = selectedData.c_id;
-		console.log("[ jiraServer :: dataTableClick ] :: selectProjectId => " + selectProjectId);
-	}
-}*/
-
-/*function draw_ribbon(alm_server_c_id, alm_server_type) {
-	$.ajax({
-		url: "/auth-user/api/arms/jiraServerProjectPure/getNode.do?c_id=" + alm_server_c_id,
-		type: "GET",
-		contentType: "application/json;charset=UTF-8",
-		dataType: "json",
-		progress: true,
-		statusCode: {
-			200: function (data) {
-				let alm_server = data;
-
-				let ribbonSelector = ".ribbon-" + alm_server_c_id;
-				let ribbonHtmlData = ``;
-
-				if (alm_server_type === "온프레미스") {
-					if (is_issuetype_ready(alm_server.jiraIssueTypeEntities)) {
-						ribbonHtmlData += `<div class="ribbon ribbon-info">Ready</div>`;
-					}
-				}
-				else {
-					// 지라 클라우드 or 레드마인 온프레미스일 경우 확인
-					let issue_type_by_project = alm_server.jiraProjectIssueTypePureEntities.every(project =>
-						is_issuetype_ready(project.jiraIssueTypeEntities)
-					);
-
-					if (alm_server_type === "레드마인_온프레미스") {
-						const issue_priority = is_issuetype_ready(alm_server.jiraIssuePriorityEntities);
-
-						if (issue_type_by_project && issue_priority) {
-							ribbonHtmlData += `<div class="ribbon ribbon-info" >Ready</div>`;
-						}
-						else if (issue_priority) {
-							ribbonHtmlData += create_ribbon_html(`not_ready_modal_popup('${alm_server_c_id}', 'issueType', '${alm_server_type}')`, "Help");
-						}
-						else if (issue_type_by_project) {
-							ribbonHtmlData += create_ribbon_html(`not_ready_modal_popup('${alm_server_c_id}', 'issuePriority', '${alm_server_type}')`, "Help");
-						}
-						else {
-							ribbonHtmlData += create_ribbon_html(`not_ready_modal_popup('${alm_server_c_id}', 'both', '${alm_server_type}')`, "Help");
-						}
-					}
-					else if (alm_server_type === "클라우드") {
-						if (issue_type_by_project) {
-							ribbonHtmlData += `<div class="ribbon ribbon-info" >Ready</div>`;
-						}
-						else {
-							ribbonHtmlData += create_ribbon_html(`not_ready_modal_popup('${alm_server_c_id}', 'issueType', '${alm_server_type}')`, "Help");
-						}
-					}
-				}
-
-				$(ribbonSelector).append(ribbonHtmlData);
-			}
-		},
-		error: function (e) {
-			if(alm_server_c_id === undefined || alm_server_c_id === "") {
-				jError("지라 서버 조회 중 에러가 발생했습니다. (지라(서버) 아이디 없음)");
-			}
-			else {
-				jError("지라 서버 조회 중 에러가 발생했습니다. 지라 서버 아이디 :: " + alm_server_c_id);
-			}
-		}
-	});
-}
-*/
