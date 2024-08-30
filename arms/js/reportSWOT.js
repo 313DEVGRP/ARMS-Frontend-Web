@@ -76,7 +76,9 @@ function execDocReady() {
 
 			// 스크립트 실행 로직을 이곳에 추가합니다.
 			const svg = d3.select('#matrix');
-			const width = +svg.attr('width') - 100;
+			//const width = +svg.attr('width') - 100;
+			const width = $("#matrix_wrapper").width();
+			//const height = +svg.attr('height') - 100;
 			const height = +svg.attr('height') - 100;
 
 			const colors = [
@@ -125,8 +127,8 @@ function execDocReady() {
 				.append('rect')
 				.attr('x', MATRIX_X)
 				.attr('y', MATRIX_Y)
-				.attr('width', 800)
-				.attr('height', 600)
+				.attr('width', width)
+				.attr('height', height)
 				.attr('rx', 8)
 				.attr('class', 'rectangle');
 
