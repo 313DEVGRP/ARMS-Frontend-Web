@@ -29,7 +29,7 @@ export function useActiveLink() {
 export const SubMenuContext = createContext();
 
 export const SubMenuContextProvider = ({children}) => {
-  const { activeLink, handleSetActiveLink } = useActiveLink();
+  const { activeLink, handleSetActiveLink  } = useActiveLink();
 
   const value = [
     {
@@ -39,7 +39,7 @@ export const SubMenuContextProvider = ({children}) => {
     }, 
     {
       to: "/installation",
-      title: "ARMS Install",
+      title: "ARMS Installation",
       Icon: ()=> (<PackagePlus />),
     }, 
     {
@@ -53,7 +53,7 @@ export const SubMenuContextProvider = ({children}) => {
     },
     {
       to: "#",
-      title: "ARMS Poduct Service",
+      title: ["ARMS Product", "Service"],
       Icon: ()=> (<MonitorDown />),
       subMenus: [
         { id: 1, to: '/product-service-choice', title: '제품관리 : 서비스 선택' },
@@ -66,7 +66,7 @@ export const SubMenuContextProvider = ({children}) => {
     },
     {
       to: "#",
-      title: "ARMS ALM",
+      title: ["ALM", "Jira, github, etc."],
       Icon: ()=> (<Boxes />),
       subMenus: [
         { id: 1, to: '#', title: '서버관리 : ALM 서버 조회' },

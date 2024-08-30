@@ -1,45 +1,70 @@
-import React, { useContext } from 'react'
-import { Link } from 'react-router-dom'
+import { useContext, useEffect, useState } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 import { SubMenuContext } from '../contexts/contexts' 
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/shadcn/ui/accordion"
-
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/shadcn/ui/accordion"
 
 export const AccordionMenu = ({ title, to, isActive }) => {
   return (
-    <AccordionContent className='px-8 lg:text-white dark:text-white !max-sm:text-black'>
+    <AccordionContent className='px-8 dark:text-white'>
       <Link to={to} className={`!sm:text-base ${isActive ? 'active text-blue-400 font-bold' : ''}`}> {title} </Link>
     </AccordionContent>
   )
 }
 
 export const SubMenu = () => {
-  const { menuItems, activeLink } = useContext(SubMenuContext);
+  const { menuItems, activeLink } = useContext(SubMenuContext)
+  const [openItems, setOpenItems] = useState([])
+  const location = useLocation()
+
+  useEffect(() => {
+    const newOpenItems = menuItems
+      .map((item, index) => {
+        if (item.subMenus && (item.subMenus.some(subItem => subItem.to === location.pathname) || openItems.includes(`item-${index}`))) {
+          return `item-${index}`;
+        }
+        return null;
+      })
+      .filter(Boolean);
+    setOpenItems(newOpenItems);
+  }, [location, menuItems]);
+
+  const handleAccordionChange = (value) => {
+    setOpenItems(value);
+  };
 
   return (
     <>
      {menuItems.map((item, index) => {
-      const isActive = activeLink === item.to;
+      const isActive = activeLink === item.to || (item.subMenus && item.subMenus.some(subItem => subItem.to === activeLink))
       const combinedClassName = `
-      ${isActive ? `active bg-gray-100 !text-blue-400` : ''}
+      ${isActive ? `active !text-blue-400` : ''}
       ${item.className || ''}
       `.trim();
  
       return (
-        item.subMenus && item.subMenus.length > 0 ? ( // 메뉴 Data에 서브메뉴가 있을 시 아코디언 컴포넌트로 출력
-          <Accordion key={index} type="single" collapsible className="flex flex-col gap-1">
+        // 메뉴 Data에 서브메뉴가 있을 시 아코디언 컴포넌트로 출력
+        item.subMenus && item.subMenus.length > 0 ? ( 
+          <Accordion 
+          key={index} 
+          type="multiple" 
+          value={openItems}
+          onValueChange={handleAccordionChange}
+          // collapsible 
+          className="flex flex-col gap-1">
             <AccordionItem value={`item-${index}`}>
-              <AccordionTrigger 
-                className={`!max-sm:text-black !justify-start gap-3 rounded-lg px-3 py-2 lg:text-white dark:text-white transition-all hover:text-blue-400 hover:bg-muted ${isActive ? 'active bg-gray-100 !text-primary' : ''}`}
+              <AccordionTrigger
+                 className={`!justify-start gap-3 rounded-lg px-3 py-2 dark:text-white transition-all hover:text-blue-400 hover:bg-muted ${isActive ? 'active !text-blue-400 data-[state=open]:animate-accordion-down' : ''}`}
                 >
                 <item.Icon />
-                {item.title}  
+                    {Array.isArray(item.title) ? (
+                    <>
+                      {item.title[0]} <sup className='-m-2'>{item.title[1]}</sup>
+                    </>
+                  ) : (
+                    item.title
+                  )} 
               </AccordionTrigger>
-              <div className="pl-5 !sm:text-base">
+              <div className="pl-1 !sm:text-sm">
               {/* 아코디언 서브 메뉴 출력 */}
                 {item.subMenus.map((el) => (
                   <AccordionMenu 
@@ -58,10 +83,16 @@ export const SubMenu = () => {
           <Link
             key={index}
             to={item.to}
-             className={`flex items-center gap-3 rounded-lg px-3 py-2 !max-sm:text-white lg:text-white dark:text-white transition-all hover:text-blue-400 hover:bg-muted ${combinedClassName}` }
+             className={`flex items-center gap-3 rounded-lg px-3 py-2 dark:text-white transition-all hover:text-blue-400 hover:bg-muted ${combinedClassName}` }
              >
             <item.Icon />
-            {item.title}
+            {Array.isArray(item.title) ? (
+                <>
+                  {item.title[0]} <sup>{item.title[1]}</sup>
+                </>
+              ) : (
+                item.title
+              )}
           </Link>
         ))
        }
@@ -76,7 +107,7 @@ const HeaderMenu = () => {
     <>
       <div className="hidden bg-transparent md:block">
         <div className="flex h-full max-h-screen flex-col gap-2">
-          <div className="flex md:mb-12 lg:mb-2 h-16 items-center px-4 lg:h-[100px] lg:px-6">
+          <div className="flex md:mb-20 lg:mb-2 h-16 items-center px-4 lg:h-[130px] lg:px-6">
             <Link to="/" className="flex lg:top-7 lg:absolute items-center gap-2 font-semibold ">
               {/* 상단 브랜드 로고 --  Page Header -- */}
               <span className="bg-logo "></span>

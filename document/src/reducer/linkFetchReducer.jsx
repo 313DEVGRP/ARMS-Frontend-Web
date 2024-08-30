@@ -49,22 +49,15 @@ export function useFetchData(wrId) { // 페이지 id 로 데이터 로드
         const htmlString = response.data;
         const parsedHtml = parse(htmlString, {
           replace: (domNode) => {
-          // console.log(domNode.name === "section")
-           //  console.log(domNode)
             if (domNode.name === "img") {
                 const savedSrc = domNode.attribs.src
                 return ( <img src={savedSrc} 
                           // style={{ width: 300 }}
-                          // onError={e => {
-                          // return e.target.src = import.meta.env.VITE_ASSET_URL + savedSrc;
-                          // }} 
-                   />
-                 )}
-              // if (domNode.name === "header") {
-              //   return <div />
-              // }   
-              if (domNode.name === "header") {
+                          />
+                        )}
+               if (domNode.name === "header") {
                 // Iterate over the children of the header
+                // 게시물 상단 <h4> 문구 숨김
                 domNode.children.forEach((child) => {
                   if (child.name === "h4") {
                     // Modify the <h4> element as needed
@@ -72,7 +65,6 @@ export function useFetchData(wrId) { // 페이지 id 로 데이터 로드
                   }
                 })
               }   
-
               if (domNode.name === "section" && domNode.attribs.id === "bo_v_info") {
                 return <div />
               }   
@@ -103,7 +95,6 @@ export function useFetchData(wrId) { // 페이지 id 로 데이터 로드
         });
         dispatch({ type: FETCH_SUCCESS, payload: parsedHtml });
       } catch (error) {
-      
           console.log(error);
           dispatch({ type: FETCH_ERROR, payload: error.message });
         }

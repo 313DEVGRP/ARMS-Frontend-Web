@@ -21,18 +21,20 @@ Routes : URL 경로와 컴포넌트를 매핑하는 컨테이너
 Route : 사용자가 접근할 url 컴포넌트
 PropTypes : 타입과 형식을 따르는지 검증하는 도구
 */
+
 function App() {
   return (
     <ThemeProvider defaultTheme="dark"> 
      <SubMenuContextProvider>
+          <Layout>
           <Routes>
             {/* 
               -- Sub menu & path -- 
               Route path 를 만들고 contexts/contexts.jsx 파일로 가서 서브 메뉴 링크를 수정하면 연결 됩니다.  
               To connect the path to the submenu, check 'contexts/contets.jsx' 
             */}
-           <Route path='/' element={<Layout />}>
-              <Route index element={<Dashboard /> } />
+           {/* <Route element={<Layout />}> */}
+              <Route path='/' element={<Dashboard /> } />
               <Route path='installation' element={<Installation /> } />
               <Route path='integration-status' element={<IntegrationStatus /> } />
               <Route path='progress-status' element={<ProgressStatus /> } />
@@ -42,8 +44,9 @@ function App() {
               <Route path='version-control-choice' element={<VersionControlChoice /> } />
               <Route path='version-control-check' element={<VersionControlCheck /> } />
               <Route path='version-control-edit' element={<VersionControlEdit /> } />
-           </Route>
-          </Routes>
+           {/* </Route> */}
+           </Routes>
+          </Layout>
       </SubMenuContextProvider>
     </ThemeProvider>
   )

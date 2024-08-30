@@ -177,9 +177,7 @@ table.jexcel {
 table.jexcel tbody tr td {
     border-top: none !important;
     color: #f8f8f8;
-
-    background-color: rgba(51,51,51,0.8);
-
+    background-color: rgba(51,51,51,0.9);
     border-top: none !important;
     border-right: 1px solid var(--dark_jexcel_border_color_5) !important;
     border-bottom: 1px solid var(--dark_jexcel_border_color_5) !important;
