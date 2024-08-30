@@ -205,7 +205,7 @@ function draw_card_deck(alm_server_list) {
 									</div>
 								</div>
 								<div class="flex-grow-1 ml-4 mb-2">
-									<h5 class="fs-15 mb-1 font14">${alm_server_list[i].c_title}</h5>
+									<h5 class="fs-15 mb-1 font13">${alm_server_list[i].c_title}</h5>
 									<p class="font13 text-muted">${alm_server_list[i].c_jira_server_base_url}</p>
 								</div>
 							</div>
