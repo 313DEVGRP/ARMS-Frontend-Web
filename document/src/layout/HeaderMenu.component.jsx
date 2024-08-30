@@ -26,7 +26,7 @@ const HeaderMenuComponents = () => {
                 className="flex items-center gap-10 font-semibold"
               >
                {/* top left logo section */}
-               <span className="mb-28 bg-logo"></span>
+               <span className="bg-logo"></span>
               </Link>
             {/*  서브 메뉴 */}
              <SubMenu />

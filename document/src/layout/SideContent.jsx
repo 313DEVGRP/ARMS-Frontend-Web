@@ -35,7 +35,7 @@ const SideContent = ({ parsedHtml }) => {
 
   const texts = extractTexts(el);
 
-  // 텍스트를 h1과 ul > li로 변환
+  // 텍스트를 strong과 ul > li로 변환
   const renderContent = () => {
     let elements = [];
     let currentList = [];
@@ -49,7 +49,7 @@ const SideContent = ({ parsedHtml }) => {
           currentList = [];
           inList = false;
         }
-        // *로 시작하는 텍스트를 <h1>으로 렌더링
+        // *로 시작하는 텍스트를 <strong>으로 렌더링
         elements.push(<strong className="sub-tit" key={`tit-${index}`}>{text.trim()}</strong>);
       } else if (!isNaN(parseInt(text))) {
         // 숫자 텍스트를 <li>로 추가
