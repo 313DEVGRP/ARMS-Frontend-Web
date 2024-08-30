@@ -28,24 +28,14 @@ function execDocReady() {
 			"../reference/light-blue/lib/vendor/http_blueimp.github.io_JavaScript-Load-Image_js_load-image.js",
 			"../reference/light-blue/lib/vendor/http_blueimp.github.io_JavaScript-Canvas-to-Blob_js_canvas-to-blob.js",
 			"../reference/light-blue/lib/jquery.iframe-transport.js",
-			"../reference/light-blue/lib/jquery.fileupload.js",
-			"../reference/light-blue/lib/jquery.fileupload-fp.js",
-			"../reference/light-blue/lib/jquery.fileupload-ui.js"
-		],
-
-		[
 			"../reference/lightblue4/docs/lib/slimScroll/jquery.slimscroll.min.js",
 			"../reference/jquery-plugins/unityping-0.1.0/dist/jquery.unityping.min.js",
-			"../reference/light-blue/lib/bootstrap-datepicker.js",
-			"../reference/jquery-plugins/datetimepicker-2.5.20/build/jquery.datetimepicker.min.css",
-			"../reference/jquery-plugins/datetimepicker-2.5.20/build/jquery.datetimepicker.full.min.js",
 			"../reference/lightblue4/docs/lib/widgster/widgster.js"
 		],
 
 		[
 			"../reference/jquery-plugins/jstree-v.pre1.0/_lib/jquery.cookie.js",
 			"../reference/jquery-plugins/jstree-v.pre1.0/_lib/jquery.hotkeys.js",
-			"../reference/jquery-plugins/jstree-v.pre1.0/jquery.jstree.js",
 			"../reference/jquery-plugins/select2-4.0.2/dist/css/select2_lightblue4.css",
 			"../reference/jquery-plugins/lou-multi-select-0.9.12/css/multiselect-lightblue4.css",
 			"../reference/jquery-plugins/multiple-select-1.5.2/dist/multiple-select-bluelight.css",
@@ -68,6 +58,7 @@ function execDocReady() {
 			"../reference/jquery-plugins/dataTables-1.10.16/extensions/Buttons/js/buttons.print.js",
 			"../reference/jquery-plugins/dataTables-1.10.16/extensions/Buttons/js/jszip.min.js"
 		],
+
 		[
 			"../reference/jquery-plugins/gantt-0.6.1/dist/frappe-gantt.js",
 			"../reference/jquery-plugins/gantt-0.6.1/dist/frappe-gantt.css",
@@ -2098,7 +2089,6 @@ function resetProjectProgress() {
 	$("#performance_progress_rate").val(null);
 	$("#project_progress").val(null);
 }
-
 function diff_day(startDate, endDate) {
 	const start = new Date(startDate);
 	const end = new Date(endDate);
@@ -2110,25 +2100,4 @@ function diff_day(startDate, endDate) {
 	let result = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
 
 	return result;
-}
-
-function mappingStateIconClass(key){
-	if (key === "열림"){
-		return "fa fa-folder-o text-danger";
-	}
-	else if (key === "진행중"){
-		return "fa fa-fire text-warning";
-	}
-	else if (key === "해결됨"){
-		return "fa fa-fire-extinguisher text-success";
-	}
-	else if (key === "닫힘"){
-		return "fa fa-folder text-primary";
-	}
-	else if (key === "폴더"){
-		return "fa fa-folder-open-o";
-	}
-	else {
-		return '';
-	}
 }
