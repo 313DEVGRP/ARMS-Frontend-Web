@@ -221,7 +221,7 @@ html.no-overflowscrolling #autosave_pop {height:auto;max-height:10000px !importa
 
 #bo_v_title {}
 #bo_v_title .bo_v_cate {display:inline-block;line-height:20px;background:#e2eaf6;color:#3a8afd;padding:0 10px;border-radius:3px;}
-#bo_v_title .bo_v_tit {display:block;margin:5px 0 0;word-break:break-all;font-size: 13px;}
+#bo_v_title .bo_v_tit {display:block;margin:5px 0;word-break:break-all;font-size: 13px;}
 
 #bo_v_info {margin:0;color:#666;}
 #bo_v_info:after {display:block;visibility:hidden;clear:both;content:""} 
@@ -304,6 +304,7 @@ box-shadow:1px 1px 5px 0px hsl(232, 36%, 96%)}
 #bo_v_con {margin:10px 0 30px;width:100%;line-height:1.7em;min-height:200px;word-break:break-all;overflow:hidden; text-align: left;}
 #bo_v_con a {display:inline-block;color:#000;text-decoration:underline}
 #bo_v_con img {max-width:100%;height:auto}
+#bo_v_con a img{display:inline-block;margin-top:10px}
 
 #bo_v_act {margin-bottom:30px;text-align:center}
 #bo_v_act .bo_v_act_gng {position:relative}
@@ -1363,18 +1364,24 @@ box-shadow:inset 0 1px 2px rgba(0, 0, 0, 0.1);}
 .fa-commenting-o{display: inline-block;font: normal normal normal 14px / 1 FontAwesome;font-size: inherit;text-rendering: auto;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;}
 .fa-commenting-o:before {content: "";}
 
-.side-wrap{z-index:100; position: fixed; right:15px;top:125px;color:#fff;background-color: rgb(51, 51, 51);border-radius:0;font-size: 13px;}
+.cmt_btn{background: rgba(51, 51, 51, 0.4) !important;border: 1px solid rgba(51, 51, 51, 0.425) !important;}
+.cmt_btn span.cmt_more img{display:none}
+.cmt_btn span.cmt_more{width:20px;height:21px;background:url(../images/bluefire.gif) no-repeat 0 0;background-size:20px 21px}
 
 .cnt-style{position: relative;margin: 15px;border-radius: 3px;box-sizing: content-box;padding: 15px 0;background: rgba(51, 51, 51, .425);margin-bottom: 30px;font-size: 13px;line-height: 1.428571429;color: #f8f8f8;}
 .cnt-style a {color: #a4c6ff;text-decoration: none}
 .cnt-style a:hover,.cnt-style a:focus {color: #5797ff;text-decoration: underline}
 .cnt-style a.btn_b01,
 .cnt-style .btn_b01{display: inline-block;color: #bababa;text-decoration: none;vertical-align: middle;border: 0;background: transparent;line-height: 35px;height: 35px;padding: 0 10px;text-align: center;font-size: 1.4em;-webkit-transition: background-color 0.3s ease-out;-moz-transition: background-color 0.3s ease-out;-o-transition: background-color 0.3s ease-out;transition: background-color 0.3s ease-out;}
-.cmt_btn{background: rgba(51, 51, 51, 0.4) !important;border: 1px solid rgba(51, 51, 51, 0.425) !important;}
-.cmt_btn span.cmt_more img{display:none}
-.cmt_btn span.cmt_more{width:20px;height:21px;background:url(../images/bluefire.gif) no-repeat 0 0;background-size:20px 21px}
 
 .menu-style .menu-top{height:130px}
 .menu-style .menu-top .link-logo{position:relative}
 .menu-style .menu-top .link-logo .bg-logo{position:absolute;left:35px;top:24px}
 .menu-style .menu-body{height:calc(100% - 130px)}
+
+.side-wrap{z-index:100; position: fixed; right:15px;top:125px;color:#fff;background-color: rgb(51, 51, 51);border-radius:0;font-size: 13px;}
+.side-wrap .tit{font-size:13px}
+.side-wrap .sub-tit{display:block;font-size:12px!important}
+.side-wrap .list-items li{font-size:12px}
+.side-wrap .sub-tit + .list-items{margin-top:10px}
+.side-wrap .list-items + .sub-tit{margin-top:15px}
