@@ -49,48 +49,10 @@ export function useFetchData(wrId) { // 페이지 id 로 데이터 로드
         const htmlString = response.data;
         const parsedHtml = parse(htmlString, {
           replace: (domNode) => {
-            if (domNode.name === "img") {
-                const savedSrc = domNode.attribs.src
-                return ( <img src={savedSrc} 
-                          // style={{ width: 300 }}
-                          />
-                        )}
-               if (domNode.name === "header") {
-                // Iterate over the children of the header
-                // 게시물 상단 <h4> 문구 숨김
-                domNode.children.forEach((child) => {
-                  if (child.name === "h4") {
-                    // Modify the <h4> element as needed
-                    child.attribs.class += ' hidden'
-                  }
-                })
-              }   
-              if (domNode.name === "section" && domNode.attribs.id === "bo_v_info") {
-                return <div />
-              }   
-              if (domNode.name === "div" && domNode.attribs.id === "bo_v_top") {
-                return <div />
-              }   
-              if (domNode.name === "html" && domNode.attribs.lang.toLowerCase() === "ko") {
-                return domNode.name = "div"
-              }
-              if (domNode.name === "body") {
-                return domNode.name = "div"
-              }
-              if (domNode.name === "span" && domNode.attribs.class === "spinner") {
-                // Add the "hidden" class 하단에 로더 문구 숨김
-                domNode.attribs.class += ' hidden';
-                // Return the updated div 
-                return domNode;
-              }
-              if (domNode.name === "div" && domNode.attribs.id === "topicon") { 
-                 // Add the "hidden" class 하단에 topicon 숨김
-                 domNode.attribs.class += ' hidden';
-                 return domNode;
-              }  
-              if (domNode.name === "span" && domNode.attribs.class === "cmt_more") { 
-                 return <span />
-              }  
+            // 컨텐츠 영역만 불러옴 삭제
+            if (domNode.name === "section" && domNode.attribs.id === "bo_v_info") {
+              return <div />
+            }
           },
         });
         dispatch({ type: FETCH_SUCCESS, payload: parsedHtml });

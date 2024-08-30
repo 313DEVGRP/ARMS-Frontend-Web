@@ -105,23 +105,23 @@ export const SubMenu = () => {
 const HeaderMenu = () => {
   return (
     <>
-      <div className="hidden bg-transparent md:block">
-        <div className="flex h-full max-h-screen flex-col gap-2">
-          <div className="flex md:mb-20 lg:mb-2 h-16 items-center px-4 lg:h-[130px] lg:px-6">
-            <Link to="/" className="flex lg:top-7 lg:absolute items-center gap-2 font-semibold ">
+      <div className="menu-style hidden md:block">
+        <div className="flex h-full max-h-screen flex-col">
+          <div className="menu-top flex">
+            <Link to="/" className="link-logo items-center">
               {/* 상단 브랜드 로고 --  Page Header -- */}
-              <span className="bg-logo "></span>
+              <span className="bg-logo"></span>
             </Link>
           </div>
-          <div className="flex-1">
-            <nav className="grid items-start px-2 text-sm lg:px-4 lg:mt-0">
+          <div className="menu-body flex-1">
+            <nav className="grid items-start px-2 text-sm lg:px-4">
               {/* 좌측 메뉴 -- Right hand side menu -- */}
               <SubMenu />
             </nav>
           </div>
+        </div>
       </div>
-    </div>
-  </>
+    </>
  )
 }
 
