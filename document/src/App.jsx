@@ -31,8 +31,8 @@ function App() {
               Route path 를 만들고 contexts/contexts.jsx 파일로 가서 서브 메뉴 링크를 수정하면 연결 됩니다.  
               To connect the path to the submenu, check 'contexts/contets.jsx' 
             */}
-           <Route path='/' element={<Layout />}>
-              <Route index element={<Dashboard /> } />
+           <Route element={<Layout />}>
+              <Route path='/' element={<Dashboard /> } />
               <Route path='installation' element={<Installation /> } />
               <Route path='integration-status' element={<IntegrationStatus /> } />
               <Route path='progress-status' element={<ProgressStatus /> } />
