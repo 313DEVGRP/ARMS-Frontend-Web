@@ -24,12 +24,6 @@ function execDocReady() {
             "../reference/light-blue/lib/vendor/http_blueimp.github.io_JavaScript-Load-Image_js_load-image.js",
             "../reference/light-blue/lib/vendor/http_blueimp.github.io_JavaScript-Canvas-to-Blob_js_canvas-to-blob.js",
             "../reference/light-blue/lib/jquery.iframe-transport.js",
-/*            "../reference/light-blue/lib/jquery.fileupload.js",
-            "../reference/light-blue/lib/jquery.fileupload-fp.js",
-            "../reference/light-blue/lib/jquery.fileupload-ui.js",
-            "../reference/jquery-plugins/datetimepicker-2.5.20/build/jquery.datetimepicker.min.css",
-            "../reference/light-blue/lib/bootstrap-datepicker.js",
-            "../reference/jquery-plugins/datetimepicker-2.5.20/build/jquery.datetimepicker.full.min.js",*/
             "../reference/lightblue4/docs/lib/widgster/widgster.js",
             "../reference/lightblue4/docs/lib/slimScroll/jquery.slimscroll.min.js",
         ],
@@ -46,7 +40,6 @@ function execDocReady() {
             "../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jsuites.css",
             "../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/index.js",
             "../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jspreadsheet.css",
-            // "../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jspreadsheet.datatables.css",
             "../reference/jquery-plugins/jspreadsheet-ce-4.13.1/dist/jspreadsheet.theme.css"
         ],
         [
