@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import { ThemeProvider } from '@/components/shadcn/theme-provider'
 import { SubMenuContextProvider } from '@/contexts/contexts'
 import '../../reference/light-blue/documentation/css/font-awesome/css/font-awesome.min.css'
@@ -37,6 +37,7 @@ function App() {
             */}
            {/* <Route element={<Layout />}> */}
               <Route path='/' element={<Dashboard /> } />
+              <Route path='*' element={ <Navigate replace to="/" /> } />
               <Route path='installation' element={<Installation /> } />
               <Route path='integration-status' element={<IntegrationStatus /> } />
               <Route path='progress-status' element={<ProgressStatus /> } />
