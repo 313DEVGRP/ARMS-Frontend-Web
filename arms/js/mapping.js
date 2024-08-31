@@ -95,6 +95,8 @@ function execDocReady() {
                 var searchString = $(this).val();
                 $("#alm_server_tree").jstree("search", searchString);
             });
+
+            init_data_load();
         })
         .catch(function (e) {
             console.error("플러그인 로드 중 오류 발생");
@@ -144,46 +146,51 @@ function make_alm_server_select_box() {
 
     // --- select2 ( 제품(서비스) 검색 및 선택 ) 이벤트 --- //
     $("#selected_alm_server").on("select2:select", function(e) {
+        $("#cloud_project_tree").hide();
+        $("#select-project-div").hide();
+        $("#select-issuetype-div").hide();
+        $("#select-project").text("선택되지 않음");
+        $("#select-issuetype").text("선택되지 않음");
+        selected_alm_server_id = $("#selected_alm_server").val();
+        selected_alm_server_name = $("#selected_alm_server").select2("data")[0].text;
+        $("#select-alm-server").text(selected_alm_server_name);
 
-        // 전역 변수 - 상태 카테고리 설정
-        get_arms_state_category_list()
-            .then((category_list) => {
-                for (var k in category_list) {
-                    var obj = category_list[k];
-                    req_state_category_list[obj.c_id] = obj;
-                }
-                console.log(req_state_category_list);
+        let alm_server_data = alm_server_list[selected_alm_server_id];
+        let alm_server_type = alm_server_data.c_jira_server_type;
 
-                $("#cloud_project_tree").hide();
-                $("#select-project-div").hide();
-                $("#select-issuetype-div").hide();
-                $("#select-project").text("선택되지 않음");
-                $("#select-issuetype").text("선택되지 않음");
-                selected_alm_server_id = $("#selected_alm_server").val();
-                selected_alm_server_name = $("#selected_alm_server").select2("data")[0].text;
-                $("#select-alm-server").text(selected_alm_server_name);
+        if (alm_server_type === "클라우드") {
+            $("#cloud_project_tree").show();
+            $("#select-project-div").show();
+            $("#select-issuetype-div").show();
 
-                let alm_server_data = alm_server_list[selected_alm_server_id];
-                let alm_server_type = alm_server_data.c_jira_server_type;
-
-                if (alm_server_type === "클라우드") {
-                    $("#cloud_project_tree").show();
-                    $("#select-project-div").show();
-                    $("#select-issuetype-div").show();
-                    build_alm_server_jstree(selected_alm_server_id);
-                    let data = {};
-                    gojs.load(data);
-                }
-                else {
-                    mapping_data_load(selected_alm_server_id, alm_server_type);
-                }
-            })
-            .catch((error) => {
-                // 오류가 발생한 경우 처리합니다.
-                console.error('Error fetching data:', error);
-            });
+            build_alm_server_jstree(selected_alm_server_id);
+            init_data_load();
+        }
+        else {
+            mapping_data_load(selected_alm_server_id, alm_server_type);
+        }
     });
 } // end make_alm_server_select_box()
+
+function init_data_load() {
+    Promise.all([get_arms_state_category_list(), get_arms_state_list()])
+        .then(([arms_state_category_list, arms_state_list]) => {
+
+            for (var k in arms_state_category_list) {
+                var obj = arms_state_category_list[k];
+                req_state_category_list[obj.c_id] = obj;
+            }
+
+            console.log('ARMS Category State List:', req_state_category_list);
+            console.log('ARMS State List:', arms_state_list);
+
+            let data = generate_gojs_mapping_data(req_state_category_list, arms_state_list, null, null);
+            gojs.load(data);
+        })
+        .catch((error) => {
+            console.error('Error fetching data:', error);
+        });
+}
 
 function mapping_data_load(alm_server_id, alm_server_type, project_id, issueType_c_id) {
     if (!alm_server_type) {
@@ -206,7 +213,6 @@ function mapping_data_load(alm_server_id, alm_server_type, project_id, issueType
 
         Promise.all([get_arms_state_list(), get_project_status_list(project_id, issueType_c_id)])
             .then(([arms_state_list, alm_status_list]) => {
-                // 두 API 호출 결과를 함께 사용합니다.
                 console.log('ARMS State List:', arms_state_list);
                 console.log('ALM Status List:', alm_status_list);
 
@@ -218,7 +224,6 @@ function mapping_data_load(alm_server_id, alm_server_type, project_id, issueType
                 }
 
                 let data = generate_gojs_mapping_data(req_state_category_list, arms_state_list, alm_status_list, alm_server_type);
-                // 여기에 두 결과를 함께 사용하는 로직을 추가합니다.
                 gojs.load(data);
             })
             .catch((error) => {
@@ -228,7 +233,6 @@ function mapping_data_load(alm_server_id, alm_server_type, project_id, issueType
     else {
         Promise.all([get_arms_state_list(), get_alm_status_list(alm_server_id)])
             .then(([arms_state_list, alm_status_list]) => {
-                // 두 API 호출 결과를 함께 사용합니다.
                 console.log('ARMS State List:', arms_state_list);
                 console.log('ALM Status List:', alm_status_list);
 
@@ -260,65 +264,71 @@ function generate_gojs_mapping_data(req_state_category_list, arms_state_list, al
     const arms_state_nodes = {};
     let alm_status_nodes = {};
 
-    Object.entries(req_state_category_list).forEach(([key, value]) => {
-        const category_type = "arms-category";
-        const category_node_key = category_type+ "-"+key;
-        const node = {
-            key: category_node_key,
-            text: `${value.c_title}`,
-            type: category_type,
-            c_id: key,
-            category: 'Loading',
-            loc: `${category_x_position} ${category_y_position}`
-        };
+    if (req_state_category_list && Array.isArray(Object.entries(req_state_category_list))) {
+        Object.entries(req_state_category_list).forEach(([key, value]) => {
+            const category_type = "arms-category";
+            const category_node_key = category_type+ "-"+key;
+            const node = {
+                key: category_node_key,
+                text: `${value.c_title}`,
+                type: category_type,
+                c_id: key,
+                category: 'Loading',
+                loc: `${category_x_position} ${category_y_position}`
+            };
 
-        node_data_array.push(node);
-        category_nodes[key] = node;
-        category_y_position += category_y_spacing;
-    });
+            node_data_array.push(node);
+            category_nodes[key] = node;
+            category_y_position += category_y_spacing;
+        });
+    }
 
-    arms_state_list.forEach((state) => {
-        const arms_state_type = "arms-state";
-        const arms_node_key = arms_state_type+"-"+state.c_id;
-        const node = {
-            key: arms_node_key,
-            text: `${state.c_title}`,
-            type: arms_state_type,
-            c_id: state.c_id,
-            category: 'NoAdd',
-            loc: `${arms_state_x_position} ${arms_state_y_position}`
-        };
+    if (arms_state_list && Array.isArray(Object.entries(arms_state_list))) {
+        arms_state_list.forEach((state) => {
+            const arms_state_type = "arms-state";
+            const arms_node_key = arms_state_type + "-" + state.c_id;
+            const node = {
+                key: arms_node_key,
+                text: `${state.c_title}`,
+                type: arms_state_type,
+                c_id: state.c_id,
+                category: 'NoAdd',
+                loc: `${arms_state_x_position} ${arms_state_y_position}`
+            };
 
-        if (state.reqStateCategoryEntity) {
-            node.mapping_id = state.reqStateCategoryEntity.c_id;
-        }
-        else {
-            node.maping_id = null;
-        }
+            if (state.reqStateCategoryEntity) {
+                node.mapping_id = state.reqStateCategoryEntity.c_id;
+            }
+            else {
+                node.maping_id = null;
+            }
 
-        node_data_array.push(node);
-        arms_state_nodes[state.c_id] = node;
-        arms_state_y_position += y_spacing;
-    });
+            node_data_array.push(node);
+            arms_state_nodes[state.c_id] = node;
+            arms_state_y_position += y_spacing;
+        });
+    }
 
-    alm_status_list.forEach((status) => {
-        const alm_status_type = "alm-status";
-        const alm_node_key = alm_status_type + "-" + status.c_id;
-        const node = {
-            key: alm_node_key,
-            text: `${status.c_issue_status_name}`,
-            server_type: alm_server_type,
-            type: alm_status_type,
-            c_id: status.c_id,
-            mapping_id: status.c_req_state_mapping_link,
-            category: 'End',
-            loc: `${alm_status_x_position} ${alm_status_y_position}`
-        };
+    if (alm_status_list && Array.isArray(alm_status_list)) {
+        alm_status_list.forEach((status) => {
+            const alm_status_type = "alm-status";
+            const alm_node_key = alm_status_type + "-" + status.c_id;
+            const node = {
+                key: alm_node_key,
+                text: `${status.c_issue_status_name}`,
+                server_type: alm_server_type,
+                type: alm_status_type,
+                c_id: status.c_id,
+                mapping_id: status.c_req_state_mapping_link,
+                category: 'End',
+                loc: `${alm_status_x_position} ${alm_status_y_position}`
+            };
 
-        node_data_array.push(node);
-        alm_status_nodes[status.c_id] = node;
-        alm_status_y_position += y_spacing;
-    });
+            node_data_array.push(node);
+            alm_status_nodes[status.c_id] = node;
+            alm_status_y_position += y_spacing;
+        });
+    }
 
     // 링크 데이터 생성
     node_data_array.forEach((node) => {
@@ -357,10 +367,12 @@ function generate_gojs_mapping_data(req_state_category_list, arms_state_list, al
     });
 
     arms_state_y_position = 0;
-    sorted_arms_state_nodes.forEach(node => {
-        node.loc = `${arms_state_x_position} ${arms_state_y_position}`;
-        arms_state_y_position += y_spacing;
-    });
+    if (sorted_arms_state_nodes && Array.isArray(sorted_arms_state_nodes)) {
+        sorted_arms_state_nodes.forEach((node) => {
+            node.loc = `${arms_state_x_position} ${arms_state_y_position}`;
+            arms_state_y_position += y_spacing;
+        });
+    }
 
     // ALM 상태 노드 ARMS에 매핑된 노드 기준으로 정렬
     const sorted_alm_status_nodes = Object.values(alm_status_nodes).sort((a, b) => {
@@ -384,10 +396,12 @@ function generate_gojs_mapping_data(req_state_category_list, arms_state_list, al
     });
 
     alm_status_y_position = 0;
-    sorted_alm_status_nodes.forEach(node => {
-        node.loc = `${alm_status_x_position} ${alm_status_y_position}`;
-        alm_status_y_position += y_spacing;
-    });
+    if (sorted_alm_status_nodes && Array.isArray(sorted_alm_status_nodes)) {
+        sorted_alm_status_nodes.forEach((node) => {
+            node.loc = `${alm_status_x_position} ${alm_status_y_position}`;
+            alm_status_y_position += y_spacing;
+        });
+    }
 
     return {
         class: 'GraphLinksModel',
