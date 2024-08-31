@@ -10,7 +10,7 @@
 				data: "displayName",
 				className: "dt-body-left",
 				visible: true,
-				width:"60%",
+				width:"40%",
 				render: function (data, type, row, meta) {
 					if (type === "display") {
 						if (row["serverType"] === "클라우드") {
@@ -27,12 +27,27 @@
 				}
 			},
 			{
+				name: "emailAddress",
+				title: "작업자 메일",
+				data: "emailAddress",
+				className: "dt-body-center",
+				visible: false,
+				width: "30%",
+				render: function (data, type, row, meta) {
+					if (type === "display") {
+						return '<label style="color: #a4c6ff">' + data +
+							"</label>";
+					}
+					return data;
+				}
+			},
+			{
 				name: "serverType",
 				title: "서버타입",
 				data: "serverType",
 				className: "dt-body-center",
 				visible: false,
-				width: "40%",
+				width: "20%",
 				render: function (data, type, row, meta) {
 					if (type === "display") {
 						return '<label style="color: #a4c6ff">' + data +
