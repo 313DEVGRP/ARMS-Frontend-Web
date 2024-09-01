@@ -65,7 +65,7 @@
     --ring: 228 48% 40%;
   }
 }
-.loading{
+.loading {
   width: 20px !important;
   height: 20px !important;
   animation: spin 3s linear infinite;
@@ -79,10 +79,6 @@
 /* global lucide icon size  */
 /* 루시드 아이콘 전역 사이즈 변경 */
 .lucide {
-  width: 12px;
-  height: 12px;
-}
-
-.lucide-loader {
-
+  width: 13px;
+  height: 13px;
 }

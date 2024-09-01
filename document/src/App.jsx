@@ -1,8 +1,8 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { ThemeProvider } from '@/components/shadcn/theme-provider'
 import { SubMenuContextProvider } from '@/contexts/contexts'
-import '../../reference/light-blue/documentation/css/font-awesome/css/font-awesome.min.css'
-import '../../reference/light-blue/css/lib/font-awesome/font-awesome.css'
+// import '../../reference/light-blue/documentation/css/font-awesome/css/font-awesome.min.css'
+// import '../../reference/light-blue/css/lib/font-awesome/font-awesome.css'
 import '@/assets/css/globals.css'
 import '@/assets/css/test.css'
 import Layout from '@/layout/Layout'
@@ -35,7 +35,7 @@ function App() {
               Route path 를 만들고 contexts/contexts.jsx 파일로 가서 서브 메뉴 링크를 수정하면 연결 됩니다.  
               To connect the path to the submenu, check 'contexts/contets.jsx' 
             */}
-           {/* <Route element={<Layout />}> */}
+         
               <Route path='/' element={<Dashboard /> } />
               <Route path='*' element={ <Navigate replace to="/" /> } />
               <Route path='installation' element={<Installation /> } />
@@ -47,7 +47,7 @@ function App() {
               <Route path='version-control-choice' element={<VersionControlChoice /> } />
               <Route path='version-control-check' element={<VersionControlCheck /> } />
               <Route path='version-control-edit' element={<VersionControlEdit /> } />
-           {/* </Route> */}
+       
            </Routes>
           </Layout>
       </SubMenuContextProvider>

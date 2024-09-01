@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils"
 const Accordion = AccordionPrimitive.Root
 
 const AccordionItem = React.forwardRef(({ className, ...props }, ref) => (
-  <AccordionPrimitive.Item ref={ref} className={cn("lg:border-0", className)} {...props} />
+  <AccordionPrimitive.Item ref={ref} className={cn("lg:border-0", className)} {...props} /> // lg:border-0  when it's on the large screen size: border none 
 ))
 AccordionItem.displayName = "AccordionItem"
 
@@ -23,7 +23,7 @@ const AccordionTrigger = React.forwardRef(({ className, children, ...props }, re
       )}
       {...props}>
       {children}
-      <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200 chevronDown ml-auto" />
+      {/* <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200 chevronDown ml-auto" /> */}
     </AccordionPrimitive.Trigger>
   </AccordionPrimitive.Header>
 ))
@@ -34,7 +34,7 @@ const AccordionContent = React.forwardRef(({ className, children, ...props }, re
     ref={ref}
     className="overflow-hidden text-sm transition-all data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down"
     {...props}>
-    <div className={cn("pb-2 pt-1 first:mt-[2px] last:mb-[2px]", className)}>{children}</div>
+    <div className={cn("pb-1 pt-1", className)}>{children}</div>
   </AccordionPrimitive.Content>
 ))
 

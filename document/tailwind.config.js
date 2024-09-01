@@ -16,8 +16,8 @@ module.exports = {
     },
     fontSize: {
       xs: '0.7rem',
-      sm: '0.8rem',
-      base: '1rem',
+      sm: '12px',
+      base: '14px',
     },
     container: {
       center: true,
@@ -61,6 +61,17 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        white: '#fff',
+        gray: {
+          100: '#f8f8f8',
+          200: 'lighten(#000, 93.5%)',
+          300: '#ddd',
+          400: 'lighten(#000, 60%)',
+          500: '#777',
+        },
+        blue: '#2477ff',
+        'link-color': '#3360ae',
+        'data': '#a4c6ff'
       },
       borderRadius: {
         lg: "var(--radius)",
